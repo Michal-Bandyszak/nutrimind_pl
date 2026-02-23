@@ -251,8 +251,17 @@ function parseBoldHeaderRecipes(textWithoutCodeBlocks: string): RecipeBlock[] {
   let currentName = "";
   let currentIngredients: ParsedIngredient[] = [];
   let currentInstructions: string[] = [];
+  let currentStep = ""; // accumulates multi-line instruction steps
+
+  const flushStep = () => {
+    if (currentStep) {
+      currentInstructions.push(currentStep.trim());
+      currentStep = "";
+    }
+  };
 
   const push = () => {
+    flushStep();
     if (currentName && currentIngredients.length > 0) {
       results.push({
         name: currentName,
@@ -281,15 +290,30 @@ function parseBoldHeaderRecipes(textWithoutCodeBlocks: string): RecipeBlock[] {
 
     if (!currentName) continue;
 
+    // Empty line: flush current step accumulator
+    if (!trimmed) {
+      flushStep();
+      continue;
+    }
+
     const ing = parseIngredientLine(trimmed);
     if (ing) {
+      flushStep();
       currentIngredients.push(ing);
       continue;
     }
 
+    // Numbered step: start a new step
     const instrMatch = trimmed.match(/^\d+\.\s+(.+)/);
     if (instrMatch) {
-      currentInstructions.push(instrMatch[1]);
+      flushStep();
+      currentStep = instrMatch[1];
+      continue;
+    }
+
+    // Continuation line: append to the current step if we're inside one
+    if (currentStep) {
+      currentStep += " " + trimmed;
     }
   }
 
