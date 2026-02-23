@@ -1,0 +1,578 @@
+
+
+
+Tydzień 1
+
+```
+Poniedziałek Wtorek Środa
+Śniadanie - 9:
+Bowl z grillowanym kurczakiem, świeżymi warzywami i
+dressingiem migdałowo-kokosowym
+```
+```
+Szakszuka z papryką, awokado i pestkami dyni Roladki z cukinii z koperkową pastą z łososia i awokado
+```
+```
+Lunch - 12:
+Sezamowy koktajl polifenolowy Migdałowa owsianka nocna z malinami Chia pudding kokosowy z musem jagodowym
+```
+```
+Obiad - 16:
+Stek z nutą tymiankową i sezamem
+Brokuły z sosem bazyliowym
+```
+```
+Stek z tuńczyka w pietruszkowej marynacie
+Surówka z marchewki i selera
+```
+```
+Curry z indykiem i warzywami
+```
+```
+Kolacja - 19:
+Sałatka z kaszą gryczaną i burakiem Paella z jarmużem, porem i pomidorkami koktajlowymi i
+pestkami dyni
+```
+```
+Zupa krem z brokuła i groszku
+```
+```
+Kcal: 2032
+W: 154.1 / B: 100.
+T: 120.2 / Bł: 29.
+ŁG: 54.
+```
+```
+Kcal: 2013
+W: 146.8 / B: 100.
+T: 121.0 / Bł: 32.
+ŁG: 47.
+```
+```
+Kcal: 2016
+W: 156.9 / B: 112.
+T: 111.8 / Bł: 42.
+ŁG: 44.
+```
+Legenda
+
+Kcal: Energia, W: Węglowodany, B: Białko, T: Tłuszcze, Bł: Błonnik, ŁG: Ładunek
+glikemiczny
+
+
+## Poniedziałek
+
+### Śniadanie - 9:00 Kcal: 494 W: 16.6 B: 27.5 T: 36.1 Bł: 5.2 ŁG: 1.
+
+```
+Bowl z grillowanym kurczakiem, świeżymi
+warzywami i dressingiem migdałowo-kokosowym
+Pierś z kurczaka, 1 x Porcja (100 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+Papryka słodka w proszku, 1 x Szczypta (0,3 g)
+Tymianek suszony, 2 x Szczypta (0,6 g)
+Masło klarowane, 1 x Łyżeczka (5 g)
+Seler naciowy, 1 x Łodyga (45 g)
+Papryka czerwona, 0,3 x Sztuka (75 g)
+Pomidor koktajlowy, 1 x Garść (100 g)
+Roszponka, 1 x Garść (20 g)
+Sok z cytryny, 1 x Łyżka (10 g)
+Jogurt kokosowy, 2 x Łyżka (40 g)
+Olej lniany, 2 x Łyżka (20 g)
+Masło migdałowe , 1 x Łyżeczka (10 g)
+```
+```
+Przepis
+```
+1. Pierś z kurczaka pokrój w paski. Mięso przypraw solą,
+pieprzem, słodką papryką, tymiankiem i usmaż na maśle
+klarowanym na patelni grillowej lub grillu elektrycznym.
+2. Paprykę pokrój w kostkę, selera naciowego w słupki, a
+pomidorki przekrój na pół.
+3. Pokrojone warzywa wraz z roszponką ułóż w
+głębokiej misce.
+4. Na warzywach ułóż kawałki mięsa.
+5. Przygotuj dressing: jogurt wymieszaj z masłem
+migdałowym, sokiem wyciśniętym z cytryny i olejem
+lnianym.
+6. Skrop bowla przygotowanym dressingiem.
+
+### Lunch - 12:00 Kcal: 369 W: 60.6 B: 7.9 T: 12.7 Bł: 6.2 ŁG: 28.
+
+```
+Sezamowy koktajl polifenolowy
+Napój migdałowy (niesłodzony), 1 x Szklanka (250 g)
+Borówka amerykańska, 2 x Garść (100 g)
+Banan, 0,5 x Sztuka (60 g)
+Szpinak, 1 x Garść (20 g)
+Pasta tahini, 1 x Łyżeczka (6 g)
+Kakao (proszek bez dodatku cukru), 1 x Łyżeczka (
+g)
+Olej z wiesiołka, 1 x Łyżeczka (5 g)
+Płatki jaglane, 3 x Łyżka (30 g)
+```
+```
+Przepis
+```
+1. Zblenduj wszystkie składniki (w razie potrzeby dodaj
+wody do uzyskania pożądanej konsystencji koktajlu).
+
+```
+Komentarz
+Do przygotowania koktajlu wybierz dojrzałego banana.
+```
+### Obiad - 16:00 Kcal: 670 W: 20.9 B: 51.0 T: 43.8 Bł: 7.3 ŁG: 1.
+
+```
+Stek z nutą tymiankową i sezamem
+Polędwica wołowa, 2 x Porcja (200 g)
+Masło klarowane, 1 x Łyżka (10 g)
+Tymianek suszony, 1 x Szczypta (0,3 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+Rukola, 1 x Garść (20 g)
+Sezam (nasiona), 1 x Łyżka (10 g)
+```
+```
+Przepis
+```
+1. Mięso dopraw solą i pieprzem.
+2. Na patelni rozgrzej masło klarowane z tymiankiem i
+smaż steka po około 3 minuty z każdej strony (jeśli
+lubisz mięso mocniej wysmażone, smaż nieco dłużej),
+obracając podlewaj masłem.
+3. Po ściągnięciu mięsa z patelni, odczekaj około 5 minut
+przed pokrojeniem.
+4. Pokrojone plastry steka ułóż na rukoli i posyp
+sezamem.
+5. Mięso podaj z brokułami z sosem bazyliowym.
+
+
+**Brokuły z sosem bazyliowym**
+Brokuł, 0,4 x Sztuka (200 g)
+Jogurt kokosowy, 3 x Łyżka (60 g)
+Olej lniany, 1 x Łyżka (10 g)
+Bazylia świeża, 1 x Garść (4 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+
+```
+Przepis
+```
+1. Brokuła ugotuj w wodzie lub na parze al dente.
+2. Przygotuj sos: jogurt zmiksuj z bazylią, olejem lnianym,
+szczyptą soli i pieprzu.
+3. Na talerzu ułóż brokuły i polej je sosem.
+
+### Kolacja - 19:00 Kcal: 499 W: 56.0 B: 14.3 T: 27.6 Bł: 10.5 ŁG: 21.
+
+**Sałatka z kaszą gryczaną i burakiem**
+Kasza gryczana, 4 x Łyżka (60 g)
+Burak, 1 x Sztuka (100 g)
+Rukola, 3 x Garść (60 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+Bazylia świeża, 1 x Garść (4 g)
+Olej lniany, 2 x Łyżka (20 g)
+Pestki dyni, 1 x Łyżka (10 g)
+
+```
+Przepis
+```
+1. Kaszę ugotuj zgodnie z instrukcjami na opakowaniu.
+2. Buraka ugotuj w wodzie i pokrój w kostkę.
+3. Kaszę wymieszaj z rukolą i burakiem.
+4. Całość dopraw solą i pieprzem.
+5. Olej lniany wymieszaj z posiekaną bazylią i skrop nim
+potrawę.
+6. Na koniec posyp pestkami dyni.
+
+```
+Komentarz
+Do przygotowania sałatki możesz użyć gotowanych
+buraków BIO.
+```
+### Suma dnia : Kcal: 2032 W: 154.1g B: 100.7g T: 120.2g Bł: 29.2g ŁG: 54.
+
+
+## Wtorek
+
+### Śniadanie - 9:00 Kcal: 524 W: 19.1 B: 24.0 T: 41.3 Bł: 9.4 ŁG: 1.
+
+```
+Szakszuka z papryką, awokado i pestkami dyni
+Jajko, 2 x Sztuka (112 g)
+Masło klarowane, 1 x Łyżeczka (5 g)
+Pomidor, 1 x Sztuka (120 g)
+Papryka czerwona, 0,3 x Sztuka (75 g)
+Awokado, 0,5 x Sztuka (70 g)
+Rukola, 1 x Garść (20 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+Bazylia świeża, 1 x Garść (4 g)
+Olej lniany, 1 x Łyżeczka (5 g)
+Pestki dyni, 2 x Łyżka (20 g)
+```
+```
+Przepis
+```
+1. Pomidora pokrój w kostkę, a paprykę w paski.
+2. Na patelni rozgrzej masło klarowane, podsmaż
+paprykę i pomidora. Dodaj posiekaną bazylię.
+3. Gdy farsz będzie ciepły, wbij jajka, nie mieszaj. Dopraw
+solą i pieprzem. Przykryj pokrywką i duś na małym ogniu,
+aż jajka się zetną. Żółtka powinny mieć płynną
+konsystencję.
+4. Awokado pokrój w plasterki.
+5. Przełóż szakszukę na talerz, ułóż obok awokado i
+rukolę.
+6. Całość skrop olejem lnianym i posyp pestkami dyni.
+
+### Lunch - 12:00 Kcal: 291 W: 43.5 B: 8.8 T: 11.3 Bł: 10.2 ŁG: 11.
+
+```
+Migdałowa owsianka nocna z malinami
+Cynamon, 0,5 x Łyżeczka (2 g)
+Płatki owsiane, 3 x Łyżka (30 g)
+Masło migdałowe , 1 x Łyżeczka (10 g)
+Maliny mrożone, 2 x Porcja (140 g)
+Napój migdałowy (niesłodzony), 1 x Szklanka (250 g)
+```
+```
+Przepis
+```
+1. W słoiku wymieszaj płatki owsiane z napojem
+roślinnym, masłem migdałowym i cynamonem.
+2. Posyp owsiankę malinami.
+3. Zakręć słoik i wstaw na całą noc do lodówki.
+
+### Obiad - 16:00 Kcal: 691 W: 18.7 B: 52.1 T: 45.8 Bł: 5.7 ŁG: 3.
+
+```
+Stek z tuńczyka w pietruszkowej marynacie
+Tuńczyk, 1 x Porcja (200 g)
+Olej kokosowy, 1 x Łyżka (10 g)
+Natka pietruszki, 2 x Łyżeczka (12 g)
+Rukola, 1 x Garść (20 g)
+Pieprz czarny, 1 x Szczypta (1 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Orzechy włoskie, 4 x Sztuka (16 g)
+```
+```
+Przepis
+```
+1. Natkę pietruszki drobno posiekaj.
+2. Tuńczyka przypraw solą, pieprzem i natką pietruszki.
+3. Na patelni rozgrzej olej kokosowy i smaż tuńczyka z
+obu stron.
+4. Ułóż tuńczyka na rukoli.
+5. Posyp posiekanymi orzechami włoskimi.
+6. Podaj z surówką z marchewki i selera.
+
+```
+Surówka z marchewki i selera
+Marchew, 2 x Sztuka (90 g)
+Seler (korzeń), 1 x Plaster (60 g)
+Olej lniany, 1,5 x Łyżka (15 g)
+Sól himalajska, 1 x Szczypta (1 g)
+```
+```
+Przepis
+```
+1. Marchew i selera zetrzyj je na tarce.
+2. Dodaj olej lniany, sól i wymieszaj.
+
+
+### Kolacja - 19:00 Kcal: 507 W: 65.5 B: 15.7 T: 22.6 Bł: 7.6 ŁG: 31.
+
+**Paella z jarmużem, porem i pomidorkami
+koktajlowymi i pestkami dyni**
+Bulion warzywny, 1 x Szklanka (250 g)
+Ryż brązowy, 4 x Łyżka (60 g)
+Olej kokosowy, 1 x Łyżka (10 g)
+Jarmuż, 3 x Garść (60 g)
+Pomidor koktajlowy, 1 x Garść (100 g)
+Por, 0,25 x Sztuka (35 g)
+Pieprz czarny, 1 x Szczypta (1 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Zioła prowansalskie, 1 x Szczypta (1 g)
+Bazylia świeża, 2 x Garść (10 g)
+Pestki dyni, 2 x Łyżka (20 g)
+
+```
+Przepis
+```
+1. Jarmuż posiekaj, pora pokrój w plasterki, a pomidorki
+przekrój na pół.
+2. Na patelni rozgrzej olej kokosowy, dodaj jarmuż, pora i
+pomidorki. Smaż przez około 3-4 minuty.
+3. Do warzyw dodaj ryż i przyprawy. Wymieszaj i
+podsmażaj jeszcze przez około 2-3 minuty. Dodaj 1/
+szklanki bulionu.
+4. Mieszaj wszystko, trzymając patelnię na małym ogniu.
+W momencie, gdy płyn się zredukuje, dodaj resztę
+bulionu.
+5. Gotuj całość pod przykryciem przez ok. 15 minut, nie
+mieszając. W razie potrzeby dodaj wody.
+6. Posyp posiekaną bazylią i pestkami dyni.
+
+### Suma dnia : Kcal: 2013 W: 146.8g B: 100.6g T: 121.0g Bł: 32.9g ŁG: 47.
+
+
+## Środa
+
+### Śniadanie - 9:00 Kcal: 515 W: 20.4 B: 30.7 T: 37.5 Bł: 9.9 ŁG: 2.
+
+```
+Roladki z cukinii z koperkową pastą z łososia i
+awokado
+Łosoś atlantycki, 1 x Porcja (100 g)
+Olej kokosowy, 1 x Łyżeczka (5 g)
+Pieprz czarny, 1 x Łyżeczka (4 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Koperek, 1 x Łyżeczka (5 g)
+Cukinia, 0,3 x Sztuka (180 g)
+Awokado, 0,5 x Sztuka (70 g)
+Rukola, 2 x Garść (40 g)
+Olej lniany, 1 x Łyżeczka (5 g)
+Pestki dyni, 1 x Łyżeczka (5 g)
+Pomidor koktajlowy, 1 x Garść (100 g)
+```
+```
+Przepis
+```
+1. Łososia dopraw solą i pieprzem.
+2. Na patelni rozgrzej olej kokosowy i usmaż łososia z
+obu stron.
+3. Cukinię pokrój w cienkie plastry wzdłuż warzywa.
+4. Ułóż plastry cukinii na natłuszczonym papierze do
+pieczenia i piecz do miękkości w przez ok. 6-8 min,
+190°C.
+5. Rozgnieć łososia i awokado widelcem, dodaj
+posiekany koperek i wymieszaj.
+6. Pastę nałóż na koniec plastra cukinii i zwiń w
+rulon/roladkę.
+7. Przygotuj sałatkę: pomidorki przekrój na pół,
+wymieszaj z rukolą, olejem lnianym i pestkami dyni.
+8. Roladki ułóż na talerzu wraz z przygotowaną sałatką.
+
+```
+Komentarz
+Możesz wykorzystać gotowanego łososia bez dodatków,
+dostępnego w sklepach np. FJØRD FISKURSSON.
+```
+### Lunch - 12:00 Kcal: 348 W: 48.1 B: 6.3 T: 14.2 Bł: 8.5 ŁG: 18.
+
+```
+Chia pudding kokosowy z musem jagodowym
+Nasiona chia, 1 x Łyżka (10 g)
+Czarne jagody mrożone, 2 x Garść (100 g)
+Jogurt kokosowy, 1 x Opakowanie (150 g)
+Płatki jaglane, 3 x Łyżka (30 g)
+```
+```
+Przepis
+```
+1. Nasiona chia wymieszaj z jogurtem kokosowym i
+płatkami, odstaw i po około 30 minutach przemieszaj
+ponownie.
+2. Całość odłóż do lodówki na ok. 4 godziny lub na całą
+noc.
+3. Jagody podgrzej w rondelku z 2 łyżkami wody. Mieszaj
+do momentu powstania kleistego musu.
+4. Dodaj mus do puddingu.
+
+
+### Obiad - 16:00 Kcal: 646 W: 25.0 B: 54.2 T: 38.1 Bł: 9.2 ŁG: 2.
+
+**Curry z indykiem i warzywami**
+Bulion warzywny, 0,5 x Szklanka (125 g)
+Olej kokosowy, 1 x Łyżka (10 g)
+Papryka czerwona, 0,5 x Sztuka (125 g)
+Fasolka szparagowa zielona mrożona, 1 x Porcja (
+g)
+Szpinak, 2 x Garść (40 g)
+Mleczko kokosowe, 4 x Łyżka (40 g)
+Curry, 1 x Łyżeczka (4 g)
+Olej lniany, 1 x Łyżka (10 g)
+Sezam (nasiona), 1 x Łyżka (10 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+Pierś z indyka, 1 x Porcja (200 g)
+
+```
+Przepis
+```
+1. Mięso i paprykę pokrój w kostkę.
+2. Na patelni rozgrzej olej kokosowy i obsmaż indyka.
+3. Do mięsa dodaj paprykę i fasolkę.
+4. Całość zalej bulionem i duś pod przykryciem przez
+około 15 minut.
+5. Dopraw solą, pieprzem, curry. Dodaj mleczko
+kokosowe i szpinak. Gotuj jeszcze przez 2 minuty.
+6. Przełóż danie do miseczki, skrop olejem lnianym i
+posyp sezamem.
+
+### Kolacja - 19:00 Kcal: 507 W: 63.4 B: 20.9 T: 22.0 Bł: 14.8 ŁG: 20.
+
+**Zupa krem z brokuła i groszku**
+Bulion warzywny, 1 x Szklanka (250 g)
+Masło klarowane, 1 x Łyżeczka (5 g)
+Ziemniak, 2 x Sztuka (140 g)
+Pietruszka (korzeń), 1 x Sztuka (80 g)
+Brokuł, 0,35 x Sztuka (175 g)
+Por, 1 x Porcja (50 g)
+Sól himalajska, 1 x Szczypta (1 g)
+Pieprz czarny, 1 x Szczypta (0,3 g)
+Tymianek suszony, 2 x Szczypta (0,6 g)
+Groszek zielony, 3 x Łyżka (45 g)
+Koperek, 1 x Łyżeczka (5 g)
+Olej lniany, 1 x Łyżka (10 g)
+Ser parmezan, 2 x Łyżka (20 g)
+
+```
+Przepis
+```
+1. Ziemniaki i korzeń pietruszki pokrój w kostkę. Pora
+pokrój w plasterki. Brokuła podziel na różyczki.
+2. W garnku rozgrzej olej kokosowy, dodaj ziemniaki,
+korzeń pietruszki, pora, brokuła i smaż przez około 2
+minuty.
+3. Warzywa zalej bulionem i gotuj przez około 8 minut.
+Dodaj groszek i gotuj, aż warzywa będą miękkie.
+4. Dopraw solą, pieprzem, tymiankiem.
+5. Zmiksuj zupę na gładki krem. Przelej do miseczki.
+6. Olej lniany wymieszaj z posiekanym koperkiem i skrop
+nim zupę.
+7. Zupę posyp startym parmezanem.
+
+### Suma dnia : Kcal: 2016 W: 156.9g B: 112.1g T: 111.8g Bł: 42.4g ŁG: 44.
+
+
+## Lista zakupów
+
+### PRODUKT ILOŚĆ WAGA PRODUKT ILOŚĆ WAGA
+
+Mięso i produkty mięsne
+
+```
+Pierś z indyka 200 g
+Pierś z kurczaka 100 g
+Polędwica wołowa 200 g
+```
+Mrożonki
+
+```
+Czarne jagody mrożone 100 g
+Fasolka szparagowa zielona
+mrożona
+```
+```
+90 g
+```
+```
+Maliny mrożone 140 g
+```
+Nabiał i jaja
+
+```
+Jajko 112 g
+Ser parmezan 20 g
+```
+Napoje
+
+```
+Napój migdałowy (niesłodzony) 500 g
+Sok z cytryny 10 g
+```
+Orzechy i nasiona
+
+```
+Masło migdałowe 20 g
+Nasiona chia 10 g
+Orzechy włoskie 16 g
+Pestki dyni 55 g
+Sezam (nasiona) 20 g
+```
+Owoce
+
+```
+Banan 60 g
+Borówka amerykańska 100 g
+```
+Przyprawy i zioła
+
+```
+Bazylia świeża 22 g
+Curry 4 g
+Cynamon 2 g
+Koperek 10 g
+Natka pietruszki 12 g
+```
+```
+Papryka słodka w proszku 0,3 g
+Pieprz czarny 8,1 g
+Sól himalajska 11 g
+Tymianek suszony 1,5 g
+Zioła prowansalskie 1 g
+```
+```
+Ryby
+```
+```
+Tuńczyk 200 g
+Łosoś atlantycki 100 g
+```
+```
+Tłuszcze
+```
+```
+Masło klarowane 25 g
+Olej kokosowy 35 g
+Olej lniany 95 g
+Olej z wiesiołka 5 g
+```
+```
+Warzywa
+```
+```
+Awokado 140 g
+Brokuł 375 g
+Burak 100 g
+Cukinia 180 g
+Groszek zielony 45 g
+Jarmuż 60 g
+Marchew 90 g
+Papryka czerwona 275 g
+Pietruszka (korzeń) 80 g
+Pomidor 120 g
+Pomidor koktajlowy 300 g
+Por 85 g
+Roszponka 20 g
+Rukola 160 g
+Seler (korzeń) 60 g
+Seler naciowy 45 g
+Szpinak 60 g
+Ziemniak 140 g
+```
+```
+Zbożowe
+```
+
+```
+Kasza gryczana 60 g
+Płatki jaglane 60 g
+Płatki owsiane 30 g
+Ryż brązowy 60 g
+```
+Inne
+
+```
+Bulion warzywny 625 g
+Jogurt kokosowy 250 g
+Kakao (proszek bez dodatku cukru) 5 g
+Mleczko kokosowe 40 g
+Pasta tahini 6 g
+```
+
