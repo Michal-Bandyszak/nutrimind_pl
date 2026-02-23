@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* NutriMind palette — Mediterranean-Apple blend */
+  --color-surface:      #f7f7f5;
+  --color-card:         #ffffff;
+  --color-border:       #e4e4de;
+  --color-border-light: #eeeeea;
+}
+
+/* ——————————————————————————————————————————————
+   Base resets
+—————————————————————————————————————————————— */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: var(--color-surface);
+  color: #111111;
+  min-height: 100dvh;
+}
+
+/* ——————————————————————————————————————————————
+   Scrollbar (webkit)
+—————————————————————————————————————————————— */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d1cc; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #a8a8a0; }
