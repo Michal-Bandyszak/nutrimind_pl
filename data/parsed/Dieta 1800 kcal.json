@@ -1,0 +1,1501 @@
+{
+  "sourceDiet": "Dieta 1800 kcal",
+  "kcalTarget": 0,
+  "recipes": [
+    {
+      "name": "Gofry wytrawne z warzywami",
+      "type": "breakfast",
+      "kcalPerServing": 738,
+      "proteinG": 27,
+      "carbsG": 38.9,
+      "fatG": 54.6,
+      "fiberG": 6.9,
+      "ingredients": [
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 100,
+          "displayText": "Jajko, 2 x Sztuka (100 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Proszek do pieczenia",
+          "amountG": 0.8,
+          "displayText": "Proszek do pieczenia, 0,2 x Łyżeczka (0,8 g)",
+          "category": "other"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.5,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Mąka migdałowa",
+          "amountG": 10,
+          "displayText": "Mąka migdałowa, 1 x Łyżka (10 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak, 2 x Garść (50 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 85,
+          "displayText": "Pomidor, 0,5 x Sztuka (85 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Mąka owsiana",
+          "amountG": 36,
+          "displayText": "Mąka owsiana, 3 x Łyżka (36 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 10,
+          "displayText": "Pestki dyni, 1 x Łyżka (10 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Olej z wiesiołka",
+          "amountG": 10,
+          "displayText": "Olej z wiesiołka, 1 x Łyżka (10 g)",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Wsyp do miski mąki, dodaj szczyptę soli i proszek do pieczenia.",
+        "Dodaj rozpuszczone masło klarowane, żółtka oraz napój.",
+        "Zmiksuj wszystko razem na gładką masę.",
+        "Następnie ubij białka na sztywną pianę.",
+        "Dodawaj pianę do masy powoli w 2 partiach i miksuj ciasto mikserem lub mieszaj dokładnie łyżką.",
+        "Nakładaj ciasto na rozgrzaną i natłuszczoną gofrownicę, smaż przez około 2-3 minuty aż gofry się zarumienią.",
+        "Podawaj gofry z warzywami, polanymi olejem i posypanymi pestkami."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Curry z kurczakiem",
+      "type": "lunch",
+      "kcalPerServing": 598,
+      "proteinG": 50.9,
+      "carbsG": 14.6,
+      "fatG": 37.7,
+      "fiberG": 5.3,
+      "ingredients": [
+        {
+          "name": "Pierś z kurczaka",
+          "amountG": 200,
+          "displayText": "Pierś z kurczaka, 1 x Porcja (200 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Olej kokosowy",
+          "amountG": 20,
+          "displayText": "Olej kokosowy, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Kurkuma mielona",
+          "amountG": 0.4,
+          "displayText": "Kurkuma mielona, 0,2 x Łyżeczka (0,4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Papryka słodka w proszku",
+          "amountG": 0.4,
+          "displayText": "Papryka słodka w proszku, 0,2 x Łyżeczka (0,4 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.4,
+          "displayText": "Pieprz czarny, 0,2 x Łyżeczka (0,4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Cynamon",
+          "amountG": 0.3,
+          "displayText": "Cynamon, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Kolendra suszona",
+          "amountG": 0.4,
+          "displayText": "Kolendra suszona, 0,2 x Łyżeczka (0,4 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Kurczaka pokrój w kostkę.",
+        "Na patelni rozgrzej tłuszcz i smaż mięso przez około 5 minut.",
+        "Cukinię umyj, obierz i pokrój w kostkę.",
+        "Dodaj warzywa, mleczko kokosowe i gotuj kolejne 10 minut."
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Kaszotto z warzywami",
+      "type": "dinner",
+      "kcalPerServing": 466,
+      "proteinG": 12.2,
+      "carbsG": 56.3,
+      "fatG": 22.8,
+      "fiberG": 12.2,
+      "ingredients": [
+        {
+          "name": "Kasza jaglana",
+          "amountG": 50,
+          "displayText": "Kasza jaglana, 1 x Porcja (50 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Bakłażan",
+          "amountG": 150,
+          "displayText": "Bakłażan, 1 x Sztuka (150 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Bulion warzywny",
+          "amountG": 240,
+          "displayText": "Bulion warzywny, 1 x Szklanka (240 g)",
+          "category": "other"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 15,
+          "displayText": "Masło klarowane, 1,5 x Łyżka (15 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.2,
+          "displayText": "Sól himalajska, 0,3 x Szczypta (0,2 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki, 2 x Łyżeczka (12 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 10,
+          "displayText": "Pestki dyni, 1 x Łyżka (10 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Na głębokiej patelni rozgrzej masło klarowane, dodaj pokrojone warzywa, przypraw i smaż przez ok. 5 minut.",
+        "Dodaj kaszę i zalej ją bulionem.",
+        "Gotuj wszystko razem do miękkości kaszy (ok. 15 minut).",
+        "Całość posyp natką pietruszki i pestkami."
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 4,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Jajka po benedyktyńsku z sosem chrzanowym i pieczywem",
+      "type": "breakfast",
+      "kcalPerServing": 756,
+      "proteinG": 34.8,
+      "carbsG": 61.8,
+      "fatG": 42,
+      "fiberG": 10.6,
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 168,
+          "displayText": "Jajko, 3 x Sztuka (168 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Jogurt kokosowy",
+          "amountG": 40,
+          "displayText": "Jogurt kokosowy, 2 x Łyżka (40 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Chrzan tarty",
+          "amountG": 5,
+          "displayText": "Chrzan tarty, 0,5 x Łyżeczka (5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z wiesiołka",
+          "amountG": 10,
+          "displayText": "Olej z wiesiołka, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 135,
+          "displayText": "Marchew, 3 x Sztuka (135 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 50,
+          "displayText": "Roszponka, 2 x Garść (50 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pestki słonecznika",
+          "amountG": 20,
+          "displayText": "Pestki słonecznika, 2 x Łyżka (20 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Chleb żytni",
+          "amountG": 80,
+          "displayText": "Chleb żytni, 2 x Kromka (80 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Szczypiorek",
+          "amountG": 2.5,
+          "displayText": "Szczypiorek, 1 x Łyżeczka (2,5 g)",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Ugotuj jajka w koszulce: zagotuj wodę w garnku (ok. 10 cm) z dodatkiem 1 łyżki octu i szczypty soli, zrób w niej wir (zamieszaj łyżką).",
+        "Jajka wbij do oddzielnych miseczek.",
+        "Delikatnie wlej pierwsze jajko do gotującej się wody i gotuj przez kilka minut, aż całe białko będzie ścięte, żółtko pozostanie płynne.",
+        "Powtórz z resztą jajek.",
+        "Przygotuj sos chrzanowy: wymieszaj jogurt, chrzan oraz przyprawy.",
+        "Posyp szczypiorkiem, dopraw solą i pieprzem.",
+        "Marchew zetrzyj obieraczką na wstążki, wymieszaj z roszponką, olejem oraz pestkami.",
+        "Jajka podawaj polane sosem z sałatką i pieczywem."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Zapiekany kurczak z warzywami",
+      "type": "lunch",
+      "kcalPerServing": 560,
+      "proteinG": 57.5,
+      "carbsG": 24.6,
+      "fatG": 26.9,
+      "fiberG": 12,
+      "ingredients": [
+        {
+          "name": "Pierś z kurczaka",
+          "amountG": 200,
+          "displayText": "Pierś z kurczaka, 1 x Porcja (200 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak, 2 x Garść (50 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Bakłażan",
+          "amountG": 150,
+          "displayText": "Bakłażan, 1 x Sztuka (150 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.3,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Płatki drożdżowe nieaktywne",
+          "amountG": 20,
+          "displayText": "Płatki drożdżowe nieaktywne , 4 x Łyżka (20 g)",
+          "category": "grains"
+        }
+      ],
+      "instructions": [
+        "Kurczaka i warzywa pokrój w kostkę i przypraw.",
+        "Pokrojone warzywa wraz z kurczakiem wrzuć do naczynia żaroodpornego, wymieszaj z masłem klarowanym.",
+        "Wierzch posyp płatkami drożdżowymi.",
+        "Całość piecz przez ok. 20 minut w 180 stopniach."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Owsianka z malinami",
+      "type": "dinner",
+      "kcalPerServing": 492,
+      "proteinG": 14,
+      "carbsG": 69.7,
+      "fatG": 20.9,
+      "fiberG": 13.6,
+      "ingredients": [
+        {
+          "name": "Płatki owsiane",
+          "amountG": 60,
+          "displayText": "Płatki owsiane, 6 x Łyżka (60 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Napój kokosowy",
+          "amountG": 250,
+          "displayText": "Napój kokosowy, 1 x Szklanka (250 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni, 1,5 x Łyżka (15 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Wiórki kokosowe",
+          "amountG": 9,
+          "displayText": "Wiórki kokosowe, 1,5 x Łyżka (9 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Płatki owsiane ugotuj na napoju roślinnym z dodatkiem wiórek kokosowych.",
+        "Wyłóż do miseczki, posyp posiekanymi pestkami i malinami."
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Omlet zawijany z warzywami",
+      "type": "breakfast",
+      "kcalPerServing": 452,
+      "proteinG": 18.8,
+      "carbsG": 16,
+      "fatG": 35.6,
+      "fiberG": 5.4,
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 100,
+          "displayText": "Jajko, 2 x Sztuka (100 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Kiełki brokuła (Vital Fresh)",
+          "amountG": 30,
+          "displayText": "Kiełki brokuła (Vital Fresh), 3 x Łyżka (30 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka, 1 x Garść (25 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 170,
+          "displayText": "Pomidor, 1 x Sztuka (170 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.3,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki słonecznika",
+          "amountG": 10,
+          "displayText": "Pestki słonecznika, 1 x Łyżka (10 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jajka wymieszaj, przypraw i smaż na maśle pod przykrywką.",
+        "Na gotowy omlet nałóż pokrojone warzywa, posyp pestkami i zawiń."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Koktajl leśny",
+      "type": "breakfast",
+      "kcalPerServing": 336,
+      "proteinG": 4.5,
+      "carbsG": 42.8,
+      "fatG": 18.4,
+      "fiberG": 11.3,
+      "ingredients": [
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 100,
+          "displayText": "Borówka amerykańska, 1 x Garść (100 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Olej z wiesiołka",
+          "amountG": 10,
+          "displayText": "Olej z wiesiołka, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Nasiona chia",
+          "amountG": 5,
+          "displayText": "Nasiona chia, 1 x Łyżeczka (5 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 10,
+          "displayText": "Płatki owsiane, 1 x Łyżka (10 g)",
+          "category": "grains"
+        }
+      ],
+      "instructions": [
+        "Wszystkie składniki zblenduj na koktajl (w razie"
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Łosoś pieczony",
+      "type": "lunch",
+      "kcalPerServing": 573,
+      "proteinG": 41.1,
+      "carbsG": 25.2,
+      "fatG": 34.8,
+      "fiberG": 9,
+      "ingredients": [
+        {
+          "name": "Cytryna",
+          "amountG": 20,
+          "displayText": "Cytryna, 2 x Plaster (20 g)",
+          "category": "other"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.5,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Na blasze ułóż plaster łososia i przypraw go.",
+        "Rybę natrzyj masłem i połóż plaster cytryny.",
+        "Piecz w piekarniku przez 15 minut w 180 stopniach."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Wrap z warzywami",
+      "type": "dinner",
+      "kcalPerServing": 459,
+      "proteinG": 10.1,
+      "carbsG": 43.4,
+      "fatG": 30,
+      "fiberG": 11.1,
+      "ingredients": [
+        {
+          "name": "Tortilla placek kukurydziany",
+          "amountG": 60,
+          "displayText": "Tortilla placek kukurydziany, 1 x Sztuka (60 g)",
+          "category": "other"
+        },
+        {
+          "name": "Sałata rzymska",
+          "amountG": 35,
+          "displayText": "Sałata rzymska, 1 x Liść (35 g)",
+          "category": "other"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży, 0,5 x Sztuka (90 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.5,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki słonecznika",
+          "amountG": 15,
+          "displayText": "Pestki słonecznika, 1,5 x Łyżka (15 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Koperek",
+          "amountG": 5,
+          "displayText": "Koperek, 1 x Łyżeczka (5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola, 1 x Garść (20 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Kalarepa",
+          "amountG": 80,
+          "displayText": "Kalarepa, 0,5 x Sztuka (80 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 45,
+          "displayText": "Marchew, 1 x Sztuka (45 g)",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Pokrój warzywa.",
+        "Warzywa ułóż na podgrzanej na suchej patelni tortilli,",
+        "Wszystkie składniki zawiń, po czym zapiecz ją w"
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Tatar wołowy w towarzystwie roszponki",
+      "type": "breakfast",
+      "kcalPerServing": 430,
+      "proteinG": 31.4,
+      "carbsG": 12.3,
+      "fatG": 29.2,
+      "fiberG": 3.9,
+      "ingredients": [
+        {
+          "name": "Polędwica wołowa",
+          "amountG": 120,
+          "displayText": "Polędwica wołowa, 1 x Porcja (120 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 40,
+          "displayText": "Roszponka, 2 x Garść (40 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki słonecznika",
+          "amountG": 20,
+          "displayText": "Pestki słonecznika, 2 x Łyżka (20 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży, 0,5 x Sztuka (90 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 45,
+          "displayText": "Marchew, 1 x Sztuka (45 g)",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Mięso posiekaj na tatara, wymieszaj z solą, pieprzem, opcjonalnie z odrobiną soku z cytryny.",
+        "Uformuj kulkę.",
+        "Ogórka pokrój w kostkę, marchew zetrzyj na makaron. Dodaj roszponkę.",
+        "Posyp pestkami słonecznika i skrop olejem.",
+        "Sałatkę podawaj z tatarem."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Smoothie zielone",
+      "type": "breakfast",
+      "kcalPerServing": 361,
+      "proteinG": 6.6,
+      "carbsG": 41.7,
+      "fatG": 21.1,
+      "fiberG": 7.3,
+      "ingredients": [
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak, 2 x Garść (50 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomarańcza",
+          "amountG": 120,
+          "displayText": "Pomarańcza, 0,5 x Sztuka (120 g)",
+          "category": "other"
+        },
+        {
+          "name": "Jarmuż",
+          "amountG": 40,
+          "displayText": "Jarmuż, 2 x Garść (40 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sok marchwiowy",
+          "amountG": 240,
+          "displayText": "Sok marchwiowy, 1 x Szklanka (240 g)",
+          "category": "other"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany, 2 x Łyżka (20 g)",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Pokrojoną pomarańczę zblenduj z pozostałymi składnikami."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Grillowana pierś z kurczaka",
+      "type": "lunch",
+      "kcalPerServing": 574,
+      "proteinG": 47.7,
+      "carbsG": 15.7,
+      "fatG": 35.9,
+      "fiberG": 5.5,
+      "ingredients": [
+        {
+          "name": "Pierś z kurczaka",
+          "amountG": 200,
+          "displayText": "Pierś z kurczaka, 1 x Porcja (200 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.5,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,5 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Pierś z kurczaka natrzyj masłem i dopraw do smaku.",
+        "Grilluj przez ok. 8 minut, obracając co jakiś czas.",
+        "Podawaj z frytkami warzywnymi."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Frytki z warzyw",
+      "type": "lunch",
+      "kcalPerServing": 574,
+      "proteinG": 47.7,
+      "carbsG": 15.7,
+      "fatG": 35.9,
+      "fiberG": 5.5,
+      "ingredients": [
+        {
+          "name": "Marchew",
+          "amountG": 45,
+          "displayText": "Marchew, 1 x Sztuka (45 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pietruszka (korzeń)",
+          "amountG": 80,
+          "displayText": "Pietruszka (korzeń), 1 x Sztuka (80 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Marchew i pietruszkę obierz, pokrój w słupki i umieść na blasze wyłożonej papierem do pieczenia.",
+        "Natrzyj masłem klarowanym i posyp przyprawami.",
+        "Piecz w piekarniku przez ok. 20 minut w 200 stopniach."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Sałatka z komosą ryżową",
+      "type": "dinner",
+      "kcalPerServing": 438,
+      "proteinG": 15.9,
+      "carbsG": 44.9,
+      "fatG": 23.5,
+      "fiberG": 8.1,
+      "ingredients": [
+        {
+          "name": "Komosa ryżowa",
+          "amountG": 50,
+          "displayText": "Komosa ryżowa, 1 x Porcja (50 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 170,
+          "displayText": "Pomidor, 1 x Sztuka (170 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży, 0,5 x Sztuka (90 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni, 2 x Łyżka (20 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki, 2 x Łyżeczka (12 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Ugotuj komosę ryżową.",
+        "Pomidora i ogórka pokrój, dodaj do kaszy.",
+        "Dopraw do smaku i dodaj olej.",
+        "Podawaj z pietruszką i pestkami dyni."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Frittata ze szpinakiem",
+      "type": "breakfast",
+      "kcalPerServing": 420,
+      "proteinG": 26.5,
+      "carbsG": 21.2,
+      "fatG": 26.5,
+      "fiberG": 7.1,
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko, 3 x Sztuka (150 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Napój migdałowy (niesłodzony)",
+          "amountG": 80,
+          "displayText": "Napój migdałowy (niesłodzony), 2 x Łyżka (80 g)",
+          "category": "other"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak, 2 x Garść (50 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor koktajlowy",
+          "amountG": 200,
+          "displayText": "Pomidor koktajlowy, 2 x Garść (200 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 100,
+          "displayText": "Papryka czerwona, 1 x Sztuka (100 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Szczypiorek",
+          "amountG": 5,
+          "displayText": "Szczypiorek, 1 x Łyżka (5 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.5,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,5 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Ubij jajka z napojem, dodaj przyprawy i szczypiorek.",
+        "Na patelni rozpuść masło i podsmaż szpinak, aby zmniejszył swoją objętość, następnie dodaj cukinię i przyprawy.",
+        "Wlej przygotowaną masę jajeczną do naczynia żaroodpornego, dodaj przygotowane warzywa.",
+        "Dodaj pomidorki koktajlowe.",
+        "Następnie włóż do piekarnika i piecz w 180 stopniach do momentu aż masa jajeczna będzie ścięta."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Koktajl bananowy z awokado",
+      "type": "breakfast",
+      "kcalPerServing": 432,
+      "proteinG": 9,
+      "carbsG": 36.5,
+      "fatG": 31.5,
+      "fiberG": 11.6,
+      "ingredients": [
+        {
+          "name": "Banan",
+          "amountG": 60,
+          "displayText": "Banan, 0,5 x Sztuka (60 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 30,
+          "displayText": "Masło migdałowe , 1,5 x Łyżka (30 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Cynamon",
+          "amountG": 4,
+          "displayText": "Cynamon, 1 x Łyżeczka (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "displayText": "Awokado, 0,5 x Sztuka (70 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Napój kokosowy",
+          "amountG": 250,
+          "displayText": "Napój kokosowy, 1 x Szklanka (250 g)",
+          "category": "dairy"
+        }
+      ],
+      "instructions": [
+        "Zmiksuj wszystkie składniki na koktajl."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Leczo z wołowiną",
+      "type": "lunch",
+      "kcalPerServing": 504,
+      "proteinG": 40.8,
+      "carbsG": 16.9,
+      "fatG": 32,
+      "fiberG": 8.6,
+      "ingredients": [
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pomidory z puszki",
+          "amountG": 120,
+          "displayText": "Pomidory z puszki, 0,5 x Opakowanie (120 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 4,
+          "displayText": "Bazylia świeża, 1 x Garść (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 0.6,
+          "displayText": "Oregano suszone, 2 x Szczypta (0,6 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Płatki drożdżowe nieaktywne",
+          "amountG": 10,
+          "displayText": "Płatki drożdżowe nieaktywne , 2 x Łyżka (10 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Bakłażan",
+          "amountG": 70,
+          "displayText": "Bakłażan, 0,5 x Sztuka (70 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.3,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Polędwica wołowa",
+          "amountG": 150,
+          "displayText": "Polędwica wołowa, 1 x Porcja (150 g)",
+          "category": "protein"
+        }
+      ],
+      "instructions": [
+        "Mięso pokrój w paski i podsmaż na maśle.",
+        "Dodaj pomidory, cukinię i bakłażana.",
+        "Duś całość aż mięso zmięknie.",
+        "Dopraw do smaku.",
+        "Podawaj świeżą bazylią i płatkami drożdżowymi."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Kasza gryczana z bakłażanem",
+      "type": "dinner",
+      "kcalPerServing": 487,
+      "proteinG": 13.8,
+      "carbsG": 49.6,
+      "fatG": 29.5,
+      "fiberG": 10.6,
+      "ingredients": [
+        {
+          "name": "Bakłażan",
+          "amountG": 150,
+          "displayText": "Bakłażan, 1 x Sztuka (150 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Kasza gryczana",
+          "amountG": 100,
+          "displayText": "Kasza gryczana, 1 x Woreczek (100 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 40,
+          "displayText": "Masło klarowane, 4 x Łyżka (40 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 340,
+          "displayText": "Pomidor, 2 x Sztuka (340 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.3,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 30,
+          "displayText": "Pestki dyni, 3 x Łyżka (30 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [],
+      "batchFriendly": false,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Sałatka z brokułem i jajkami",
+      "type": "breakfast",
+      "kcalPerServing": 439,
+      "proteinG": 18.9,
+      "carbsG": 24.5,
+      "fatG": 30.7,
+      "fiberG": 8.3,
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 100,
+          "displayText": "Jajko, 2 x Sztuka (100 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży, 0,5 x Sztuka (90 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 170,
+          "displayText": "Pomidor, 1 x Sztuka (170 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.3,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Ugotuj brokuła i jajka.",
+        "Ostudzonego brokuła wymieszaj z pokrojonymi w kostkę warzywami.",
+        "Podawaj całość z jajkami.",
+        "Przypraw sałatkę i skrop olejem lnianym."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Pudding chia z owocami",
+      "type": "breakfast",
+      "kcalPerServing": 428,
+      "proteinG": 13,
+      "carbsG": 37,
+      "fatG": 28.1,
+      "fiberG": 21.5,
+      "ingredients": [
+        {
+          "name": "Nasiona chia",
+          "amountG": 36,
+          "displayText": "Nasiona chia, 3 x Łyżka (36 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Napój migdałowy (niesłodzony)",
+          "amountG": 240,
+          "displayText": "Napój migdałowy (niesłodzony), 1 x Szklanka (240 g)",
+          "category": "other"
+        },
+        {
+          "name": "Wiórki kokosowe",
+          "amountG": 9,
+          "displayText": "Wiórki kokosowe, 1,5 x Łyżka (9 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 20,
+          "displayText": "Masło migdałowe , 1 x Łyżka (20 g)",
+          "category": "dairy"
+        }
+      ],
+      "instructions": [
+        "Do naczynia wlej napój migdałowy, dodaj wiórki, masło migdałowe i nasiona chia.",
+        "Wszystko mieszaj intensywnie przez 1–2 minuty, następnie przelej do szklanki i wstaw do lodówki na ok. 3 godziny lub na noc.",
+        "Przed podaniem dodaj owoce."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Kurczak w ziołach",
+      "type": "lunch",
+      "kcalPerServing": 559,
+      "proteinG": 52.2,
+      "carbsG": 31.1,
+      "fatG": 26.3,
+      "fiberG": 11.8,
+      "ingredients": [
+        {
+          "name": "Pierś z kurczaka",
+          "amountG": 200,
+          "displayText": "Pierś z kurczaka, 1 x Porcja (200 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 20,
+          "displayText": "Masło klarowane, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia suszona",
+          "amountG": 0.5,
+          "displayText": "Bazylia suszona, 1 x Szczypta (0,5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 0.3,
+          "displayText": "Sól himalajska, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 0.3,
+          "displayText": "Oregano suszone, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Pokrój kurczaka w kostkę i wrzuć do miski.",
+        "Dodaj przyprawy, dokładnie wymieszaj.",
+        "Podsmaż kurczaka na maśle, aż do zarumienienia."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Warzywa gotowane na parze",
+      "type": "lunch",
+      "kcalPerServing": 559,
+      "proteinG": 52.2,
+      "carbsG": 31.1,
+      "fatG": 26.3,
+      "fiberG": 11.8,
+      "ingredients": [
+        {
+          "name": "Brokuł",
+          "amountG": 200,
+          "displayText": "Brokuł, 0,4 x Sztuka (200 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Marchew baby",
+          "amountG": 200,
+          "displayText": "Marchew baby, 4 x Garść (200 g)",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Pokrojone warzywa ugotuj na parze."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Koktajl leśny Napój kokosowy, 250 g Maliny, 100 g",
+      "type": "dinner",
+      "kcalPerServing": 336,
+      "proteinG": 4.5,
+      "carbsG": 42.8,
+      "fatG": 18.4,
+      "fiberG": 11.3,
+      "ingredients": [
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 100,
+          "displayText": "Borówka amerykańska, 1 x Garść (100 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Olej z wiesiołka",
+          "amountG": 10,
+          "displayText": "Olej z wiesiołka, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Nasiona chia",
+          "amountG": 5,
+          "displayText": "Nasiona chia, 1 x Łyżeczka (5 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 10,
+          "displayText": "Płatki owsiane, 1 x Łyżka (10 g)",
+          "category": "grains"
+        }
+      ],
+      "instructions": [
+        "Wszystkie składniki zblenduj na koktajl (w razie potrzeby dodaj wody)."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Omlet bananowy z masłem migdałowym i borówkami",
+      "type": "breakfast",
+      "kcalPerServing": 756,
+      "proteinG": 30.8,
+      "carbsG": 70.1,
+      "fatG": 42.9,
+      "fiberG": 10.9,
+      "ingredients": [
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 100,
+          "displayText": "Borówka amerykańska, 2 x Garść (100 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko, 3 x Sztuka (150 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 30,
+          "displayText": "Masło migdałowe , 1,5 x Łyżka (30 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 30,
+          "displayText": "Płatki owsiane, 3 x Łyżka (30 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Banan",
+          "amountG": 120,
+          "displayText": "Banan, 1 x Sztuka (120 g)",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Płatki zalej gorącą wodą i odstaw do napęcznienia na około 5 minut. 2, Rozgnieć banana, dodaj płatki, jajka i dokładnie wymieszaj.",
+        "Na rozgrzanej patelni rozpuść masło i wlej masę jajeczną.",
+        "Smaż kilka minut, aż jajka się zetną.",
+        "Posmaruj masłem migdałowym i podawaj z borówkami."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Łosoś z warzywami",
+      "type": "lunch",
+      "kcalPerServing": 564,
+      "proteinG": 42.2,
+      "carbsG": 21.6,
+      "fatG": 35.2,
+      "fiberG": 7.1,
+      "ingredients": [
+        {
+          "name": "Pietruszka (korzeń)",
+          "amountG": 80,
+          "displayText": "Pietruszka (korzeń), 1 x Sztuka (80 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 90,
+          "displayText": "Marchew, 2 x Sztuka (90 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Warzywa umyj, obierz i pokrój w słupki lub plasterki,",
+        "Przyprawionego łososia i warzywa natrzyj masłem i piecz w piekarniku przez 20 minut w 180 stopniach."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    },
+    {
+      "name": "Jesienna owsianka z borówkami",
+      "type": "dinner",
+      "kcalPerServing": 490,
+      "proteinG": 14.2,
+      "carbsG": 71.5,
+      "fatG": 19.7,
+      "fiberG": 10.8,
+      "ingredients": [
+        {
+          "name": "Napój owsiany",
+          "amountG": 250,
+          "displayText": "Napój owsiany , 1 x Szklanka (250 g)",
+          "category": "other"
+        },
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 100,
+          "displayText": "Borówka amerykańska, 2 x Garść (100 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 50,
+          "displayText": "Płatki owsiane, 5 x Łyżka (50 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Cynamon",
+          "amountG": 1,
+          "displayText": "Cynamon, 0,2 x Łyżeczka (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Kardamon",
+          "amountG": 1,
+          "displayText": "Kardamon, 0,2 x Łyżeczka (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 20,
+          "displayText": "Masło migdałowe , 1 x Łyżka (20 g)",
+          "category": "dairy"
+        }
+      ],
+      "instructions": [
+        "Płatki owsiane ugotuj na napoju roślinnym z",
+        "Wyłóż do miseczki, dodaj masło migdałowe i udekoruj"
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dieta 1800 kcal"
+    }
+  ],
+  "substitutionRules": []
+}

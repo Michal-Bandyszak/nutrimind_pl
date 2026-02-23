@@ -1,0 +1,1014 @@
+{
+  "sourceDiet": "Dopaminowa klasyczna",
+  "kcalTarget": 0,
+  "recipes": [
+    {
+      "name": "Bowl z grillowanym kurczakiem, świeżymi warzywami i dressingiem migdałowo-kokosowym",
+      "type": "breakfast",
+      "kcalPerServing": 494,
+      "proteinG": 27.5,
+      "carbsG": 16.6,
+      "fatG": 36.1,
+      "fiberG": 5.2,
+      "ingredients": [
+        {
+          "name": "Pierś z kurczaka",
+          "amountG": 100,
+          "displayText": "Pierś z kurczaka, 1 x Porcja (100 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Papryka słodka w proszku",
+          "amountG": 0.3,
+          "displayText": "Papryka słodka w proszku, 1 x Szczypta (0,3 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Tymianek suszony",
+          "amountG": 0.6,
+          "displayText": "Tymianek suszony, 2 x Szczypta (0,6 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 5,
+          "displayText": "Masło klarowane, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Seler naciowy",
+          "amountG": 45,
+          "displayText": "Seler naciowy, 1 x Łodyga (45 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 75,
+          "displayText": "Papryka czerwona, 0,3 x Sztuka (75 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor koktajlowy",
+          "amountG": 100,
+          "displayText": "Pomidor koktajlowy, 1 x Garść (100 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 20,
+          "displayText": "Roszponka, 1 x Garść (20 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sok z cytryny",
+          "amountG": 10,
+          "displayText": "Sok z cytryny, 1 x Łyżka (10 g)",
+          "category": "other"
+        },
+        {
+          "name": "Jogurt kokosowy",
+          "amountG": 40,
+          "displayText": "Jogurt kokosowy, 2 x Łyżka (40 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 10,
+          "displayText": "Masło migdałowe , 1 x Łyżeczka (10 g)",
+          "category": "dairy"
+        }
+      ],
+      "instructions": [
+        "Pierś z kurczaka pokrój w paski. Mięso przypraw solą, pieprzem, słodką papryką, tymiankiem i usmaż na maśle klarowanym na patelni grillowej lub grillu elektrycznym.",
+        "Paprykę pokrój w kostkę, selera naciowego w słupki, a pomidorki przekrój na pół.",
+        "Pokrojone warzywa wraz z roszponką ułóż w głębokiej misce.",
+        "Na warzywach ułóż kawałki mięsa.",
+        "Przygotuj dressing: jogurt wymieszaj z masłem migdałowym, sokiem wyciśniętym z cytryny i olejem lnianym.",
+        "Skrop bowla przygotowanym dressingiem."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Sezamowy koktajl polifenolowy",
+      "type": "lunch",
+      "kcalPerServing": 369,
+      "proteinG": 7.9,
+      "carbsG": 60.6,
+      "fatG": 12.7,
+      "fiberG": 6.2,
+      "ingredients": [
+        {
+          "name": "Napój migdałowy (niesłodzony)",
+          "amountG": 250,
+          "displayText": "Napój migdałowy (niesłodzony), 1 x Szklanka (250 g)",
+          "category": "other"
+        },
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 100,
+          "displayText": "Borówka amerykańska, 2 x Garść (100 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Banan",
+          "amountG": 60,
+          "displayText": "Banan, 0,5 x Sztuka (60 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 20,
+          "displayText": "Szpinak, 1 x Garść (20 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pasta tahini",
+          "amountG": 6,
+          "displayText": "Pasta tahini, 1 x Łyżeczka (6 g)",
+          "category": "other"
+        },
+        {
+          "name": "Olej z wiesiołka",
+          "amountG": 5,
+          "displayText": "Olej z wiesiołka, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Płatki jaglane",
+          "amountG": 30,
+          "displayText": "Płatki jaglane, 3 x Łyżka (30 g)",
+          "category": "grains"
+        }
+      ],
+      "instructions": [
+        "Zblenduj wszystkie składniki (w razie potrzeby dodaj wody do uzyskania pożądanej konsystencji koktajlu)."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Stek z nutą tymiankową i sezamem",
+      "type": "lunch",
+      "kcalPerServing": 670,
+      "proteinG": 51,
+      "carbsG": 20.9,
+      "fatG": 43.8,
+      "fiberG": 7.3,
+      "ingredients": [
+        {
+          "name": "Polędwica wołowa",
+          "amountG": 200,
+          "displayText": "Polędwica wołowa, 2 x Porcja (200 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 10,
+          "displayText": "Masło klarowane, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Tymianek suszony",
+          "amountG": 0.3,
+          "displayText": "Tymianek suszony, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola, 1 x Garść (20 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sezam (nasiona)",
+          "amountG": 10,
+          "displayText": "Sezam (nasiona), 1 x Łyżka (10 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Mięso dopraw solą i pieprzem.",
+        "Na patelni rozgrzej masło klarowane z tymiankiem i smaż steka po około 3 minuty z każdej strony (jeśli lubisz mięso mocniej wysmażone, smaż nieco dłużej), obracając podlewaj masłem.",
+        "Po ściągnięciu mięsa z patelni, odczekaj około 5 minut przed pokrojeniem.",
+        "Pokrojone plastry steka ułóż na rukoli i posyp sezamem.",
+        "Mięso podaj z brokułami z sosem bazyliowym."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Brokuły z sosem bazyliowym",
+      "type": "lunch",
+      "kcalPerServing": 670,
+      "proteinG": 51,
+      "carbsG": 20.9,
+      "fatG": 43.8,
+      "fiberG": 7.3,
+      "ingredients": [
+        {
+          "name": "Brokuł",
+          "amountG": 200,
+          "displayText": "Brokuł, 0,4 x Sztuka (200 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jogurt kokosowy",
+          "amountG": 60,
+          "displayText": "Jogurt kokosowy, 3 x Łyżka (60 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 4,
+          "displayText": "Bazylia świeża, 1 x Garść (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Brokuła ugotuj w wodzie lub na parze al dente.",
+        "Przygotuj sos: jogurt zmiksuj z bazylią, olejem lnianym,",
+        "Na talerzu ułóż brokuły i polej je sosem."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Sałatka z kaszą gryczaną i burakiem",
+      "type": "dinner",
+      "kcalPerServing": 499,
+      "proteinG": 14.3,
+      "carbsG": 56,
+      "fatG": 27.6,
+      "fiberG": 10.5,
+      "ingredients": [
+        {
+          "name": "Kasza gryczana",
+          "amountG": 60,
+          "displayText": "Kasza gryczana, 4 x Łyżka (60 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Burak",
+          "amountG": 100,
+          "displayText": "Burak, 1 x Sztuka (100 g)",
+          "category": "other"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 60,
+          "displayText": "Rukola, 3 x Garść (60 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 4,
+          "displayText": "Bazylia świeża, 1 x Garść (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany, 2 x Łyżka (20 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 10,
+          "displayText": "Pestki dyni, 1 x Łyżka (10 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Kaszę ugotuj zgodnie z instrukcjami na opakowaniu.",
+        "Buraka ugotuj w wodzie i pokrój w kostkę.",
+        "Kaszę wymieszaj z rukolą i burakiem.",
+        "Całość dopraw solą i pieprzem.",
+        "Olej lniany wymieszaj z posiekaną bazylią i skrop nim",
+        "Na koniec posyp pestkami dyni."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Szakszuka z papryką, awokado i pestkami dyni",
+      "type": "breakfast",
+      "kcalPerServing": 524,
+      "proteinG": 24,
+      "carbsG": 19.1,
+      "fatG": 41.3,
+      "fiberG": 9.4,
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 112,
+          "displayText": "Jajko, 2 x Sztuka (112 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 5,
+          "displayText": "Masło klarowane, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 120,
+          "displayText": "Pomidor, 1 x Sztuka (120 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 75,
+          "displayText": "Papryka czerwona, 0,3 x Sztuka (75 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "displayText": "Awokado, 0,5 x Sztuka (70 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola, 1 x Garść (20 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 4,
+          "displayText": "Bazylia świeża, 1 x Garść (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 5,
+          "displayText": "Olej lniany, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni, 2 x Łyżka (20 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Pomidora pokrój w kostkę, a paprykę w paski.",
+        "Na patelni rozgrzej masło klarowane, podsmaż paprykę i pomidora. Dodaj posiekaną bazylię.",
+        "Gdy farsz będzie ciepły, wbij jajka, nie mieszaj. Dopraw solą i pieprzem. Przykryj pokrywką i duś na małym ogniu, aż jajka się zetną. Żółtka powinny mieć płynną konsystencję.",
+        "Awokado pokrój w plasterki.",
+        "Przełóż szakszukę na talerz, ułóż obok awokado i rukolę.",
+        "Całość skrop olejem lnianym i posyp pestkami dyni."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Migdałowa owsianka nocna z malinami",
+      "type": "lunch",
+      "kcalPerServing": 291,
+      "proteinG": 8.8,
+      "carbsG": 43.5,
+      "fatG": 11.3,
+      "fiberG": 10.2,
+      "ingredients": [
+        {
+          "name": "Cynamon",
+          "amountG": 2,
+          "displayText": "Cynamon, 0,5 x Łyżeczka (2 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 30,
+          "displayText": "Płatki owsiane, 3 x Łyżka (30 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 10,
+          "displayText": "Masło migdałowe , 1 x Łyżeczka (10 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Maliny mrożone",
+          "amountG": 140,
+          "displayText": "Maliny mrożone, 2 x Porcja (140 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Napój migdałowy (niesłodzony)",
+          "amountG": 250,
+          "displayText": "Napój migdałowy (niesłodzony), 1 x Szklanka (250 g)",
+          "category": "other"
+        }
+      ],
+      "instructions": [
+        "W słoiku wymieszaj płatki owsiane z napojem roślinnym, masłem migdałowym i cynamonem.",
+        "Posyp owsiankę malinami.",
+        "Zakręć słoik i wstaw na całą noc do lodówki."
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Stek z tuńczyka w pietruszkowej marynacie",
+      "type": "lunch",
+      "kcalPerServing": 691,
+      "proteinG": 52.1,
+      "carbsG": 18.7,
+      "fatG": 45.8,
+      "fiberG": 5.7,
+      "ingredients": [
+        {
+          "name": "Tuńczyk",
+          "amountG": 200,
+          "displayText": "Tuńczyk, 1 x Porcja (200 g)",
+          "category": "other"
+        },
+        {
+          "name": "Olej kokosowy",
+          "amountG": 10,
+          "displayText": "Olej kokosowy, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki, 2 x Łyżeczka (12 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola, 1 x Garść (20 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 16,
+          "displayText": "Orzechy włoskie, 4 x Sztuka (16 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Natkę pietruszki drobno posiekaj.",
+        "Tuńczyka przypraw solą, pieprzem i natką pietruszki.",
+        "Na patelni rozgrzej olej kokosowy i smaż tuńczyka z obu stron.",
+        "Ułóż tuńczyka na rukoli.",
+        "Posyp posiekanymi orzechami włoskimi.",
+        "Podaj z surówką z marchewki i selera."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Surówka z marchewki i selera",
+      "type": "lunch",
+      "kcalPerServing": 691,
+      "proteinG": 52.1,
+      "carbsG": 18.7,
+      "fatG": 45.8,
+      "fiberG": 5.7,
+      "ingredients": [
+        {
+          "name": "Marchew",
+          "amountG": 90,
+          "displayText": "Marchew, 2 x Sztuka (90 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Seler (korzeń)",
+          "amountG": 60,
+          "displayText": "Seler (korzeń), 1 x Plaster (60 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany, 1,5 x Łyżka (15 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Marchew i selera zetrzyj je na tarce.",
+        "Dodaj olej lniany, sól i wymieszaj."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Paella z jarmużem, porem i pomidorkami koktajlowymi i pestkami dyni",
+      "type": "dinner",
+      "kcalPerServing": 507,
+      "proteinG": 15.7,
+      "carbsG": 65.5,
+      "fatG": 22.6,
+      "fiberG": 7.6,
+      "ingredients": [
+        {
+          "name": "Bulion warzywny",
+          "amountG": 250,
+          "displayText": "Bulion warzywny, 1 x Szklanka (250 g)",
+          "category": "other"
+        },
+        {
+          "name": "Ryż brązowy",
+          "amountG": 60,
+          "displayText": "Ryż brązowy, 4 x Łyżka (60 g)",
+          "category": "grains"
+        },
+        {
+          "name": "Olej kokosowy",
+          "amountG": 10,
+          "displayText": "Olej kokosowy, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Jarmuż",
+          "amountG": 60,
+          "displayText": "Jarmuż, 3 x Garść (60 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor koktajlowy",
+          "amountG": 100,
+          "displayText": "Pomidor koktajlowy, 1 x Garść (100 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Por",
+          "amountG": 35,
+          "displayText": "Por, 0,25 x Sztuka (35 g)",
+          "category": "other"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża, 2 x Garść (10 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni, 2 x Łyżka (20 g)",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jarmuż posiekaj, pora pokrój w plasterki, a pomidorki",
+        "Na patelni rozgrzej olej kokosowy, dodaj jarmuż, pora i",
+        "Do warzyw dodaj ryż i przyprawy. Wymieszaj i",
+        "Mieszaj wszystko, trzymając patelnię na małym ogniu.",
+        "Gotuj całość pod przykryciem przez ok. 15 minut, nie",
+        "Posyp posiekaną bazylią i pestkami dyni."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Roladki z cukinii z koperkową pastą z łososia i awokado",
+      "type": "breakfast",
+      "kcalPerServing": 515,
+      "proteinG": 30.7,
+      "carbsG": 20.4,
+      "fatG": 37.5,
+      "fiberG": 9.9,
+      "ingredients": [
+        {
+          "name": "Łosoś atlantycki",
+          "amountG": 100,
+          "displayText": "Łosoś atlantycki, 1 x Porcja (100 g)",
+          "category": "protein"
+        },
+        {
+          "name": "Olej kokosowy",
+          "amountG": 5,
+          "displayText": "Olej kokosowy, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 4,
+          "displayText": "Pieprz czarny, 1 x Łyżeczka (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Koperek",
+          "amountG": 5,
+          "displayText": "Koperek, 1 x Łyżeczka (5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Cukinia",
+          "amountG": 180,
+          "displayText": "Cukinia, 0,3 x Sztuka (180 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "displayText": "Awokado, 0,5 x Sztuka (70 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 40,
+          "displayText": "Rukola, 2 x Garść (40 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 5,
+          "displayText": "Olej lniany, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 5,
+          "displayText": "Pestki dyni, 1 x Łyżeczka (5 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Pomidor koktajlowy",
+          "amountG": 100,
+          "displayText": "Pomidor koktajlowy, 1 x Garść (100 g)",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Łososia dopraw solą i pieprzem.",
+        "Na patelni rozgrzej olej kokosowy i usmaż łososia z obu stron.",
+        "Cukinię pokrój w cienkie plastry wzdłuż warzywa.",
+        "Ułóż plastry cukinii na natłuszczonym papierze do pieczenia i piecz do miękkości w przez ok. 6-8 min, 190°C.",
+        "Rozgnieć łososia i awokado widelcem, dodaj posiekany koperek i wymieszaj.",
+        "Pastę nałóż na koniec plastra cukinii i zwiń w rulon/roladkę.",
+        "Przygotuj sałatkę: pomidorki przekrój na pół, wymieszaj z rukolą, olejem lnianym i pestkami dyni.",
+        "Roladki ułóż na talerzu wraz z przygotowaną sałatką."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Chia pudding kokosowy z musem jagodowym",
+      "type": "lunch",
+      "kcalPerServing": 348,
+      "proteinG": 6.3,
+      "carbsG": 48.1,
+      "fatG": 14.2,
+      "fiberG": 8.5,
+      "ingredients": [
+        {
+          "name": "Nasiona chia",
+          "amountG": 10,
+          "displayText": "Nasiona chia, 1 x Łyżka (10 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Czarne jagody mrożone",
+          "amountG": 100,
+          "displayText": "Czarne jagody mrożone, 2 x Garść (100 g)",
+          "category": "fruits"
+        },
+        {
+          "name": "Jogurt kokosowy",
+          "amountG": 150,
+          "displayText": "Jogurt kokosowy, 1 x Opakowanie (150 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Płatki jaglane",
+          "amountG": 30,
+          "displayText": "Płatki jaglane, 3 x Łyżka (30 g)",
+          "category": "grains"
+        }
+      ],
+      "instructions": [
+        "Nasiona chia wymieszaj z jogurtem kokosowym i płatkami, odstaw i po około 30 minutach przemieszaj ponownie.",
+        "Całość odłóż do lodówki na ok. 4 godziny lub na całą noc.",
+        "Jagody podgrzej w rondelku z 2 łyżkami wody. Mieszaj do momentu powstania kleistego musu.",
+        "Dodaj mus do puddingu."
+      ],
+      "batchFriendly": false,
+      "maxStorageDays": 2,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Curry z indykiem i warzywami",
+      "type": "lunch",
+      "kcalPerServing": 646,
+      "proteinG": 54.2,
+      "carbsG": 25,
+      "fatG": 38.1,
+      "fiberG": 9.2,
+      "ingredients": [
+        {
+          "name": "Bulion warzywny",
+          "amountG": 125,
+          "displayText": "Bulion warzywny, 0,5 x Szklanka (125 g)",
+          "category": "other"
+        },
+        {
+          "name": "Olej kokosowy",
+          "amountG": 10,
+          "displayText": "Olej kokosowy, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 125,
+          "displayText": "Papryka czerwona, 0,5 x Sztuka (125 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 40,
+          "displayText": "Szpinak, 2 x Garść (40 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Mleczko kokosowe",
+          "amountG": 40,
+          "displayText": "Mleczko kokosowe, 4 x Łyżka (40 g)",
+          "category": "dairy"
+        },
+        {
+          "name": "Curry",
+          "amountG": 4,
+          "displayText": "Curry, 1 x Łyżeczka (4 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Sezam (nasiona)",
+          "amountG": 10,
+          "displayText": "Sezam (nasiona), 1 x Łyżka (10 g)",
+          "category": "nuts"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pierś z indyka",
+          "amountG": 200,
+          "displayText": "Pierś z indyka, 1 x Porcja (200 g)",
+          "category": "protein"
+        }
+      ],
+      "instructions": [
+        "Mięso i paprykę pokrój w kostkę.",
+        "Na patelni rozgrzej olej kokosowy i obsmaż indyka.",
+        "Do mięsa dodaj paprykę i fasolkę.",
+        "Całość zalej bulionem i duś pod przykryciem przez",
+        "Dopraw solą, pieprzem, curry. Dodaj mleczko",
+        "Przełóż danie do miseczki, skrop olejem lnianym i"
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 3,
+      "sourceDiet": "Dopaminowa klasyczna"
+    },
+    {
+      "name": "Zupa krem z brokuła i groszku",
+      "type": "dinner",
+      "kcalPerServing": 507,
+      "proteinG": 20.9,
+      "carbsG": 63.4,
+      "fatG": 22,
+      "fiberG": 14.8,
+      "ingredients": [
+        {
+          "name": "Bulion warzywny",
+          "amountG": 250,
+          "displayText": "Bulion warzywny, 1 x Szklanka (250 g)",
+          "category": "other"
+        },
+        {
+          "name": "Masło klarowane",
+          "amountG": 5,
+          "displayText": "Masło klarowane, 1 x Łyżeczka (5 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Ziemniak",
+          "amountG": 140,
+          "displayText": "Ziemniak, 2 x Sztuka (140 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pietruszka (korzeń)",
+          "amountG": 80,
+          "displayText": "Pietruszka (korzeń), 1 x Sztuka (80 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Brokuł",
+          "amountG": 175,
+          "displayText": "Brokuł, 0,35 x Sztuka (175 g)",
+          "category": "vegetables"
+        },
+        {
+          "name": "Por",
+          "amountG": 50,
+          "displayText": "Por, 1 x Porcja (50 g)",
+          "category": "other"
+        },
+        {
+          "name": "Sól himalajska",
+          "amountG": 1,
+          "displayText": "Sól himalajska, 1 x Szczypta (1 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 0.3,
+          "displayText": "Pieprz czarny, 1 x Szczypta (0,3 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Tymianek suszony",
+          "amountG": 0.6,
+          "displayText": "Tymianek suszony, 2 x Szczypta (0,6 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Groszek zielony",
+          "amountG": 45,
+          "displayText": "Groszek zielony, 3 x Łyżka (45 g)",
+          "category": "other"
+        },
+        {
+          "name": "Koperek",
+          "amountG": 5,
+          "displayText": "Koperek, 1 x Łyżeczka (5 g)",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany, 1 x Łyżka (10 g)",
+          "category": "oils"
+        },
+        {
+          "name": "Ser parmezan",
+          "amountG": 20,
+          "displayText": "Ser parmezan, 2 x Łyżka (20 g)",
+          "category": "dairy"
+        }
+      ],
+      "instructions": [
+        "Ziemniaki i korzeń pietruszki pokrój w kostkę. Pora",
+        "W garnku rozgrzej olej kokosowy, dodaj ziemniaki,",
+        "Warzywa zalej bulionem i gotuj przez około 8 minut.",
+        "Dopraw solą, pieprzem, tymiankiem.",
+        "Zmiksuj zupę na gładki krem. Przelej do miseczki.",
+        "Olej lniany wymieszaj z posiekanym koperkiem i skrop",
+        "Zupę posyp startym parmezanem."
+      ],
+      "batchFriendly": true,
+      "maxStorageDays": 4,
+      "sourceDiet": "Dopaminowa klasyczna"
+    }
+  ],
+  "substitutionRules": []
+}
