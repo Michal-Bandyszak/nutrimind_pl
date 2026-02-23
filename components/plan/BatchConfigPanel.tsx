@@ -40,11 +40,12 @@ type Props = {
   onChange: (config: BatchConfig) => void;
 };
 
-const MEAL_KEYS = ['breakfast', 'lunch', 'dinner'] as const;
+const MEAL_KEYS = ['breakfast', 'second_breakfast', 'lunch', 'dinner'] as const;
 const MEAL_LABELS: Record<typeof MEAL_KEYS[number], string> = {
-  breakfast: 'Śniadanie',
-  lunch:     'Obiad',
-  dinner:    'Kolacja',
+  breakfast:        'Śniadanie',
+  second_breakfast: 'Drugie śniadanie',
+  lunch:            'Obiad',
+  dinner:           'Kolacja',
 };
 
 export default function BatchConfigPanel({ config, onChange }: Props) {
@@ -55,7 +56,12 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
   }
 
   function applyPreset(d: MealDividers) {
-    onChange({ breakfast: [...d] as MealDividers, lunch: [...d] as MealDividers, dinner: [...d] as MealDividers });
+    onChange({
+      breakfast:        [...d] as MealDividers,
+      second_breakfast: [...d] as MealDividers,
+      lunch:            [...d] as MealDividers,
+      dinner:           [...d] as MealDividers,
+    });
   }
 
   function applyPresetToMeal(meal: typeof MEAL_KEYS[number], d: MealDividers) {
@@ -64,9 +70,10 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
 
   function applyToAll(meal: typeof MEAL_KEYS[number]) {
     onChange({
-      breakfast: [...config[meal]] as MealDividers,
-      lunch:     [...config[meal]] as MealDividers,
-      dinner:    [...config[meal]] as MealDividers,
+      breakfast:        [...config[meal]] as MealDividers,
+      second_breakfast: [...config[meal]] as MealDividers,
+      lunch:            [...config[meal]] as MealDividers,
+      dinner:           [...config[meal]] as MealDividers,
     });
   }
 

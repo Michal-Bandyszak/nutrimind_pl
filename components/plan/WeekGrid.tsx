@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { MealPlanWithMeals, DayMeals, MealWithRecipe } from '@/lib/types';
+import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import MealCard from './MealCard';
@@ -17,9 +17,10 @@ type Props = {
   onDragOver: (dayOfWeek: number, mealType: string) => void;
   onDragEnd: () => void;
   onDrop: (targetDay: number, mealType: string) => void;
+  onReplace?: (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => Promise<void>;
 };
 
-const MEAL_TYPES = ['breakfast', 'lunch', 'dinner'] as const;
+const MEAL_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
 
 function buildDays(plan: MealPlanWithMeals): DayMeals[] {
   const weekStart = new Date(plan.weekStart);
@@ -33,10 +34,12 @@ function buildDays(plan: MealPlanWithMeals): DayMeals[] {
       dayOfWeek,
       dayName: DAY_NAMES[i],
       dateLabel,
-      breakfast: dayMeals.find((m) => m.mealType === 'breakfast') ?? null,
-      lunch:     dayMeals.find((m) => m.mealType === 'lunch') ?? null,
-      dinner:    dayMeals.find((m) => m.mealType === 'dinner') ?? null,
-      snacks:    dayMeals.filter((m) => m.mealType === 'snack' || m.mealType === 'cocktail'),
+      breakfast:        dayMeals.find((m) => m.mealType === 'breakfast') ?? null,
+      second_breakfast: dayMeals.find((m) => m.mealType === 'second_breakfast') ?? null,
+      lunch:            dayMeals.find((m) => m.mealType === 'lunch') ?? null,
+      dinner:           dayMeals.find((m) => m.mealType === 'dinner') ?? null,
+      cocktail:         dayMeals.find((m) => m.mealType === 'cocktail') ?? null,
+      snacks:           dayMeals.filter((m) => m.mealType === 'snack'),
     };
   });
 }
@@ -49,11 +52,14 @@ export default function WeekGrid({
   onDragOver,
   onDragEnd,
   onDrop,
+  onReplace,
 }: Props) {
   const colorMaps = {
-    breakfast: buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'breakfast').map((m) => m.batchGroupId)),
-    lunch:     buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'lunch').map((m) => m.batchGroupId)),
-    dinner:    buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'dinner').map((m) => m.batchGroupId)),
+    breakfast:        buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'breakfast').map((m) => m.batchGroupId)),
+    second_breakfast: buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'second_breakfast').map((m) => m.batchGroupId)),
+    lunch:            buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'lunch').map((m) => m.batchGroupId)),
+    dinner:           buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'dinner').map((m) => m.batchGroupId)),
+    cocktail:         buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'cocktail').map((m) => m.batchGroupId)),
   };
 
   const [selectedMeal, setSelectedMeal] = useState<{ meal: MealWithRecipe; color: BatchColor | null } | null>(null);
@@ -66,7 +72,8 @@ export default function WeekGrid({
   }
 
   function isDropTarget(dayOfWeek: number, mealType: string) {
-    return dragged !== null && dragged.mealType === mealType && dragged.dayOfWeek !== dayOfWeek;
+    // Allow cross-type drops: any cell is a valid target except the exact source cell
+    return dragged !== null && !(dragged.dayOfWeek === dayOfWeek && dragged.mealType === mealType);
   }
 
   function isOver(dayOfWeek: number, mealType: string) {
@@ -241,7 +248,7 @@ export default function WeekGrid({
       {/* DnD hint */}
       {dragged && (
         <div className="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-gray-900/80 text-white text-xs rounded-full pointer-events-none">
-          Upuść na inny dzień żeby zamienić
+          Upuść na dowolny slot żeby zamienić
         </div>
       )}
 
@@ -251,6 +258,11 @@ export default function WeekGrid({
           meal={selectedMeal.meal}
           color={selectedMeal.color}
           onClose={() => setSelectedMeal(null)}
+          onReplace={
+            onReplace
+              ? (newRecipe: RecipeWithIngredients) => onReplace(selectedMeal.meal, newRecipe)
+              : undefined
+          }
         />
       )}
     </>

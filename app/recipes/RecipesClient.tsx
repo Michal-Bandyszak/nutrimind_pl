@@ -1,51 +1,64 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Clock, Layers, ChevronDown, ChevronUp, Users, Minus, Plus } from 'lucide-react';
+import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
+import AddRecipeModal from '@/components/recipes/AddRecipeModal';
 
 const TYPE_FILTERS = [
-  { value: 'all',       label: 'Wszystkie' },
-  { value: 'breakfast', label: 'Śniadania' },
-  { value: 'lunch',     label: 'Obiady' },
-  { value: 'dinner',    label: 'Kolacje' },
-  { value: 'snack',     label: 'Przekąski' },
-  { value: 'cocktail',  label: 'Koktajle' },
+  { value: 'all',              label: 'Wszystkie' },
+  { value: 'breakfast',        label: 'Śniadania' },
+  { value: 'second_breakfast', label: 'Drugie śniadanie' },
+  { value: 'lunch',            label: 'Obiady' },
+  { value: 'dinner',           label: 'Kolacje' },
+  { value: 'snack',            label: 'Przekąski' },
+  { value: 'cocktail',         label: 'Koktajle' },
+  { value: 'soup',             label: 'Zupy' },
 ];
 
 const TYPE_COLORS: Record<string, string> = {
-  breakfast: 'bg-amber-100 text-amber-700',
-  lunch:     'bg-teal-100 text-teal-700',
-  dinner:    'bg-blue-100 text-blue-700',
-  snack:     'bg-rose-100 text-rose-700',
-  cocktail:  'bg-violet-100 text-violet-700',
+  breakfast:        'bg-amber-100 text-amber-700',
+  second_breakfast: 'bg-orange-100 text-orange-700',
+  lunch:            'bg-teal-100 text-teal-700',
+  dinner:           'bg-blue-100 text-blue-700',
+  snack:            'bg-rose-100 text-rose-700',
+  cocktail:         'bg-violet-100 text-violet-700',
 };
 
 const TYPE_LABELS: Record<string, string> = {
-  breakfast: 'Śniadanie',
-  lunch:     'Obiad',
-  dinner:    'Kolacja',
-  snack:     'Przekąska',
-  cocktail:  'Koktajl',
+  breakfast:        'Śniadanie',
+  second_breakfast: 'Drugie śniadanie',
+  lunch:            'Obiad',
+  dinner:           'Kolacja',
+  snack:            'Przekąska',
+  cocktail:         'Koktajl',
 };
 
 type Props = { recipes: RecipeWithIngredients[] };
 
-export default function RecipesClient({ recipes }: Props) {
+export default function RecipesClient({ recipes: initialRecipes }: Props) {
+  const [recipes, setRecipes] = useState(initialRecipes);
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return recipes.filter((r) => {
-      const matchesType = typeFilter === 'all' || r.type === typeFilter;
+      let tags: string[] = [];
+      try { tags = JSON.parse(r.tags) as string[]; } catch { /* ignore */ }
+      const matchesType =
+        typeFilter === 'all' ? true :
+        typeFilter === 'soup' ? tags.includes('zupa') || r.name.toLowerCase().includes('zupa') :
+        r.type === typeFilter;
       const matchesQuery = !q || r.name.toLowerCase().includes(q);
       return matchesType && matchesQuery;
     });
   }, [recipes, query, typeFilter]);
 
   return (
+    <>
     <div className="space-y-4">
       {/* Search */}
       <div className="relative">
@@ -59,21 +72,29 @@ export default function RecipesClient({ recipes }: Props) {
         />
       </div>
 
-      {/* Type filters */}
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
-        {TYPE_FILTERS.map(({ value, label }) => (
-          <button
-            key={value}
-            onClick={() => setTypeFilter(value)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              typeFilter === value
-                ? 'bg-teal-700 text-white shadow-sm'
-                : 'bg-white border border-border text-gray-500 hover:border-teal-300 hover:text-teal-700'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      {/* Type filters + Add button */}
+      <div className="flex items-center gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 flex-1">
+          {TYPE_FILTERS.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setTypeFilter(value)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                typeFilter === value
+                  ? 'bg-teal-700 text-white shadow-sm'
+                  : 'bg-white border border-border text-gray-500 hover:border-teal-300 hover:text-teal-700'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium rounded-full transition shadow-sm"
+        >
+          <Plus size={13} /> Dodaj przepis
+        </button>
       </div>
 
       <p className="text-xs text-gray-400">{filtered.length} przepisów</p>
@@ -96,6 +117,17 @@ export default function RecipesClient({ recipes }: Props) {
         </div>
       )}
     </div>
+
+    {modalOpen && (
+      <AddRecipeModal
+        onClose={() => setModalOpen(false)}
+        onSaved={(r) => {
+          setRecipes((prev) => [r, ...prev]);
+          setModalOpen(false);
+        }}
+      />
+    )}
+    </>
   );
 }
 
@@ -128,6 +160,11 @@ function RecipeCard({
     catch { return []; }
   })();
 
+  const recipeTags: string[] = (() => {
+    try { return JSON.parse(recipe.tags) as string[]; }
+    catch { return []; }
+  })();
+
   const macroScale = servings; // macros per serving × servings
 
   return (
@@ -144,10 +181,9 @@ function RecipeCard({
               <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_COLORS[recipe.type] ?? 'bg-gray-100 text-gray-500'}`}>
                 {TYPE_LABELS[recipe.type] ?? recipe.type}
               </span>
-              {recipe.batchFriendly && (
-                <span className="text-xs text-teal-500 flex items-center gap-0.5">
-                  <Layers size={12} />
-                  wsadowe
+              {recipeTags.includes('zupa') && (
+                <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700">
+                  Zupa
                 </span>
               )}
             </div>
