@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
-const VALID_TYPES = ['breakfast', 'lunch', 'dinner', 'snack', 'cocktail'];
+const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 
 export async function POST(req: NextRequest) {
   try {

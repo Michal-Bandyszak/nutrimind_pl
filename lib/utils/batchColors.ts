@@ -30,6 +30,7 @@ export const MEAL_TYPE_LABELS: Record<string, string> = {
   dinner: 'Kolacja',
   snack: 'Przekąska',
   cocktail: 'Koktajl',
+  dessert: 'Ciasto / deser',
 };
 
 export const MEAL_TYPE_EMOJI: Record<string, string> = {
@@ -39,6 +40,7 @@ export const MEAL_TYPE_EMOJI: Record<string, string> = {
   dinner: '🍜',
   snack: '🍎',
   cocktail: '🥤',
+  dessert: '🍰',
 };
 
 export const DAY_NAMES = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Ndz'];

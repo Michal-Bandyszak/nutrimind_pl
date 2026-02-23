@@ -14,7 +14,7 @@ const LLM_PROMPT = `Jesteś asystentem kuchennym. Sformatuj poniższy przepis ja
 SCHEMA:
 {
   "name": "string — pełna nazwa przepisu po polsku",
-  "type": "breakfast | lunch | dinner | snack | cocktail",
+  "type": "breakfast | second_breakfast | lunch | dinner | snack | cocktail | dessert",
   "prepTimeMin": number | null,
   "cookTimeMin": number | null,
   "batchFriendly": true | false,
@@ -47,22 +47,26 @@ ZASADY:
 PRZEPIS DO PRZETWORZENIA:
 [Wklej tutaj przepis z internetu lub własny opis]`;
 
-const VALID_TYPES = ['breakfast', 'lunch', 'dinner', 'snack', 'cocktail'] as const;
+const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'] as const;
 
 const TYPE_LABELS: Record<string, string> = {
-  breakfast: 'Śniadanie',
-  lunch: 'Obiad',
-  dinner: 'Kolacja',
-  snack: 'Przekąska',
-  cocktail: 'Koktajl',
+  breakfast:        'Śniadanie',
+  second_breakfast: 'Drugie śniadanie',
+  lunch:            'Obiad',
+  dinner:           'Kolacja',
+  snack:            'Przekąska',
+  cocktail:         'Koktajl',
+  dessert:          'Ciasto / deser',
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  breakfast: 'bg-amber-100 text-amber-700',
-  lunch: 'bg-teal-100 text-teal-700',
-  dinner: 'bg-blue-100 text-blue-700',
-  snack: 'bg-rose-100 text-rose-700',
-  cocktail: 'bg-violet-100 text-violet-700',
+  breakfast:        'bg-amber-100 text-amber-700',
+  second_breakfast: 'bg-orange-100 text-orange-700',
+  lunch:            'bg-teal-100 text-teal-700',
+  dinner:           'bg-blue-100 text-blue-700',
+  snack:            'bg-rose-100 text-rose-700',
+  cocktail:         'bg-violet-100 text-violet-700',
+  dessert:          'bg-pink-100 text-pink-700',
 };
 
 const CATEGORIES = [

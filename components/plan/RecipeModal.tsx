@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ArrowLeft, Search, Check, Loader2 } from 'lucide-react';
+import { X, ArrowLeft, Search, Check, Loader2, Trash2 } from 'lucide-react';
 import type { MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_EMOJI } from '@/lib/utils/batchColors';
@@ -12,12 +12,13 @@ import { MEAL_TYPE_EMOJI } from '@/lib/utils/batchColors';
 // ─────────────────────────────────────────────────────────────────────────────
 
 const MEAL_LABELS: Record<string, string> = {
-  breakfast: 'Śniadanie',
+  breakfast:        'Śniadanie',
   second_breakfast: 'Drugie śniadanie',
-  lunch: 'Obiad',
-  dinner: 'Kolacja',
-  snack: 'Przekąska',
-  cocktail: 'Koktajl',
+  lunch:            'Obiad',
+  dinner:           'Kolacja',
+  snack:            'Przekąska',
+  cocktail:         'Koktajl',
+  dessert:          'Ciasto / deser',
 };
 
 const TYPE_FILTERS = [
@@ -28,6 +29,7 @@ const TYPE_FILTERS = [
   { value: 'dinner',           label: 'Kolacje' },
   { value: 'snack',            label: 'Przekąski' },
   { value: 'cocktail',         label: 'Koktajle' },
+  { value: 'dessert',          label: 'Ciasta i desery' },
 ];
 
 const TYPE_COLORS: Record<string, string> = {
@@ -37,6 +39,7 @@ const TYPE_COLORS: Record<string, string> = {
   dinner:           'bg-blue-100 text-blue-700',
   snack:            'bg-rose-100 text-rose-700',
   cocktail:         'bg-violet-100 text-violet-700',
+  dessert:          'bg-pink-100 text-pink-700',
 };
 
 const TYPE_LABELS_SHORT: Record<string, string> = {
@@ -46,6 +49,7 @@ const TYPE_LABELS_SHORT: Record<string, string> = {
   dinner:           'Kolacja',
   snack:            'Przekąska',
   cocktail:         'Koktajl',
+  dessert:          'Ciasto / deser',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -57,13 +61,14 @@ type Props = {
   color: BatchColor | null;
   onClose: () => void;
   onReplace?: (newRecipe: RecipeWithIngredients) => Promise<void>;
+  onDelete?: () => Promise<void>;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Main component
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function RecipeModal({ meal, color, onClose, onReplace }: Props) {
+export default function RecipeModal({ meal, color, onClose, onReplace, onDelete }: Props) {
   const [view, setView] = useState<'detail' | 'replace'>('detail');
 
   useEffect(() => {
@@ -97,6 +102,7 @@ export default function RecipeModal({ meal, color, onClose, onReplace }: Props) 
             color={color}
             onClose={onClose}
             onOpenReplace={onReplace ? () => setView('replace') : undefined}
+            onDelete={onDelete}
           />
         ) : (
           <ReplaceView
@@ -121,12 +127,15 @@ function DetailView({
   color,
   onClose,
   onOpenReplace,
+  onDelete,
 }: {
   meal: MealWithRecipe;
   color: BatchColor | null;
   onClose: () => void;
   onOpenReplace?: () => void;
+  onDelete?: () => Promise<void>;
 }) {
+  const [deleting, setDeleting] = useState(false);
   const { recipe } = meal;
   const kcal = recipe.kcalPerServing ? Math.round(recipe.kcalPerServing * meal.servings) : null;
 
@@ -221,15 +230,31 @@ function DetailView({
         )}
       </div>
 
-      {/* Footer with replace button */}
-      {onOpenReplace && (
-        <div className="px-6 py-3 border-t border-border shrink-0 flex justify-end">
-          <button
-            onClick={onOpenReplace}
-            className="flex items-center gap-1.5 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium rounded-xl transition"
-          >
-            Zamień przepis
-          </button>
+      {/* Footer with delete / replace buttons */}
+      {(onOpenReplace || onDelete) && (
+        <div className="px-6 py-3 border-t border-border shrink-0 flex items-center justify-between gap-3">
+          {onDelete && (
+            <button
+              onClick={async () => {
+                setDeleting(true);
+                try { await onDelete(); }
+                finally { setDeleting(false); }
+              }}
+              disabled={deleting}
+              className="flex items-center gap-1.5 px-3 py-2 text-red-500 hover:text-red-700 hover:bg-red-50 text-sm font-medium rounded-xl transition disabled:opacity-50"
+            >
+              {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+              Usuń z planu
+            </button>
+          )}
+          {onOpenReplace && (
+            <button
+              onClick={onOpenReplace}
+              className="flex items-center gap-1.5 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium rounded-xl transition ml-auto"
+            >
+              Zamień przepis
+            </button>
+          )}
         </div>
       )}
     </>

@@ -14,6 +14,7 @@ const TYPE_FILTERS = [
   { value: 'snack',            label: 'Przekąski' },
   { value: 'cocktail',         label: 'Koktajle' },
   { value: 'soup',             label: 'Zupy' },
+  { value: 'dessert',          label: 'Ciasta i desery' },
 ];
 
 const TYPE_COLORS: Record<string, string> = {
@@ -23,6 +24,7 @@ const TYPE_COLORS: Record<string, string> = {
   dinner:           'bg-blue-100 text-blue-700',
   snack:            'bg-rose-100 text-rose-700',
   cocktail:         'bg-violet-100 text-violet-700',
+  dessert:          'bg-pink-100 text-pink-700',
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -32,6 +34,7 @@ const TYPE_LABELS: Record<string, string> = {
   dinner:           'Kolacja',
   snack:            'Przekąska',
   cocktail:         'Koktajl',
+  dessert:          'Ciasto / deser',
 };
 
 type Props = { recipes: RecipeWithIngredients[] };
