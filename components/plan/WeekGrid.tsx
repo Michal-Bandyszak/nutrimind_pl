@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
@@ -18,6 +19,8 @@ type Props = {
   onDragEnd: () => void;
   onDrop: (targetDay: number, mealType: string) => void;
   onReplace?: (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => Promise<void>;
+  onAddMeal?: (dayOfWeek: number) => void;
+  onDeleteMeal?: (meal: MealWithRecipe) => Promise<void>;
 };
 
 const MEAL_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
@@ -53,6 +56,8 @@ export default function WeekGrid({
   onDragEnd,
   onDrop,
   onReplace,
+  onAddMeal,
+  onDeleteMeal,
 }: Props) {
   const colorMaps = {
     breakfast:        buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'breakfast').map((m) => m.batchGroupId)),
@@ -170,7 +175,7 @@ export default function WeekGrid({
             })
           )}
 
-          {/* Row 4: Snacks */}
+          {/* Row 4: Snacks + add button */}
           {days.map((day) => (
             <div key={`snack-${day.dayOfWeek}`} className="flex flex-col gap-1">
               {day.snacks.map((s) => (
@@ -181,6 +186,15 @@ export default function WeekGrid({
                   onClick={() => setSelectedMeal({ meal: s, color: null })}
                 />
               ))}
+              {onAddMeal && (
+                <button
+                  onClick={() => onAddMeal(day.dayOfWeek)}
+                  className="w-full flex items-center justify-center gap-1 py-1.5 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/50 transition-colors text-xs"
+                  title="Dodaj przepis do tego dnia"
+                >
+                  <Plus size={12} />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -240,6 +254,15 @@ export default function WeekGrid({
                   onClick={() => setSelectedMeal({ meal: s, color: null })}
                 />
               ))}
+              {onAddMeal && (
+                <button
+                  onClick={() => onAddMeal(day.dayOfWeek)}
+                  className="flex items-center gap-1.5 py-2 px-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/50 transition-colors text-xs"
+                >
+                  <Plus size={12} />
+                  Dodaj przepis
+                </button>
+              )}
             </div>
           </section>
         ))}
@@ -261,6 +284,14 @@ export default function WeekGrid({
           onReplace={
             onReplace
               ? (newRecipe: RecipeWithIngredients) => onReplace(selectedMeal.meal, newRecipe)
+              : undefined
+          }
+          onDelete={
+            onDeleteMeal && selectedMeal.meal.mealType === 'snack'
+              ? async () => {
+                  await onDeleteMeal(selectedMeal.meal);
+                  setSelectedMeal(null);
+                }
               : undefined
           }
         />

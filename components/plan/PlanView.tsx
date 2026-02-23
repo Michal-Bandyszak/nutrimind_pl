@@ -6,6 +6,7 @@ import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipeWithIngredie
 import { planToBatchConfig } from '@/lib/utils/planUtils';
 import BatchConfigPanel from './BatchConfigPanel';
 import WeekGrid from './WeekGrid';
+import AddMealModal from './AddMealModal';
 
 type DragState = { dayOfWeek: number; mealType: string } | null;
 
@@ -17,6 +18,9 @@ export default function PlanView({ plan: initialPlan }: Props) {
   // ── Drag-and-drop state ───────────────────────────────────────────────────
   const [dragged, setDragged] = useState<DragState>(null);
   const [dragOver, setDragOver] = useState<DragState>(null);
+
+  // ── Add meal state ────────────────────────────────────────────────────────
+  const [addMealDay, setAddMealDay] = useState<number | null>(null);
 
   // ── Rebatch state ─────────────────────────────────────────────────────────
   const [showRebatch, setShowRebatch] = useState(false);
@@ -83,6 +87,35 @@ export default function PlanView({ plan: initialPlan }: Props) {
       }
     },
     [plan.id, initialPlan],
+  );
+
+  // ── Add meal handler ──────────────────────────────────────────────────────
+  const handleAddMeal = useCallback(
+    async (dayOfWeek: number, recipe: RecipeWithIngredients) => {
+      const res = await fetch(`/api/meal-plans/${plan.id}/meals`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dayOfWeek, recipeId: recipe.id }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Błąd dodawania.');
+      setPlan((prev) => ({ ...prev, meals: [...prev.meals, json.data as MealWithRecipe] }));
+    },
+    [plan.id],
+  );
+
+  // ── Delete meal handler ───────────────────────────────────────────────────
+  const handleDeleteMeal = useCallback(
+    async (meal: MealWithRecipe) => {
+      setPlan((prev) => ({ ...prev, meals: prev.meals.filter((m) => m.id !== meal.id) }));
+      const res = await fetch(`/api/meal-plans/${plan.id}/meals/${meal.id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        setPlan((prev) => ({ ...prev, meals: [...prev.meals, meal] }));
+      }
+    },
+    [plan.id],
   );
 
   // ── Drag handlers ─────────────────────────────────────────────────────────
@@ -230,7 +263,18 @@ export default function PlanView({ plan: initialPlan }: Props) {
         onDragEnd={handleDragEnd}
         onDrop={handleDrop}
         onReplace={handleReplace}
+        onAddMeal={(d) => setAddMealDay(d)}
+        onDeleteMeal={handleDeleteMeal}
       />
+
+      {/* Add meal modal */}
+      {addMealDay !== null && (
+        <AddMealModal
+          dayOfWeek={addMealDay}
+          onClose={() => setAddMealDay(null)}
+          onAdd={(recipe) => handleAddMeal(addMealDay, recipe)}
+        />
+      )}
     </div>
   );
 }
