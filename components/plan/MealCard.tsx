@@ -4,6 +4,7 @@ import { MEAL_TYPE_EMOJI } from '@/lib/utils/batchColors';
 
 const MEAL_LABELS: Record<string, string> = {
   breakfast: 'Śniadanie',
+  second_breakfast: 'Drugie śniadanie',
   lunch: 'Obiad',
   dinner: 'Kolacja',
   snack: 'Przekąska',

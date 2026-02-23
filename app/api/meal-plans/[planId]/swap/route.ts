@@ -7,19 +7,26 @@ export async function PATCH(
 ) {
   try {
     const { planId } = await params;
-    const { sourceDayOfWeek, targetDayOfWeek, mealType } = await req.json() as {
+    const body = await req.json() as {
       sourceDayOfWeek: number;
       targetDayOfWeek: number;
-      mealType: string;
+      // Cross-type support: sourceMealType/targetMealType are preferred;
+      // legacy mealType (same for both) kept for backward compat
+      sourceMealType?: string;
+      targetMealType?: string;
+      mealType?: string;
     };
+    const { sourceDayOfWeek, targetDayOfWeek } = body;
+    const srcMealType = body.sourceMealType ?? body.mealType ?? '';
+    const tgtMealType = body.targetMealType ?? body.mealType ?? '';
 
-    if (sourceDayOfWeek === targetDayOfWeek) {
+    if (sourceDayOfWeek === targetDayOfWeek && srcMealType === tgtMealType) {
       return NextResponse.json({ data: null });
     }
 
     const [sourceMeal, targetMeal] = await Promise.all([
-      prisma.mealPlanMeal.findFirst({ where: { mealPlanId: planId, dayOfWeek: sourceDayOfWeek, mealType } }),
-      prisma.mealPlanMeal.findFirst({ where: { mealPlanId: planId, dayOfWeek: targetDayOfWeek, mealType } }),
+      prisma.mealPlanMeal.findFirst({ where: { mealPlanId: planId, dayOfWeek: sourceDayOfWeek, mealType: srcMealType } }),
+      prisma.mealPlanMeal.findFirst({ where: { mealPlanId: planId, dayOfWeek: targetDayOfWeek, mealType: tgtMealType } }),
     ]);
 
     if (!sourceMeal || !targetMeal) {
@@ -52,7 +59,7 @@ export async function PATCH(
       prisma.mealPlanMeal.updateMany({
         where: {
           mealPlanId: planId,
-          mealType,
+          mealType: srcMealType,
           ...(sourceMeal.batchGroupId
             ? { batchGroupId: sourceMeal.batchGroupId }
             : { dayOfWeek: sourceDayOfWeek }),
@@ -63,7 +70,7 @@ export async function PATCH(
       prisma.mealPlanMeal.updateMany({
         where: {
           mealPlanId: planId,
-          mealType,
+          mealType: tgtMealType,
           ...(targetMeal.batchGroupId
             ? { batchGroupId: targetMeal.batchGroupId }
             : { dayOfWeek: targetDayOfWeek }),

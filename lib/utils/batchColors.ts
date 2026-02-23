@@ -25,6 +25,7 @@ export function buildBatchColorMap(batchGroupIds: (string | null)[]): Map<string
 
 export const MEAL_TYPE_LABELS: Record<string, string> = {
   breakfast: 'Śniadanie',
+  second_breakfast: 'Drugie śniadanie',
   lunch: 'Obiad',
   dinner: 'Kolacja',
   snack: 'Przekąska',
@@ -33,6 +34,7 @@ export const MEAL_TYPE_LABELS: Record<string, string> = {
 
 export const MEAL_TYPE_EMOJI: Record<string, string> = {
   breakfast: '🌅',
+  second_breakfast: '🥣',
   lunch: '🥗',
   dinner: '🍜',
   snack: '🍎',

@@ -86,11 +86,13 @@ export async function generateWeekPlan(
 ): Promise<MealPlanWithMeals> {
   const start = weekStart ?? getMonday();
 
-  const [allBreakfasts, allLunches, allDinners, allSnacks] = await Promise.all([
+  const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails, allSnacks] = await Promise.all([
     prisma.recipe.findMany({ where: { type: 'breakfast' } }),
+    prisma.recipe.findMany({ where: { type: 'second_breakfast' } }),
     prisma.recipe.findMany({ where: { type: 'lunch' } }),
     prisma.recipe.findMany({ where: { type: 'dinner' } }),
-    prisma.recipe.findMany({ where: { type: { in: ['snack', 'cocktail'] } } }),
+    prisma.recipe.findMany({ where: { type: 'cocktail' } }),
+    prisma.recipe.findMany({ where: { type: 'snack' } }),
   ]);
 
   if (!allBreakfasts.length) throw new Error('Brak przepisów na śniadanie.');
@@ -118,10 +120,29 @@ export async function generateWeekPlan(
     batchDayNum: number | null;
   }[] = [];
 
-  // Breakfast, lunch, dinner with custom batch config
-  rows.push(...buildMealRows(plan.id, 'breakfast', config.breakfast, allBreakfasts, SERVINGS));
-  rows.push(...buildMealRows(plan.id, 'lunch',     config.lunch,     allLunches,    SERVINGS));
-  rows.push(...buildMealRows(plan.id, 'dinner',    config.dinner,    allDinners,    SERVINGS));
+  // Breakfast, second_breakfast, lunch, dinner with custom batch config
+  rows.push(...buildMealRows(plan.id, 'breakfast',        config.breakfast,        allBreakfasts,       SERVINGS));
+  if (allSecondBreakfasts.length) {
+    rows.push(...buildMealRows(plan.id, 'second_breakfast', config.second_breakfast, allSecondBreakfasts, SERVINGS));
+  }
+  rows.push(...buildMealRows(plan.id, 'lunch',            config.lunch,            allLunches,          SERVINGS));
+  rows.push(...buildMealRows(plan.id, 'dinner',           config.dinner,           allDinners,          SERVINGS));
+
+  // Cocktails — one per day, no batching, own draggable row
+  if (allCocktails.length) {
+    const shuffledCocktails = shuffle(allCocktails);
+    for (let day = 1; day <= 7; day++) {
+      rows.push({
+        mealPlanId: plan.id,
+        dayOfWeek: day,
+        mealType: 'cocktail',
+        recipeId: shuffledCocktails[(day - 1) % shuffledCocktails.length].id,
+        servings: SERVINGS,
+        batchGroupId: null,
+        batchDayNum: null,
+      });
+    }
+  }
 
   // Snacks — one per day, no batching
   if (allSnacks.length) {
