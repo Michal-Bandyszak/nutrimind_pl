@@ -36,15 +36,17 @@ export type MealDividers = [boolean, boolean, boolean, boolean, boolean, boolean
 
 export type BatchConfig = {
   breakfast: MealDividers;
+  second_breakfast: MealDividers;
   lunch: MealDividers;
   dinner: MealDividers;
 };
 
 export const DEFAULT_BATCH_CONFIG: BatchConfig = {
   // Mon-Wed same recipe | Thu-Sun same recipe
-  breakfast: [false, false, true, false, false, false],
-  lunch:     [false, false, true, false, false, false],
-  dinner:    [false, false, true, false, false, false],
+  breakfast:        [false, false, true, false, false, false],
+  second_breakfast: [false, false, true, false, false, false],
+  lunch:            [false, false, true, false, false, false],
+  dinner:           [false, false, true, false, false, false],
 };
 
 /** Convert dividers array → group numbers array (length 7) */
@@ -62,8 +64,10 @@ export type DayMeals = {
   dayName: string;
   dateLabel: string;
   breakfast: MealWithRecipe | null;
+  second_breakfast: MealWithRecipe | null;
   lunch: MealWithRecipe | null;
   dinner: MealWithRecipe | null;
+  cocktail: MealWithRecipe | null;
   snacks: MealWithRecipe[];
 };
 
