@@ -492,7 +492,7 @@
         }
       ],
       "instructions": [
-        "Wszystkie składniki zblenduj na koktajl (w razie"
+        "Wszystkie składniki zblenduj na koktajl (w razie potrzeby dodaj wody)."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -619,8 +619,8 @@
       ],
       "instructions": [
         "Pokrój warzywa.",
-        "Warzywa ułóż na podgrzanej na suchej patelni tortilli,",
-        "Wszystkie składniki zawiń, po czym zapiecz ją w"
+        "Warzywa ułóż na podgrzanej na suchej patelni tortilli, polej masłem koperkowym (wymieszaj posiekany koperek, masło klarowane, pieprz, sól) i posyp pestkami słonecznika.",
+        "Wszystkie składniki zawiń, po czym zapiecz ją w tosterze lub na patelni."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -1489,8 +1489,8 @@
         }
       ],
       "instructions": [
-        "Płatki owsiane ugotuj na napoju roślinnym z",
-        "Wyłóż do miseczki, dodaj masło migdałowe i udekoruj"
+        "Płatki owsiane ugotuj na napoju roślinnym z dodatkiem cynamonu i kardamonu.",
+        "Wyłóż do miseczki, dodaj masło migdałowe i udekoruj borówkami."
       ],
       "batchFriendly": true,
       "maxStorageDays": 2,

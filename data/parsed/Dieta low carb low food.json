@@ -454,13 +454,13 @@
         }
       ],
       "instructions": [
-        "Ugotuj jajka w koszulce: zagotuj wodę w garnku (ok.",
+        "Ugotuj jajka w koszulce: zagotuj wodę w garnku (ok. 10 cm) z dodatkiem 1 łyżki octu i szczypty soli, zrób w niej wir (zamieszać łyżką).",
         "Jajka wbij do oddzielnych miseczek.",
-        "Delikatnie wlej pierwsze jajko do gotującej się wody i",
+        "Delikatnie wlej pierwsze jajko do gotującej się wody i gotuj przez kilka minut aż całe białko będzie ścięte, żółtko pozostanie płynne.",
         "Powtórz z resztą jajek.",
-        "Przygotuj sos chrzanowy: wymieszaj jogurt, chrzan",
+        "Przygotuj sos chrzanowy: wymieszaj jogurt, chrzan oraz przypraw.",
         "Posyp szczypiorkiem, doprawić solą i pieprzem.",
-        "Marchew zetrzyj obieraczką na wstążki, wymieszaj z",
+        "Marchew zetrzyj obieraczką na wstążki, wymieszaj z roszponką, olejem oraz pestkami.",
         "Podawaj z jajkami polanymi sosem."
       ],
       "batchFriendly": false,
@@ -532,8 +532,8 @@
         }
       ],
       "instructions": [
-        "Rozgrzej patelnię grillową i zgrilluj na niej łososia na",
-        "Ogórka obierz ze skóry. Pokrój w cienkie plasterki,"
+        "Rozgrzej patelnię grillową i zgrilluj na niej łososia na maśle klarowanym. Rybę posyp pestkami.",
+        "Ogórka obierz ze skóry. Pokrój w cienkie plasterki, dodaj jogurt kokosowy, olej i posiekany koperek. Wymieszaj. Przypraw do smaku."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -580,8 +580,8 @@
         }
       ],
       "instructions": [
-        "Ugotuj kaszę na wodzie. Następnie zblenduj z",
-        "Jagody i borówki podgrzej w garnuszku z odrobiną",
+        "Ugotuj kaszę na wodzie. Następnie zblenduj z jogurtem kokosowym i siemieniem.",
+        "Jagody i borówki podgrzej w garnuszku z odrobiną wody i zblenduj na mus.",
         "Polej gotowym musem budyń jaglany."
       ],
       "batchFriendly": true,
@@ -1131,9 +1131,9 @@
         }
       ],
       "instructions": [
-        "Jajka wymieszaj w miseczce i usmaż na oleju",
+        "Jajka wymieszaj w miseczce i usmaż na oleju kokosowym.",
         "Warzywa pokrój drobno i ułóż na omlecie.",
-        "Posyp pestkami, dopraw, polej olejem lnianym i zawiń"
+        "Posyp pestkami, dopraw, polej olejem lnianym i zawiń omlet."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -1375,9 +1375,9 @@
         }
       ],
       "instructions": [
-        "Ugotuj jajka w koszulce: zagotuj wodę w garnku (ok.",
+        "Ugotuj jajka w koszulce: zagotuj wodę w garnku (ok. 10 cm) z dodatkiem 1 łyżki octu i szczypty soli, zrób w niej wir (zamieszać łyżką).",
         "Jajka wbij do oddzielnych miseczek.",
-        "Delikatnie wlej pierwsze jajko do gotującej się wody i",
+        "Delikatnie wlej pierwsze jajko do gotującej się wody i gotuj przez kilka minut aż całe białko będzie ścięte, żółtko pozostanie płynne.",
         "Powtórz z resztą jajek.",
         "Na rozgrzanej patelni rozpuść masło.",
         "Do masła dodaj liście jarmużu.",
@@ -1460,11 +1460,11 @@
         }
       ],
       "instructions": [
-        "Marchew pokrój w kostkę, a brokuła rozdziel na",
-        "Warzywa i kurczaka natrzyj olejem kokosowym i",
-        "Kurczaka oraz warzywa umieść w rękawie do",
+        "Marchew pokrój w kostkę, a brokuła rozdziel na różyczki.",
+        "Warzywa i kurczaka natrzyj olejem kokosowym i przyprawami.",
+        "Kurczaka oraz warzywa umieść w rękawie do pieczenia.",
         "Piecz w 180*C przez 20-25 min.",
-        "Na końcu posyp pestkami dyni i rukolą oraz polej"
+        "Na końcu posyp pestkami dyni i rukolą oraz polej olejem lnianym."
       ],
       "batchFriendly": false,
       "maxStorageDays": 3,
@@ -1537,7 +1537,7 @@
       "instructions": [
         "Ugotuj makaron.",
         "Pokrój warzywa. Połącz z ugotowanym makaronem.",
-        "Polej olejem i posyp pestkami. Przypraw do smaku"
+        "Polej olejem i posyp pestkami. Przypraw do smaku solą, pieprzem i oregano."
       ],
       "batchFriendly": true,
       "maxStorageDays": 3,
@@ -1725,8 +1725,8 @@
         }
       ],
       "instructions": [
-        "Warzywa pokrój w cienkie paski obieraczką do",
-        "Wymieszaj z olejem lnianym, koperkiem, dopraw do"
+        "Warzywa pokrój w cienkie paski obieraczką do warzyw.",
+        "Wymieszaj z olejem lnianym, koperkiem, dopraw do smaku."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -1792,7 +1792,7 @@
       ],
       "instructions": [
         "Ryż i fasolkę ugotuj.",
-        "Jarmuż podduś na oleju kokosowym, dodaj fasolkę i",
+        "Jarmuż podduś na oleju kokosowym, dodaj fasolkę i przyprawy. Połącz z ryżem.",
         "Przypraw do smaku."
       ],
       "batchFriendly": true,

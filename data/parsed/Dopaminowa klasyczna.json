@@ -278,7 +278,7 @@
       ],
       "instructions": [
         "Brokuła ugotuj w wodzie lub na parze al dente.",
-        "Przygotuj sos: jogurt zmiksuj z bazylią, olejem lnianym,",
+        "Przygotuj sos: jogurt zmiksuj z bazylią, olejem lnianym, szczyptą soli i pieprzu.",
         "Na talerzu ułóż brokuły i polej je sosem."
       ],
       "batchFriendly": false,
@@ -348,7 +348,7 @@
         "Buraka ugotuj w wodzie i pokrój w kostkę.",
         "Kaszę wymieszaj z rukolą i burakiem.",
         "Całość dopraw solą i pieprzem.",
-        "Olej lniany wymieszaj z posiekaną bazylią i skrop nim",
+        "Olej lniany wymieszaj z posiekaną bazylią i skrop nim potrawę.",
         "Na koniec posyp pestkami dyni."
       ],
       "batchFriendly": false,
@@ -675,11 +675,11 @@
         }
       ],
       "instructions": [
-        "Jarmuż posiekaj, pora pokrój w plasterki, a pomidorki",
-        "Na patelni rozgrzej olej kokosowy, dodaj jarmuż, pora i",
-        "Do warzyw dodaj ryż i przyprawy. Wymieszaj i",
-        "Mieszaj wszystko, trzymając patelnię na małym ogniu.",
-        "Gotuj całość pod przykryciem przez ok. 15 minut, nie",
+        "Jarmuż posiekaj, pora pokrój w plasterki, a pomidorki przekrój na pół.",
+        "Na patelni rozgrzej olej kokosowy, dodaj jarmuż, pora i pomidorki. Smaż przez około 3-4 minuty.",
+        "Do warzyw dodaj ryż i przyprawy. Wymieszaj i podsmażaj jeszcze przez około 2-3 minuty. Dodaj 1/ szklanki bulionu.",
+        "Mieszaj wszystko, trzymając patelnię na małym ogniu. W momencie, gdy płyn się zredukuje, dodaj resztę bulionu.",
+        "Gotuj całość pod przykryciem przez ok. 15 minut, nie mieszając. W razie potrzeby dodaj wody.",
         "Posyp posiekaną bazylią i pestkami dyni."
       ],
       "batchFriendly": false,
@@ -900,9 +900,9 @@
         "Mięso i paprykę pokrój w kostkę.",
         "Na patelni rozgrzej olej kokosowy i obsmaż indyka.",
         "Do mięsa dodaj paprykę i fasolkę.",
-        "Całość zalej bulionem i duś pod przykryciem przez",
-        "Dopraw solą, pieprzem, curry. Dodaj mleczko",
-        "Przełóż danie do miseczki, skrop olejem lnianym i"
+        "Całość zalej bulionem i duś pod przykryciem przez około 15 minut.",
+        "Dopraw solą, pieprzem, curry. Dodaj mleczko kokosowe i szpinak. Gotuj jeszcze przez 2 minuty.",
+        "Przełóż danie do miseczki, skrop olejem lnianym i posyp sezamem."
       ],
       "batchFriendly": true,
       "maxStorageDays": 3,
@@ -997,12 +997,12 @@
         }
       ],
       "instructions": [
-        "Ziemniaki i korzeń pietruszki pokrój w kostkę. Pora",
-        "W garnku rozgrzej olej kokosowy, dodaj ziemniaki,",
-        "Warzywa zalej bulionem i gotuj przez około 8 minut.",
+        "Ziemniaki i korzeń pietruszki pokrój w kostkę. Pora pokrój w plasterki. Brokuła podziel na różyczki.",
+        "W garnku rozgrzej olej kokosowy, dodaj ziemniaki, korzeń pietruszki, pora, brokuła i smaż przez około 2 minuty.",
+        "Warzywa zalej bulionem i gotuj przez około 8 minut. Dodaj groszek i gotuj, aż warzywa będą miękkie.",
         "Dopraw solą, pieprzem, tymiankiem.",
         "Zmiksuj zupę na gładki krem. Przelej do miseczki.",
-        "Olej lniany wymieszaj z posiekanym koperkiem i skrop",
+        "Olej lniany wymieszaj z posiekanym koperkiem i skrop nim zupę.",
         "Zupę posyp startym parmezanem."
       ],
       "batchFriendly": true,

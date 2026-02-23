@@ -494,9 +494,9 @@
         }
       ],
       "instructions": [
-        "10 minut przed włożeniem na patelnie dopraw mięso",
-        "Steka smaż na rozgrzanym oleju 3 minuty z jednej",
-        "Przed podaniem przełóż stek na ciepły talerz aby",
+        "10 minut przed włożeniem na patelnie dopraw mięso solą i pieprzem. Odstaw mięso na bok.",
+        "Steka smaż na rozgrzanym oleju 3 minuty z jednej strony, następnie przełóż na drugą. Smaż jeszcze około 3 minuty.",
+        "Przed podaniem przełóż stek na ciepły talerz aby „odpoczął” przez 5 minut.",
         "Podawaj z frytkami."
       ],
       "batchFriendly": false,
@@ -574,8 +574,8 @@
         }
       ],
       "instructions": [
-        "Warzywa pokrój w słupki i umieść na blasze wyłożonej",
-        "Piecz w piekarniku przez ok. 30 minut w 180",
+        "Warzywa pokrój w słupki i umieść na blasze wyłożonej papierem do pieczenia, skrop olejem z awokado i posyp przyprawami.",
+        "Piecz w piekarniku przez ok. 30 minut w 180 stopniach.",
         "Jogurt wymieszaj z posiekaną bazylią.",
         "Frytki podaj z rukolą i dipem."
       ],
@@ -666,12 +666,12 @@
         }
       ],
       "instructions": [
-        "Suchą soczewicę dokładnie przepłucz na sitku zimną",
+        "Suchą soczewicę dokładnie przepłucz na sitku zimną wodą.",
         "Cukinię i marchewkę pokrój w kostkę.",
-        "Podsmaż chwilę warzywa na oleju z awokado, zalej",
-        "Gotuj przez około 15-20 minut, do zmięknięcia",
-        "Zupę po ugotowaniu zmiksuj na krem z dodatkiem",
-        "Chleb podpiecz w piekarniku lub na suchej patelni i"
+        "Podsmaż chwilę warzywa na oleju z awokado, zalej bulionem, dodaj soczewicę i przyprawy.",
+        "Gotuj przez około 15-20 minut, do zmięknięcia soczewicy i warzyw.",
+        "Zupę po ugotowaniu zmiksuj na krem z dodatkiem oleju lnianego i bazylii.",
+        "Chleb podpiecz w piekarniku lub na suchej patelni i pokrój na mniejsze fragmenty. Posyp zupę grzankami."
       ],
       "batchFriendly": true,
       "maxStorageDays": 4,
@@ -1157,9 +1157,9 @@
         }
       ],
       "instructions": [
-        "Mięso wymieszaj z posiekaną bazylią, olejem i",
-        "Nałóż mięso (o grubości kiełbasy) na patyczki od",
-        "Mięso upiecz w piekarniku przez około 20 minut w",
+        "Mięso wymieszaj z posiekaną bazylią, olejem i przyprawami.",
+        "Nałóż mięso (o grubości kiełbasy) na patyczki od szaszłyków.",
+        "Mięso upiecz w piekarniku przez około 20 minut w 180 stopniach.",
         "Podawaj z sosem i ugotowanym ryżem."
       ],
       "batchFriendly": false,
@@ -1219,8 +1219,8 @@
         }
       ],
       "instructions": [
-        "Ogórka obierz ze skóry i zetrzyj na tarce razem z",
-        "Dodaj jogurt kokosowy, olej i posiekany koperek."
+        "Ogórka obierz ze skóry i zetrzyj na tarce razem z rzodkiewką.",
+        "Dodaj jogurt kokosowy, olej i posiekany koperek. Wymieszaj, przypraw do smaku."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -1303,9 +1303,9 @@
         }
       ],
       "instructions": [
-        "Obrane i oczyszczone krewetki podmaż na oleju z",
-        "Dodaj rozkrojone na pół pomidorki, podduś jeszcze 3",
-        "Całość skrop sokiem z cytryny i olejem lnianym. Posyp",
+        "Obrane i oczyszczone krewetki podmaż na oleju z awokado. Dopraw, dodaj posiekaną natkę pietruszki.",
+        "Dodaj rozkrojone na pół pomidorki, podduś jeszcze 3 minuty.",
+        "Całość skrop sokiem z cytryny i olejem lnianym. Posyp posiekanymi orzechami.",
         "Podawaj z ugotowaną komosą."
       ],
       "batchFriendly": false,
@@ -1857,9 +1857,9 @@
       ],
       "instructions": [
         "Warzywa i mięso pokrój w kostkę.",
-        "Na patelni rozgrzej olej z awokado, dorzuć warzywa i",
-        "Dodaj posiekaną natkę pietruszki i bulion. Zmniejsz",
-        "Duś pod przykryciem przez ok. 20-25 minut. Pod",
+        "Na patelni rozgrzej olej z awokado, dorzuć warzywa i mięso. Podduś.",
+        "Dodaj posiekaną natkę pietruszki i bulion. Zmniejsz moc palnika, dopraw.",
+        "Duś pod przykryciem przez ok. 20-25 minut. Pod koniec gotowania dodaj mleczko kokosowe.",
         "Podawaj z ugotowaną komosą."
       ],
       "batchFriendly": true,
@@ -1913,9 +1913,9 @@
         }
       ],
       "instructions": [
-        "Wymieszaj jajka, mąkę i napój na gładką masę. W razie",
-        "Smaż na rozgrzanej patelni na niewielkiej ilości oleju z",
-        "Owoce podgrzej w garnuszku z niewielką ilością wody"
+        "Wymieszaj jajka, mąkę i napój na gładką masę. W razie potrzeby dodaj odrobinę wody do uzyskania odpowiedniej konsystencji.",
+        "Smaż na rozgrzanej patelni na niewielkiej ilości oleju z awokado.",
+        "Owoce podgrzej w garnuszku z niewielką ilością wody i zmielonym siemieniem. Polej naleśniki."
       ],
       "batchFriendly": false,
       "maxStorageDays": 2,
@@ -2195,7 +2195,7 @@
       ],
       "instructions": [
         "Brokuły ugotuj.",
-        "Przygotuj sos z jogurtu, posiekanego koperku, oleju,",
+        "Przygotuj sos z jogurtu, posiekanego koperku, oleju, soli i pieprzu.",
         "Na talerzu ułóż rukolę i brokuły. Polej dipem."
       ],
       "batchFriendly": false,
@@ -2286,7 +2286,7 @@
       ],
       "instructions": [
         "Ryż ugotuj.",
-        "Bakłażana i pomidorki pokrój w kostkę, podduś na",
+        "Bakłażana i pomidorki pokrój w kostkę, podduś na oleju z awokado, dodaj przyprawy i posiekane zioła.",
         "Warzywa ułóż na ryżu. Dodaj kawałki sera."
       ],
       "batchFriendly": false,
