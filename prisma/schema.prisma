@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Ingredient {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  category     String   // vegetables | fruits | grains | protein | dairy | oils | spices | other
+  kcalPer100g  Float?
+  proteinPer100g Float?
+  carbsPer100g   Float?
+  fatPer100g     Float?
+  fiberPer100g   Float?
+  // Package size for waste prevention (e.g., coconut milk = 400g can)
+  packageSizeG Float?
+  packageUnit  String?  // can | bottle | bag | bunch
+  packageLabel String?  // "400ml can"
+  recipeIngredients RecipeIngredient[]
+  createdAt    DateTime @default(now())
+}
+
+model Recipe {
+  id             String   @id @default(cuid())
+  name           String
+  // breakfast | lunch | dinner | snack | cocktail
+  type           String
+  prepTimeMin    Int?
+  cookTimeMin    Int?
+  batchFriendly  Boolean  @default(false)
+  maxStorageDays Int      @default(1)
+  // Macros per 1 serving (as eaten, not per 100g)
+  kcalPerServing   Float?
+  proteinG         Float?
+  carbsG           Float?
+  fatG             Float?
+  fiberG           Float?
+  instructions   String   @default("[]") // JSON array of steps
+  sourceDiet     String?  // filename of origin diet
+  tags           String   @default("[]") // JSON array
+  ingredients    RecipeIngredient[]
+  mealPlanMeals  MealPlanMeal[]
+  createdAt      DateTime @default(now())
+
+  @@unique([name, sourceDiet])
+}
+
+model RecipeIngredient {
+  id             String     @id @default(cuid())
+  recipeId       String
+  recipe         Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredientId   String
+  ingredient     Ingredient @relation(fields: [ingredientId], references: [id])
+  amountG        Float      // total grams for 1 serving
+  displayText    String?    // original text e.g. "3 łyżki oliwy (30g)"
+  scalesLinearly Boolean    @default(true) // false for oils, spices
+}
+
+model MealPlan {
+  id        String   @id @default(cuid())
+  name      String   @default("Tydzień")
+  weekStart DateTime
+  status    String   @default("draft") // draft | active | archived
+  meals     MealPlanMeal[]
+  createdAt DateTime @default(now())
+}
+
+model MealPlanMeal {
+  id           String    @id @default(cuid())
+  mealPlanId   String
+  mealPlan     MealPlan  @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  // 1=Mon ... 7=Sun
+  dayOfWeek    Int
+  mealType     String    // breakfast | lunch | dinner | snack
+  recipeId     String
+  recipe       Recipe    @relation(fields: [recipeId], references: [id])
+  servings     Float     @default(1.0)
+  // Batch cooking — meals with same batchGroupId are cooked together once
+  batchGroupId String?
+  batchDayNum  Int?      // 1, 2, 3 — freshness day within the batch
+}
