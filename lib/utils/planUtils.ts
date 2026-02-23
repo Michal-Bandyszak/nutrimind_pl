@@ -6,9 +6,10 @@ import type { MealPlanWithMeals, BatchConfig, MealDividers } from '@/lib/types';
  */
 export function planToBatchConfig(plan: MealPlanWithMeals): BatchConfig {
   return {
-    breakfast: mealTypeToDividers(plan, 'breakfast'),
-    lunch:     mealTypeToDividers(plan, 'lunch'),
-    dinner:    mealTypeToDividers(plan, 'dinner'),
+    breakfast:        mealTypeToDividers(plan, 'breakfast'),
+    second_breakfast: mealTypeToDividers(plan, 'second_breakfast'),
+    lunch:            mealTypeToDividers(plan, 'lunch'),
+    dinner:           mealTypeToDividers(plan, 'dinner'),
   };
 }
 

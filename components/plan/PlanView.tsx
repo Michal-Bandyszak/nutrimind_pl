@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { SlidersHorizontal, Check, X, Loader2 } from 'lucide-react';
-import type { MealPlanWithMeals, BatchConfig } from '@/lib/types';
+import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { planToBatchConfig } from '@/lib/utils/planUtils';
 import BatchConfigPanel from './BatchConfigPanel';
 import WeekGrid from './WeekGrid';
@@ -53,6 +53,38 @@ export default function PlanView({ plan: initialPlan }: Props) {
     }
   }
 
+  // ── Replace handler ───────────────────────────────────────────────────────
+  const handleReplace = useCallback(
+    async (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => {
+      // Optimistic update across batch group (or single meal)
+      setPlan((prev) => ({
+        ...prev,
+        meals: prev.meals.map((m) => {
+          if (meal.batchGroupId && m.batchGroupId === meal.batchGroupId)
+            return { ...m, recipe: newRecipe, recipeId: newRecipe.id };
+          if (!meal.batchGroupId && m.id === meal.id)
+            return { ...m, recipe: newRecipe, recipeId: newRecipe.id };
+          return m;
+        }),
+      }));
+
+      const res = await fetch(`/api/meal-plans/${plan.id}/replace`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dayOfWeek: meal.dayOfWeek,
+          mealType: meal.mealType,
+          newRecipeId: newRecipe.id,
+        }),
+      });
+
+      if (!res.ok) {
+        setPlan(initialPlan);
+      }
+    },
+    [plan.id, initialPlan],
+  );
+
   // ── Drag handlers ─────────────────────────────────────────────────────────
   const handleDragStart = useCallback((dayOfWeek: number, mealType: string) => {
     setDragged({ dayOfWeek, mealType });
@@ -68,24 +100,27 @@ export default function PlanView({ plan: initialPlan }: Props) {
   }, []);
 
   const handleDrop = useCallback(
-    async (targetDay: number, mealType: string) => {
-      if (!dragged || dragged.mealType !== mealType || dragged.dayOfWeek === targetDay) {
+    async (targetDay: number, targetMealType: string) => {
+      if (!dragged) { setDragged(null); setDragOver(null); return; }
+      // Prevent drop on itself (same day + same type)
+      if (dragged.dayOfWeek === targetDay && dragged.mealType === targetMealType) {
         setDragged(null);
         setDragOver(null);
         return;
       }
 
       const sourceDay = dragged.dayOfWeek;
+      const sourceMealType = dragged.mealType;
       setDragged(null);
       setDragOver(null);
 
-      // Optimistic update: swap recipes across batch groups
+      // Optimistic update: swap recipes across batch groups (supports cross-type)
       setPlan((prev) => {
         const sourceMeal = prev.meals.find(
-          (m) => m.dayOfWeek === sourceDay && m.mealType === mealType,
+          (m) => m.dayOfWeek === sourceDay && m.mealType === sourceMealType,
         );
         const targetMeal = prev.meals.find(
-          (m) => m.dayOfWeek === targetDay && m.mealType === mealType,
+          (m) => m.dayOfWeek === targetDay && m.mealType === targetMealType,
         );
         if (!sourceMeal || !targetMeal) return prev;
 
@@ -97,15 +132,18 @@ export default function PlanView({ plan: initialPlan }: Props) {
         return {
           ...prev,
           meals: prev.meals.map((m) => {
-            if (m.mealType !== mealType) return m;
-            if (sourceBatch && m.batchGroupId === sourceBatch)
-              return { ...m, recipe: targetRecipe, recipeId: targetRecipe.id };
-            if (!sourceBatch && m.dayOfWeek === sourceDay)
-              return { ...m, recipe: targetRecipe, recipeId: targetRecipe.id };
-            if (targetBatch && m.batchGroupId === targetBatch)
-              return { ...m, recipe: sourceRecipe, recipeId: sourceRecipe.id };
-            if (!targetBatch && m.dayOfWeek === targetDay)
-              return { ...m, recipe: sourceRecipe, recipeId: sourceRecipe.id };
+            if (m.mealType === sourceMealType) {
+              if (sourceBatch && m.batchGroupId === sourceBatch)
+                return { ...m, recipe: targetRecipe, recipeId: targetRecipe.id };
+              if (!sourceBatch && m.dayOfWeek === sourceDay)
+                return { ...m, recipe: targetRecipe, recipeId: targetRecipe.id };
+            }
+            if (m.mealType === targetMealType) {
+              if (targetBatch && m.batchGroupId === targetBatch)
+                return { ...m, recipe: sourceRecipe, recipeId: sourceRecipe.id };
+              if (!targetBatch && m.dayOfWeek === targetDay)
+                return { ...m, recipe: sourceRecipe, recipeId: sourceRecipe.id };
+            }
             return m;
           }),
         };
@@ -114,11 +152,15 @@ export default function PlanView({ plan: initialPlan }: Props) {
       const res = await fetch(`/api/meal-plans/${plan.id}/swap`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourceDayOfWeek: sourceDay, targetDayOfWeek: targetDay, mealType }),
+        body: JSON.stringify({
+          sourceDayOfWeek: sourceDay,
+          sourceMealType,
+          targetDayOfWeek: targetDay,
+          targetMealType,
+        }),
       });
 
       if (!res.ok) {
-        // Revert on failure
         setPlan(initialPlan);
       }
     },
@@ -187,6 +229,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
         onDrop={handleDrop}
+        onReplace={handleReplace}
       />
     </div>
   );
