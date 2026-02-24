@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
+const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,14 +16,20 @@ export async function POST(req: NextRequest) {
     if (!name || typeof name !== 'string' || !name.trim()) {
       return NextResponse.json({ error: 'Pole "name" jest wymagane.' }, { status: 400 });
     }
+    if (name.length > 200) {
+      return NextResponse.json({ error: 'Nazwa przepisu jest zbyt długa (max 200 znaków).' }, { status: 400 });
+    }
     if (!type || !VALID_TYPES.includes(type)) {
       return NextResponse.json({ error: 'Nieprawidłowy typ przepisu.' }, { status: 400 });
     }
     if (!Array.isArray(ingredients) || ingredients.length === 0) {
       return NextResponse.json({ error: 'Wymagany co najmniej 1 składnik.' }, { status: 400 });
     }
-    if (typeof kcalPerServing !== 'number' || typeof proteinG !== 'number' ||
-        typeof carbsG !== 'number' || typeof fatG !== 'number') {
+    if (ingredients.length > 50) {
+      return NextResponse.json({ error: 'Za dużo składników (max 50).' }, { status: 400 });
+    }
+    const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
+    if (!isValidNum(kcalPerServing) || !isValidNum(proteinG) || !isValidNum(carbsG) || !isValidNum(fatG)) {
       return NextResponse.json({ error: 'Makroskładniki (kcal, białko, węgle, tłuszcze) są wymagane.' }, { status: 400 });
     }
 
@@ -40,7 +47,7 @@ export async function POST(req: NextRequest) {
         const ingredient = await tx.ingredient.upsert({
           where: { name: ing.name },
           update: {},
-          create: { name: ing.name, category: ing.category || 'other' },
+          create: { name: ing.name, category: VALID_CATEGORIES.includes(ing.category) ? ing.category : 'other' },
         });
         resolvedIngredients.push({
           id: ingredient.id,

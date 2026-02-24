@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Copy, Check, Plus, Trash2, Upload } from 'lucide-react';
+import { X, Copy, Check, Plus, Trash2, ClipboardPaste } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -141,7 +141,7 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
   const [copied, setCopied] = useState(false);
   const [fileData, setFileData] = useState<FileData | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pasteText, setPasteText] = useState('');
 
   // Manual tab
   const [name, setName] = useState('');
@@ -182,27 +182,31 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  function processFile(file: File) {
-    setFileError(null);
-    setFileData(null);
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const parsed = JSON.parse(ev.target?.result as string) as FileData;
-        if (!parsed.name || !parsed.type || !Array.isArray(parsed.ingredients) || parsed.ingredients.length === 0) {
-          setFileError('Nieprawidłowy format JSON. Wymagane pola: "name", "type", "ingredients".');
-          return;
-        }
-        if (!VALID_TYPES.includes(parsed.type as typeof VALID_TYPES[number])) {
-          setFileError(`Nieprawidłowy typ: "${parsed.type}". Dozwolone: breakfast, lunch, dinner, snack, cocktail.`);
-          return;
-        }
-        setFileData(parsed);
-      } catch {
-        setFileError('Błąd parsowania JSON. Sprawdź format pliku.');
+  function processJsonText(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      setFileError(null);
+      setFileData(null);
+      return;
+    }
+    try {
+      const parsed = JSON.parse(trimmed) as FileData;
+      if (!parsed.name || !parsed.type || !Array.isArray(parsed.ingredients) || parsed.ingredients.length === 0) {
+        setFileError('Nieprawidłowy format JSON. Wymagane pola: "name", "type", "ingredients".');
+        setFileData(null);
+        return;
       }
-    };
-    reader.readAsText(file);
+      if (!VALID_TYPES.includes(parsed.type as typeof VALID_TYPES[number])) {
+        setFileError(`Nieprawidłowy typ: "${parsed.type}". Dozwolone: ${VALID_TYPES.join(', ')}.`);
+        setFileData(null);
+        return;
+      }
+      setFileError(null);
+      setFileData(parsed);
+    } catch {
+      setFileError('Błąd parsowania JSON. Sprawdź czy tekst to poprawny JSON.');
+      setFileData(null);
+    }
   }
 
   function buildPayloadFromForm(): FileData | null {
@@ -288,7 +292,7 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
                   : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              {tab === 'upload' ? 'Prześlij plik JSON' : 'Wpisz ręcznie'}
+              {tab === 'upload' ? 'Wklej JSON' : 'Wpisz ręcznie'}
             </button>
           ))}
         </div>
@@ -301,9 +305,8 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
               onCopy={handleCopy}
               fileData={fileData}
               fileError={fileError}
-              fileInputRef={fileInputRef}
-              onFileChange={(e) => { const f = e.target.files?.[0]; if (f) processFile(f); }}
-              onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) processFile(f); }}
+              pasteText={pasteText}
+              onPasteTextChange={(text) => { setPasteText(text); processJsonText(text); }}
             />
           ) : (
             <ManualTab
@@ -364,15 +367,14 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function UploadTab({
-  copied, onCopy, fileData, fileError, fileInputRef, onFileChange, onDrop,
+  copied, onCopy, fileData, fileError, pasteText, onPasteTextChange,
 }: {
   copied: boolean;
   onCopy: () => void;
   fileData: FileData | null;
   fileError: string | null;
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onDrop: (e: React.DragEvent) => void;
+  pasteText: string;
+  onPasteTextChange: (text: string) => void;
 }) {
   return (
     <div className="space-y-5">
@@ -395,38 +397,44 @@ function UploadTab({
         </div>
       </div>
 
-      {/* Step 2: File drop zone */}
+      {/* Step 2: Paste JSON textarea */}
       <div>
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-          2. Prześlij wygenerowany plik .json
+          2. Wklej odpowiedź JSON z ChatGPT
         </p>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json"
-          className="hidden"
-          onChange={onFileChange}
-        />
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          onDrop={onDrop}
-          onDragOver={(e) => e.preventDefault()}
-          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
-            fileData
-              ? 'border-teal-300 bg-teal-50'
-              : fileError
-                ? 'border-red-300 bg-red-50'
-                : 'border-gray-200 hover:border-teal-300 hover:bg-gray-50'
-          }`}
-        >
-          <Upload size={24} className={`mx-auto mb-2 ${fileData ? 'text-teal-500' : 'text-gray-300'}`} />
-          <p className="text-sm font-medium text-gray-600">
-            Kliknij lub przeciągnij plik .json
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">Plik JSON wygenerowany przez AI</p>
+        <div className="relative">
+          <textarea
+            value={pasteText}
+            onChange={(e) => onPasteTextChange(e.target.value)}
+            placeholder={'{\n  "name": "Owsianka z owocami",\n  "type": "breakfast",\n  ...\n}'}
+            rows={8}
+            spellCheck={false}
+            className={`w-full px-3 py-2.5 border rounded-xl text-xs font-mono text-gray-700 placeholder:text-gray-300 resize-none focus:outline-none focus:ring-2 transition ${
+              fileData
+                ? 'border-teal-300 bg-teal-50 focus:ring-teal-500/30 focus:border-teal-400'
+                : fileError
+                  ? 'border-red-300 bg-red-50 focus:ring-red-500/30 focus:border-red-400'
+                  : 'border-gray-200 bg-white focus:ring-teal-500/30 focus:border-teal-400'
+            }`}
+          />
+          {pasteText && (
+            <button
+              onClick={() => onPasteTextChange('')}
+              className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500 hover:bg-gray-100 transition"
+              aria-label="Wyczyść"
+            >
+              <X size={12} />
+            </button>
+          )}
         </div>
         {fileError && (
           <p className="text-xs text-red-500 mt-1.5">{fileError}</p>
+        )}
+        {!pasteText && (
+          <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+            <ClipboardPaste size={11} />
+            Wklej JSON skopiowany bezpośrednio z odpowiedzi ChatGPT
+          </p>
         )}
       </div>
 
