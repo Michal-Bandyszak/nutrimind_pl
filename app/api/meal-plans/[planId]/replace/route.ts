@@ -13,8 +13,13 @@ export async function PATCH(
       newRecipeId: string;
     };
 
-    if (!dayOfWeek || !mealType || !newRecipeId) {
+    if (dayOfWeek == null || !mealType || !newRecipeId) {
       return NextResponse.json({ error: 'Brakuje wymaganych pól.' }, { status: 400 });
+    }
+
+    const recipeExists = await prisma.recipe.findUnique({ where: { id: newRecipeId }, select: { id: true } });
+    if (!recipeExists) {
+      return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
     }
 
     const meal = await prisma.mealPlanMeal.findFirst({
