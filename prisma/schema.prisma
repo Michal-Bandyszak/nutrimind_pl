@@ -83,3 +83,13 @@ model MealPlanMeal {
   batchGroupId String?
   batchDayNum  Int?      // 1, 2, 3 — freshness day within the batch
 }
+
+model AppSettings {
+  id                 String   @id @default("default")
+  personAName        String   @default("Michał")
+  personAKcal        Int      @default(2500)
+  personBName        String   @default("Osoba B")
+  personBKcal        Int      @default(1800)
+  defaultBatchConfig String   @default("") // JSON-encoded BatchConfig, empty = use app default
+  updatedAt          DateTime @updatedAt
+}
