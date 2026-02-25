@@ -197,6 +197,11 @@ export default function WeekGrid({
               )}
             </div>
           ))}
+
+          {/* Row 5: Daily macro summary */}
+          {days.map((day) => (
+            <DayMacroSummary key={`macro-${day.dayOfWeek}`} day={day} />
+          ))}
         </div>
       </div>
 
@@ -263,6 +268,8 @@ export default function WeekGrid({
                   Dodaj przepis
                 </button>
               )}
+
+              <DayMacroSummary day={day} />
             </div>
           </section>
         ))}
@@ -297,5 +304,38 @@ export default function WeekGrid({
         />
       )}
     </>
+  );
+}
+
+// ── Daily macro summary ────────────────────────────────────────────────────
+
+function DayMacroSummary({ day }: { day: DayMeals }) {
+  const meals = [
+    day.breakfast,
+    day.second_breakfast,
+    day.lunch,
+    day.dinner,
+    day.cocktail,
+    ...day.snacks,
+  ].filter((m): m is MealWithRecipe => m !== null);
+
+  const kcal    = Math.round(meals.reduce((s, m) => s + (m.recipe.kcalPerServing ?? 0), 0));
+  const protein = Math.round(meals.reduce((s, m) => s + (m.recipe.proteinG ?? 0), 0));
+  const carbs   = Math.round(meals.reduce((s, m) => s + (m.recipe.carbsG ?? 0), 0));
+  const fat     = Math.round(meals.reduce((s, m) => s + (m.recipe.fatG ?? 0), 0));
+
+  if (!kcal) return <div className="h-14" />;
+
+  return (
+    <div className="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2.5 space-y-1">
+      <p className="text-sm font-bold text-gray-700 text-center tabular-nums">
+        {kcal.toLocaleString('pl-PL')} kcal
+      </p>
+      <div className="flex justify-between text-xs text-gray-400 tabular-nums">
+        <span title="Białko">B {protein}g</span>
+        <span title="Węglowodany">W {carbs}g</span>
+        <span title="Tłuszcze">T {fat}g</span>
+      </div>
+    </div>
   );
 }
