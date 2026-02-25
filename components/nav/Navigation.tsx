@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, BookOpen, ShoppingCart, Settings } from 'lucide-react';
+import { CalendarDays, BookOpen, ShoppingCart, Heart, Settings } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { href: '/',          label: 'Plan',      icon: CalendarDays },
-  { href: '/recipes',   label: 'Przepisy',  icon: BookOpen },
-  { href: '/shopping',  label: 'Zakupy',    icon: ShoppingCart },
+  { href: '/',          label: 'Plan',       icon: CalendarDays },
+  { href: '/recipes',   label: 'Przepisy',   icon: BookOpen },
+  { href: '/shopping',  label: 'Zakupy',     icon: ShoppingCart },
+  { href: '/health',    label: 'Zdrowie',    icon: Heart },
   { href: '/settings',  label: 'Ustawienia', icon: Settings },
 ];
 
