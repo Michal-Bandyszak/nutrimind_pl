@@ -84,6 +84,29 @@ model MealPlanMeal {
   batchDayNum  Int?      // 1, 2, 3 — freshness day within the batch
 }
 
+model HealthLog {
+  id            String   @id @default(cuid())
+  date          String   @unique // YYYY-MM-DD — no timezone issues
+  // Routine checklists — JSON arrays of completed item IDs
+  morningDone   String   @default("[]")
+  eveningDone   String   @default("[]")
+  // Daily metrics
+  waterGlasses  Int?
+  sleepH        Float?
+  sleepQuality  Int?     // 1-5
+  energyLevel   Int?     // 1-5
+  moodLevel     Int?     // 1-5
+  // 1% Strategy daily points (1-3 per category)
+  pointsDiet    Int?
+  pointsSupp    Int?
+  pointsTrain   Int?
+  pointsRoutine Int?
+  pointsRelax   Int?
+  pointsMindset Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model AppSettings {
   id                 String   @id @default("default")
   personAName        String   @default("Michał")
