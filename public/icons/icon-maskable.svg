@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full bleed background (no rounded corners — maskable icons are clipped by OS) -->
+  <rect width="512" height="512" fill="#0f766e"/>
+
+  <!-- Subtle inner glow -->
+  <rect width="512" height="512" fill="url(#grad)" opacity="0.15"/>
+  <defs>
+    <radialGradient id="grad" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="white"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Letter N — scaled down to respect the 10% safe zone (51px each side) -->
+  <text
+    x="256" y="340"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="265"
+    font-weight="900"
+    text-anchor="middle"
+    fill="white"
+    letter-spacing="-10"
+  >N</text>
+
+  <!-- Small olive leaf accent -->
+  <ellipse cx="375" cy="118" rx="22" ry="40" fill="rgba(255,255,255,0.25)" transform="rotate(35 375 118)"/>
+  <ellipse cx="375" cy="118" rx="11" ry="22" fill="rgba(255,255,255,0.40)" transform="rotate(35 375 118)"/>
+</svg>
