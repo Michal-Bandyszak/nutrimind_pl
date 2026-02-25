@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="115" fill="#0f766e"/>
+
+  <!-- Subtle inner glow -->
+  <rect width="512" height="512" rx="115" fill="url(#grad)" opacity="0.15"/>
+  <defs>
+    <radialGradient id="grad" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="white"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Letter N -->
+  <text
+    x="256" y="358"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="310"
+    font-weight="900"
+    text-anchor="middle"
+    fill="white"
+    letter-spacing="-12"
+  >N</text>
+
+  <!-- Small olive leaf accent (top-right) -->
+  <ellipse cx="395" cy="108" rx="28" ry="50" fill="rgba(255,255,255,0.25)" transform="rotate(35 395 108)"/>
+  <ellipse cx="395" cy="108" rx="14" ry="26" fill="rgba(255,255,255,0.40)" transform="rotate(35 395 108)"/>
+</svg>
