@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/nav/Navigation';
+import RegisterSW from '@/components/RegisterSW';
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
@@ -11,14 +12,29 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'NutriMind',
-  description: 'Planowanie posiłków z gotowaniem wsadowym',
+  description: 'Planowanie posiłków śródziemnomorskich z gotowaniem wsadowym',
   manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'NutriMind',
+  },
+  icons: {
+    apple: '/icons/apple-touch-icon.png',
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icons/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: '#0f766e',
   width: 'device-width',
   initialScale: 1,
+  minimumScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="lg:pl-56 pb-20 lg:pb-0 min-h-dvh">
           {children}
         </main>
+        <RegisterSW />
       </body>
     </html>
   );
