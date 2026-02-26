@@ -142,6 +142,10 @@ async function main() {
             fiberG: recipe.fiberG,
             instructions: JSON.stringify(recipe.instructions || []),
             sourceDiet: recipe.sourceDiet,
+            baseServings: recipe.baseServings ?? 1,
+            ingredientBasis: recipe.ingredientBasis ?? "per-serving",
+            source: recipe.source ?? "dietitian",
+            nutritionVerified: recipe.nutritionVerified ?? true,
           },
         });
         // Remove old ingredient links
@@ -160,6 +164,10 @@ async function main() {
             fiberG: recipe.fiberG,
             instructions: JSON.stringify(recipe.instructions || []),
             sourceDiet: recipe.sourceDiet,
+            baseServings: recipe.baseServings ?? 1,
+            ingredientBasis: recipe.ingredientBasis ?? "per-serving",
+            source: recipe.source ?? "dietitian",
+            nutritionVerified: recipe.nutritionVerified ?? true,
           },
         });
       }
