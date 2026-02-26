@@ -4,6 +4,9 @@ import { prisma } from '@/lib/db/prisma';
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
 
+const VALID_INGREDIENT_BASIS = ['per-serving', 'per-whole'];
+const VALID_SOURCES = ['dietitian', 'user'];
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -11,6 +14,8 @@ export async function POST(req: NextRequest) {
       name, type, ingredients,
       kcalPerServing, proteinG, carbsG, fatG, fiberG,
       prepTimeMin, cookTimeMin, batchFriendly, maxStorageDays, instructions,
+      // new fields
+      baseServings, ingredientBasis, source, nutritionVerified,
     } = body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -28,13 +33,21 @@ export async function POST(req: NextRequest) {
     if (ingredients.length > 50) {
       return NextResponse.json({ error: 'Za dużo składników (max 50).' }, { status: 400 });
     }
-    const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
-    if (!isValidNum(kcalPerServing) || !isValidNum(proteinG) || !isValidNum(carbsG) || !isValidNum(fatG)) {
-      return NextResponse.json({ error: 'Makroskładniki (kcal, białko, węgle, tłuszcze) są wymagane.' }, { status: 400 });
+    if (ingredientBasis && !VALID_INGREDIENT_BASIS.includes(ingredientBasis)) {
+      return NextResponse.json({ error: 'Nieprawidłowa wartość ingredientBasis.' }, { status: 400 });
+    }
+    if (source && !VALID_SOURCES.includes(source)) {
+      return NextResponse.json({ error: 'Nieprawidłowa wartość source.' }, { status: 400 });
     }
 
+    const resolvedSource: string = source ?? 'user';
+    const resolvedBasis: string = ingredientBasis ?? 'per-serving';
+    const resolvedBaseServings: number = typeof baseServings === 'number' && baseServings > 0 ? baseServings : 1;
+    // Only mark as verified if explicitly passed as true; user-submitted recipes default to unverified
+    const resolvedVerified: boolean = nutritionVerified === true;
+
     const existing = await prisma.recipe.findFirst({
-      where: { name: name.trim(), sourceDiet: 'custom' },
+      where: { name: name.trim(), source: resolvedSource },
     });
     if (existing) {
       return NextResponse.json({ error: 'Przepis o tej nazwie już istnieje.' }, { status: 409 });
@@ -57,6 +70,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
       const created = await tx.recipe.create({
         data: {
           name: name.trim(),
@@ -65,13 +79,17 @@ export async function POST(req: NextRequest) {
           cookTimeMin: cookTimeMin ?? null,
           batchFriendly: batchFriendly ?? false,
           maxStorageDays: maxStorageDays ?? 1,
-          kcalPerServing,
-          proteinG,
-          carbsG,
-          fatG,
-          fiberG: fiberG ?? null,
+          kcalPerServing: isValidNum(kcalPerServing) ? kcalPerServing : null,
+          proteinG:       isValidNum(proteinG)       ? proteinG       : null,
+          carbsG:         isValidNum(carbsG)         ? carbsG         : null,
+          fatG:           isValidNum(fatG)           ? fatG           : null,
+          fiberG:         isValidNum(fiberG)         ? fiberG         : null,
           instructions: JSON.stringify(Array.isArray(instructions) ? instructions : []),
-          sourceDiet: 'custom',
+          sourceDiet: null,
+          source: resolvedSource,
+          ingredientBasis: resolvedBasis,
+          baseServings: resolvedBaseServings,
+          nutritionVerified: resolvedVerified,
         },
       });
 
@@ -107,11 +125,16 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
     const q = searchParams.get('q');
+    const verifiedParam = searchParams.get('verified'); // "true" | "false" | null
+    const sourceParam = searchParams.get('source');     // "dietitian" | "user" | null
 
     const recipes = await prisma.recipe.findMany({
       where: {
         ...(type && type !== 'all' ? { type } : {}),
         ...(q ? { name: { contains: q } } : {}),
+        ...(verifiedParam === 'true'  ? { nutritionVerified: true }  : {}),
+        ...(verifiedParam === 'false' ? { nutritionVerified: false } : {}),
+        ...(sourceParam && VALID_SOURCES.includes(sourceParam) ? { source: sourceParam } : {}),
       },
       include: {
         ingredients: { include: { ingredient: true } },
