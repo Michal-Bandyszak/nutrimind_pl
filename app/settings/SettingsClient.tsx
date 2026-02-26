@@ -140,43 +140,27 @@ function AppearanceSection() {
       <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Wygląd</h2>
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-amber-50 dark:bg-gray-800 rounded-xl">
-              {isDark ? (
-                <Moon size={24} className="text-indigo-500" />
-              ) : (
-                <Sun size={24} className="text-amber-500" />
-              )}
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Przełącz motyw aplikacji</p>
-            </div>
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Przełącz motyw aplikacji</p>
           </div>
 
+          {/* Toggle button — iOS style */}
           <button
             onClick={toggleTheme}
             role="switch"
             aria-checked={isDark}
-            className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-              isDark
-                ? 'bg-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-900'
-                : 'bg-gray-300 focus:ring-gray-400 focus:ring-offset-white'
+            className={`relative h-8 w-14 rounded-full transition-colors duration-200 ${
+              isDark ? 'bg-teal-600' : 'bg-gray-200'
             }`}
           >
             <span
-              className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-lg transition-transform duration-300 flex items-center justify-center ${
-                isDark ? 'translate-x-10' : 'translate-x-1'
+              className={`absolute top-1 left-1 h-6 w-6 rounded-full bg-white shadow-md transition-transform duration-200 ${
+                isDark ? 'translate-x-6' : 'translate-x-0'
               }`}
-            >
-              {isDark ? (
-                <Moon size={16} className="text-indigo-600" />
-              ) : (
-                <Sun size={16} className="text-amber-500" />
-              )}
-            </span>
+            />
           </button>
         </div>
       </div>
