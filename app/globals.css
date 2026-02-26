@@ -37,28 +37,28 @@ body {
    redefine them under html.dark and everything switches.
 —————————————————————————————————————————————— */
 html.dark {
-  /* Custom app tokens */
-  --color-surface:      #141414;
-  --color-card:         #1e1e1e;
-  --color-border:       #2e2e2e;
-  --color-border-light: #252525;
+  /* Elegant modern dark mode standard (Zinc based) */
+  --color-surface:      #09090b;
+  --color-card:         #18181b;
+  --color-border:       #27272a;
+  --color-border-light: #3f3f46;
   color-scheme: dark;
 
   /* NOTE: we do NOT override --color-white because text-white
      must stay white (buttons, badges). Instead we handle bg-white below. */
 
-  /* Gray scale — inverted for dark */
-  --color-gray-50:      #1a1a1a;
-  --color-gray-100:     #252525;
-  --color-gray-200:     #333333;
-  --color-gray-300:     #525252;
-  --color-gray-400:     #737373;
-  --color-gray-500:     #8b8b8b;
-  --color-gray-600:     #a3a3a3;
-  --color-gray-700:     #c0c0c0;
-  --color-gray-800:     #d4d4d4;
-  --color-gray-900:     #e5e5e5;
-  --color-gray-950:     #f0f0f0;
+  /* Gray scale — inverted for dark (Zinc scheme) */
+  --color-gray-50:      #18181b;
+  --color-gray-100:     #27272a;
+  --color-gray-200:     #3f3f46;
+  --color-gray-300:     #52525b;
+  --color-gray-400:     #71717a;
+  --color-gray-500:     #a1a1aa;
+  --color-gray-600:     #d4d4d8;
+  --color-gray-700:     #e4e4e7;
+  --color-gray-800:     #f4f4f5;
+  --color-gray-900:     #fafafa;
+  --color-gray-950:     #ffffff;
 
   /* Teal — slightly adjusted for dark backgrounds */
   --color-teal-50:      rgba(13, 148, 136, 0.12);
@@ -182,7 +182,7 @@ html.dark {
 
 html.dark body {
   background-color: var(--color-surface);
-  color: #e5e5e5;
+  color: #e4e4e7; /* Zinc 200 */
 }
 
 /* bg-white needs special treatment — we can't override --color-white
@@ -191,26 +191,26 @@ html.dark .bg-white {
   background-color: var(--color-card) !important;
 }
 html.dark .bg-white\/95 {
-  background-color: rgba(30, 30, 30, 0.95) !important;
+  background-color: rgba(24, 24, 27, 0.95) !important; /* Zinc 900 */
 }
 
 /* Dark: input fields (elements, not utilities) */
 html.dark input,
 html.dark textarea,
 html.dark select {
-  background-color: #1a1a1a;
-  color: #e5e5e5;
+  background-color: var(--color-surface);
+  color: #e4e4e7;
   border-color: var(--color-border);
 }
 
 html.dark input::placeholder,
 html.dark textarea::placeholder {
-  color: #525252;
+  color: #71717a; /* Zinc 500 */
 }
 
 /* Dark: scrollbar */
-html.dark ::-webkit-scrollbar-thumb { background: #3a3a3a; }
-html.dark ::-webkit-scrollbar-thumb:hover { background: #4a4a4a; }
+html.dark ::-webkit-scrollbar-thumb { background: #3f3f46; } /* Zinc 700 */
+html.dark ::-webkit-scrollbar-thumb:hover { background: #52525b; } /* Zinc 600 */
 
 /* ——————————————————————————————————————————————
    Scrollbar (webkit)
