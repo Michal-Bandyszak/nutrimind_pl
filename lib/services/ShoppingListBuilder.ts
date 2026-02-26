@@ -125,8 +125,12 @@ export async function buildShoppingList(planId: string): Promise<ShoppingList> {
   // Process batch groups — each batch cooked ONCE, total = servings × days
   for (const { meal, days } of batchGroups.values()) {
     const totalServings = meal.servings * days.length;
+    const isPerWhole = meal.recipe.ingredientBasis === 'per-whole';
+    const baseServings = meal.recipe.baseServings || 1;
     for (const ri of meal.recipe.ingredients) {
-      const scaled = scaleAmount(ri.amountG, totalServings, ri.scalesLinearly);
+      // per-whole: amountG is for the full recipe (baseServings portions) → normalize to per-serving first
+      const perServing = isPerWhole ? ri.amountG / baseServings : ri.amountG;
+      const scaled = scaleAmount(perServing, totalServings, ri.scalesLinearly);
       addIngredient(ingredientMap, ri.ingredient, scaled, {
         recipeName: meal.recipe.name,
         mealType: meal.mealType,
@@ -138,8 +142,11 @@ export async function buildShoppingList(planId: string): Promise<ShoppingList> {
 
   // Process unbatched (snacks etc.) — count each day separately
   for (const meal of unbatched) {
+    const isPerWhole = meal.recipe.ingredientBasis === 'per-whole';
+    const baseServings = meal.recipe.baseServings || 1;
     for (const ri of meal.recipe.ingredients) {
-      const scaled = scaleAmount(ri.amountG, meal.servings, ri.scalesLinearly);
+      const perServing = isPerWhole ? ri.amountG / baseServings : ri.amountG;
+      const scaled = scaleAmount(perServing, meal.servings, ri.scalesLinearly);
       addIngredient(ingredientMap, ri.ingredient, scaled, {
         recipeName: meal.recipe.name,
         mealType: meal.mealType,
