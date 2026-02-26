@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus } from 'lucide-react';
+import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
+import type { SubstitutionResult } from '@/lib/services/SubstitutionEngine';
 import AddRecipeModal from '@/components/recipes/AddRecipeModal';
 
 const TYPE_FILTERS = [
@@ -157,6 +158,27 @@ function RecipeCard({
   onToggle: () => void;
 }) {
   const [servings, setServings] = useState(2);
+  const [subsFor, setSubsFor] = useState<string | null>(null); // ingredientId being looked up
+  const [subsData, setSubsData] = useState<SubstitutionResult | null>(null);
+  const [subsLoading, setSubsLoading] = useState(false);
+
+  async function handleIngredientClick(ingredientId: string) {
+    if (subsFor === ingredientId) {
+      setSubsFor(null);
+      setSubsData(null);
+      return;
+    }
+    setSubsFor(ingredientId);
+    setSubsData(null);
+    setSubsLoading(true);
+    try {
+      const res = await fetch(`/api/ingredients/${ingredientId}/substitutions`);
+      const json = await res.json();
+      if (res.ok) setSubsData(json.data as SubstitutionResult);
+    } finally {
+      setSubsLoading(false);
+    }
+  }
 
   const instructions: string[] = (() => {
     try { return JSON.parse(recipe.instructions) as string[]; }
@@ -266,16 +288,91 @@ function RecipeCard({
 
           {/* Ingredients */}
           <div className="px-4 py-3">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-              Składniki
-            </p>
-            <ul className="space-y-1.5">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                Składniki
+              </p>
+              <p className="text-xs text-gray-300">kliknij składnik → zamienniki</p>
+            </div>
+            <ul className="space-y-1">
               {recipe.ingredients.map((ri) => {
                 const scaled = scaleAmount(ri.amountG, servings, ri.scalesLinearly);
+                const isActive = subsFor === ri.ingredient.id;
                 return (
-                  <li key={ri.id} className="flex items-baseline justify-between gap-2 text-sm">
-                    <span className="text-gray-700">{ri.ingredient.name}</span>
-                    <span className="text-gray-400 tabular-nums shrink-0">{formatAmount(scaled)}</span>
+                  <li key={ri.id}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleIngredientClick(ri.ingredient.id); }}
+                      className={`w-full flex items-baseline justify-between gap-2 text-sm px-2 py-1.5 rounded-lg transition-colors text-left ${
+                        isActive ? 'bg-teal-50 ring-1 ring-teal-200' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className="text-gray-700 flex items-center gap-1.5">
+                        {ri.ingredient.name}
+                        {isActive && <ArrowRightLeft size={12} className="text-teal-500" />}
+                      </span>
+                      <span className="text-gray-400 tabular-nums shrink-0">{formatAmount(scaled)}</span>
+                    </button>
+
+                    {/* Substitution panel */}
+                    {isActive && (
+                      <div className="mx-2 mb-1 mt-0.5 p-3 bg-teal-50 border border-teal-100 rounded-xl">
+                        {subsLoading && (
+                          <div className="flex items-center gap-2 text-xs text-teal-600">
+                            <Loader2 size={13} className="animate-spin" /> Szukam zamienników…
+                          </div>
+                        )}
+                        {subsData && (
+                          <div className="space-y-2">
+                            {subsData.note && (
+                              <p className="text-xs text-teal-700 font-medium">{subsData.note}</p>
+                            )}
+                            {subsData.substitutes.length > 0 && (
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">Zamienniki z reguł diety:</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {subsData.substitutes.map((s) => (
+                                    <span
+                                      key={s.name}
+                                      className={`inline-block text-xs px-2.5 py-1 rounded-full ${
+                                        s.inDatabase
+                                          ? 'bg-white border border-teal-200 text-teal-700'
+                                          : 'bg-gray-100 text-gray-400 border border-gray-200'
+                                      }`}
+                                    >
+                                      {s.name}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {subsData.categoryMatches.length > 0 && (
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">Inne w tej kategorii:</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {subsData.categoryMatches.slice(0, 8).map((s) => (
+                                    <span
+                                      key={s.name}
+                                      className="inline-block text-xs px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-600"
+                                    >
+                                      {s.name}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {subsData.substitutes.length === 0 && subsData.categoryMatches.length === 0 && (
+                              <p className="text-xs text-gray-400">Brak znanych zamienników.</p>
+                            )}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setSubsFor(null); setSubsData(null); }}
+                              className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1 mt-1"
+                            >
+                              <X size={11} /> Zamknij
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </li>
                 );
               })}
