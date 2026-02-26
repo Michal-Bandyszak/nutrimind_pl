@@ -87,12 +87,12 @@ export async function generateWeekPlan(
   const start = weekStart ?? getMonday();
 
   const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails, allSnacks] = await Promise.all([
-    prisma.recipe.findMany({ where: { type: 'breakfast' } }),
-    prisma.recipe.findMany({ where: { type: 'second_breakfast' } }),
-    prisma.recipe.findMany({ where: { type: 'lunch' } }),
-    prisma.recipe.findMany({ where: { type: 'dinner' } }),
-    prisma.recipe.findMany({ where: { type: 'cocktail' } }),
-    prisma.recipe.findMany({ where: { type: 'snack' } }),
+    prisma.recipe.findMany({ where: { type: 'breakfast',        nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'second_breakfast', nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'lunch',            nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'dinner',           nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'cocktail',         nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'snack',            nutritionVerified: true } }),
   ]);
 
   if (!allBreakfasts.length) throw new Error('Brak przepisów na śniadanie.');
