@@ -155,13 +155,13 @@ function AppearanceSection() {
           </div>
           <button
             onClick={toggleTheme}
-            className={`relative w-12 h-7 rounded-full transition-colors ${
-              isDark ? 'bg-teal-600' : 'bg-gray-300'
+            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
+              isDark ? 'bg-teal-600' : 'bg-gray-200'
             }`}
           >
             <span
-              className={`absolute top-[2px] w-6 h-6 rounded-full shadow-sm bg-white transition-transform duration-300 ${
-                isDark ? 'translate-x-[22px]' : 'translate-x-[2px]'
+              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform ${
+                isDark ? 'translate-x-7' : 'translate-x-1'
               }`}
             />
           </button>
