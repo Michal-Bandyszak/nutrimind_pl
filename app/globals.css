@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
@@ -28,6 +30,91 @@ body {
   color: #111111;
   min-height: 100dvh;
 }
+
+/* ——————————————————————————————————————————————
+   Dark mode — override Tailwind's own CSS variables
+   Tailwind v4 utilities use var(--color-*), so we just
+   redefine them under html.dark and everything switches.
+—————————————————————————————————————————————— */
+html.dark {
+  /* Custom app tokens */
+  --color-surface:      #141414;
+  --color-card:         #1e1e1e;
+  --color-border:       #2e2e2e;
+  --color-border-light: #252525;
+  color-scheme: dark;
+
+  /* NOTE: we do NOT override --color-white because text-white
+     must stay white (buttons, badges). Instead we handle bg-white below. */
+
+  /* Gray scale — inverted for dark */
+  --color-gray-50:      #1a1a1a;
+  --color-gray-100:     #252525;
+  --color-gray-200:     #333333;
+  --color-gray-300:     #525252;
+  --color-gray-400:     #737373;
+  --color-gray-500:     #8b8b8b;
+  --color-gray-600:     #a3a3a3;
+  --color-gray-700:     #c0c0c0;
+  --color-gray-800:     #d4d4d4;
+  --color-gray-900:     #e5e5e5;
+  --color-gray-950:     #f0f0f0;
+
+  /* Teal — slightly adjusted for dark backgrounds */
+  --color-teal-50:      rgba(13, 148, 136, 0.12);
+  --color-teal-100:     rgba(13, 148, 136, 0.18);
+
+  /* Amber — adjusted for dark */
+  --color-amber-50:     rgba(217, 119, 6, 0.1);
+  --color-amber-100:    rgba(217, 119, 6, 0.2);
+  --color-amber-200:    rgba(217, 119, 6, 0.3);
+  --color-amber-800:    #fbbf24;
+  --color-amber-900:    #f59e0b;
+
+  /* Other accent colors — slightly muted for dark */
+  --color-orange-100:   rgba(234, 88, 12, 0.2);
+  --color-blue-100:     rgba(37, 99, 235, 0.2);
+  --color-rose-100:     rgba(225, 29, 72, 0.2);
+  --color-violet-100:   rgba(124, 58, 237, 0.2);
+  --color-pink-100:     rgba(236, 72, 153, 0.2);
+  --color-cyan-100:     rgba(6, 182, 212, 0.2);
+  --color-cyan-700:     #22d3ee;
+  --color-indigo-400:   #818cf8;
+  --color-indigo-500:   #6366f1;
+  --color-red-500:      #f87171;
+}
+
+html.dark body {
+  background-color: var(--color-surface);
+  color: #e5e5e5;
+}
+
+/* bg-white needs special treatment — we can't override --color-white
+   because text-white on buttons must stay white. */
+html.dark .bg-white {
+  background-color: var(--color-card) !important;
+}
+html.dark .bg-white\/95 {
+  background-color: rgba(30, 30, 30, 0.95) !important;
+}
+
+/* Dark: input fields (elements, not utilities) */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #1a1a1a;
+  color: #e5e5e5;
+  border-color: var(--color-border);
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #525252;
+}
+
+/* Dark: scrollbar */
+html.dark ::-webkit-scrollbar-thumb { background: #3a3a3a; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #4a4a4a; }
 
 /* ——————————————————————————————————————————————
    Scrollbar (webkit)

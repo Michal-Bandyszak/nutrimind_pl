@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Check, Loader2, User } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, Loader2, User, Sun, Moon } from 'lucide-react';
 import type { AppSettingsData } from '@/lib/services/SettingsService';
 import type { BatchConfig } from '@/lib/types';
 import BatchConfigPanel from '@/components/plan/BatchConfigPanel';
@@ -43,6 +43,9 @@ export default function SettingsClient({ initialSettings }: Props) {
 
   return (
     <div className="max-w-2xl space-y-8">
+
+      {/* ── Appearance ──────────────────────────────────────────────── */}
+      <AppearanceSection />
 
       {/* ── People ─────────────────────────────────────────────────── */}
       <section>
@@ -112,6 +115,61 @@ type PersonCardProps = {
   onNameChange: (v: string) => void;
   onKcalChange: (v: number) => void;
 };
+
+function AppearanceSection() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  function toggleTheme() {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('nutrimind-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('nutrimind-theme', 'light');
+    }
+  }
+
+  return (
+    <section>
+      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Wygląd</h2>
+      <div className="bg-white rounded-2xl border border-border p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {isDark ? (
+              <Moon size={18} className="text-indigo-400" />
+            ) : (
+              <Sun size={18} className="text-amber-500" />
+            )}
+            <div>
+              <p className="text-sm font-medium text-gray-900">
+                {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
+              </p>
+              <p className="text-xs text-gray-400">Przełącz motyw aplikacji</p>
+            </div>
+          </div>
+          <button
+            onClick={toggleTheme}
+            className={`relative w-12 h-7 rounded-full transition-colors ${
+              isDark ? 'bg-indigo-500' : 'bg-gray-300'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 w-6 h-6 rounded-full shadow-sm transition-transform ${
+                isDark ? 'translate-x-[22px] bg-gray-900' : 'translate-x-[2px] bg-white'
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function PersonCard({ label, name, kcal, onNameChange, onKcalChange }: PersonCardProps) {
   return (
