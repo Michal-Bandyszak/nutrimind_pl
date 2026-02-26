@@ -10,19 +10,49 @@ import path from "path";
 const prisma = new PrismaClient();
 
 // Known package sizes for waste-prevention feature
-const PACKAGE_SIZES: Record<string, { sizeG: number; unit: string; label: string }> = {
-  "mleczko kokosowe":      { sizeG: 400, unit: "can",    label: "puszka 400ml" },
-  "napój kokosowy":        { sizeG: 1000, unit: "carton", label: "karton 1L" },
-  "passata":               { sizeG: 700, unit: "bottle",  label: "butelka 700g" },
-  "ciecierzyca":           { sizeG: 400, unit: "can",    label: "puszka 400g" },
-  "fasola":                { sizeG: 400, unit: "can",    label: "puszka 400g" },
-  "pomidory z puszki":     { sizeG: 400, unit: "can",    label: "puszka 400g" },
-  "soczewica z puszki":    { sizeG: 400, unit: "can",    label: "puszka 400g" },
-  "bulion warzywny":       { sizeG: 500, unit: "carton", label: "karton 500ml" },
-  "jogurt kokosowy":       { sizeG: 125, unit: "pot",    label: "kubek 125g" },
-  "skyr naturalny":        { sizeG: 150, unit: "pot",    label: "kubek 150g" },
-  "ser mozzarella":        { sizeG: 125, unit: "pack",   label: "opakowanie 125g" },
-  "masło migdałowe":       { sizeG: 200, unit: "jar",    label: "słoik 200g" },
+// pieceWeightG: set for count-based items (e.g. egg=60g) → display in pieces, not grams
+const PACKAGE_SIZES: Record<string, { sizeG: number; unit: string; label: string; pieceWeightG?: number }> = {
+  // ── Nabiał i jaja ──────────────────────────────────────────────────────────
+  "jajko":               { sizeG: 600, unit: "pack",    label: "karton 10 szt.", pieceWeightG: 60 },
+  "mleczko kokosowe":    { sizeG: 400, unit: "can",     label: "puszka 400ml" },
+  "napój kokosowy":      { sizeG: 1000, unit: "carton", label: "karton 1L" },
+  "jogurt kokosowy":     { sizeG: 125, unit: "pot",     label: "kubek 125g" },
+  "skyr naturalny":      { sizeG: 150, unit: "pot",     label: "kubek 150g" },
+  "ser mozzarella":      { sizeG: 125, unit: "pack",    label: "opakowanie 125g" },
+  "masło migdałowe":     { sizeG: 900, unit: "jar",     label: "słoik 900g" },
+  "ser feta":            { sizeG: 200, unit: "pack",    label: "opakowanie 200g" },
+  // ── Białko ────────────────────────────────────────────────────────────────
+  "pierś z kurczaka":    { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
+  "pierś z indyka":      { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
+  "mięso mielone":       { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
+  "łosoś atlantycki":    { sizeG: 300, unit: "pack",    label: "opakowanie 300g" },
+  "dorsz":               { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
+  "krewetki":            { sizeG: 300, unit: "pack",    label: "opakowanie 300g" },
+  // ── Warzywa pakowane ──────────────────────────────────────────────────────
+  "rukola":              { sizeG: 100, unit: "bag",     label: "opakowanie 100g" },
+  "roszponka":           { sizeG: 100, unit: "bag",     label: "opakowanie 100g" },
+  "szpinak":             { sizeG: 200, unit: "bag",     label: "opakowanie 200g" },
+  // ── Zboża i kasze ─────────────────────────────────────────────────────────
+  "kasza gryczana":      { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
+  "kasza jaglana":       { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
+  "komosa ryżowa":       { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
+  "makaron gryczany":    { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
+  "ryż":                 { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
+  "płatki owsiane":      { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
+  // ── Orzechy i pestki ──────────────────────────────────────────────────────
+  "pestki dyni":         { sizeG: 100, unit: "bag",     label: "opakowanie 100g" },
+  "pestki słonecznika":  { sizeG: 200, unit: "bag",     label: "opakowanie 200g" },
+  "orzechy włoskie":     { sizeG: 200, unit: "bag",     label: "opakowanie 200g" },
+  "nasiona chia":        { sizeG: 200, unit: "bag",     label: "opakowanie 200g" },
+  // ── Puszki i butelki ──────────────────────────────────────────────────────
+  "passata":             { sizeG: 700, unit: "bottle",  label: "butelka 700g" },
+  "ciecierzyca":         { sizeG: 400, unit: "can",     label: "puszka 400g" },
+  "fasola":              { sizeG: 400, unit: "can",     label: "puszka 400g" },
+  "pomidory z puszki":   { sizeG: 400, unit: "can",     label: "puszka 400g" },
+  "soczewica z puszki":  { sizeG: 400, unit: "can",     label: "puszka 400g" },
+  "bulion warzywny":     { sizeG: 500, unit: "carton",  label: "karton 500ml" },
+  // ── Słoiki ────────────────────────────────────────────────────────────────
+  "olej kokosowy":       { sizeG: 450, unit: "jar",     label: "słoik 450g" },
 };
 
 // Non-linearly scaling ingredients (oils, spices)
@@ -43,6 +73,15 @@ function getPackageInfo(ingredientName: string) {
     if (lower.includes(key)) return info;
   }
   return null;
+}
+
+function buildPackageData(pkg: ReturnType<typeof getPackageInfo>) {
+  return {
+    packageSizeG:  pkg?.sizeG      ?? null,
+    packageUnit:   pkg?.unit       ?? null,
+    packageLabel:  pkg?.label      ?? null,
+    pieceWeightG:  pkg?.pieceWeightG ?? null,
+  };
 }
 
 async function main() {
@@ -66,15 +105,14 @@ async function main() {
     for (const ing of recipe.ingredients) {
       const pkg = getPackageInfo(ing.name);
 
+      const pkgData = buildPackageData(pkg);
       const ingredient = await prisma.ingredient.upsert({
         where: { name: ing.name },
-        update: {},
+        update: pkgData,
         create: {
           name: ing.name,
           category: ing.category || "other",
-          packageSizeG: pkg?.sizeG ?? null,
-          packageUnit: pkg?.unit ?? null,
-          packageLabel: pkg?.label ?? null,
+          ...pkgData,
         },
       });
 
