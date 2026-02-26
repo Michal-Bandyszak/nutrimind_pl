@@ -39,7 +39,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={inter.variable}>
+    <html lang="pl" className={inter.variable} suppressHydrationWarning>
       <head>
         {/* Apply saved theme before first paint — prevents flash of wrong theme */}
         <script
