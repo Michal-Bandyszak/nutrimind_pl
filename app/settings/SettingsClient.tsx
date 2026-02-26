@@ -153,12 +153,12 @@ function AppearanceSection() {
             role="switch"
             aria-checked={isDark}
             aria-label="Tryb ciemny"
-            className={`relative shrink-0 h-7 w-12 rounded-full transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${
               isDark ? 'bg-teal-600' : 'bg-gray-300'
             }`}
           >
             <span
-              className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${
+              className={`pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg transition-transform duration-200 ease-in-out ${
                 isDark ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
