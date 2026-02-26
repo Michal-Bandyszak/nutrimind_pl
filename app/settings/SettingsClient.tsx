@@ -138,32 +138,45 @@ function AppearanceSection() {
   return (
     <section>
       <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Wygląd</h2>
-      <div className="bg-white rounded-2xl border border-border p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {isDark ? (
-              <Moon size={18} className="text-indigo-400" />
-            ) : (
-              <Sun size={18} className="text-amber-500" />
-            )}
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-amber-50 dark:bg-gray-800 rounded-xl">
+              {isDark ? (
+                <Moon size={24} className="text-indigo-500" />
+              ) : (
+                <Sun size={24} className="text-amber-500" />
+              )}
+            </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
               </p>
-              <p className="text-xs text-gray-400">Przełącz motyw aplikacji</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Przełącz motyw aplikacji</p>
             </div>
           </div>
+
           <button
             onClick={toggleTheme}
-            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
-              isDark ? 'bg-teal-600' : 'bg-gray-200'
+            role="switch"
+            aria-checked={isDark}
+            className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              isDark
+                ? 'bg-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-900'
+                : 'bg-gray-300 focus:ring-gray-400 focus:ring-offset-white'
             }`}
           >
             <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform ${
-                isDark ? 'translate-x-7' : 'translate-x-1'
+              className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-lg transition-transform duration-300 flex items-center justify-center ${
+                isDark ? 'translate-x-10' : 'translate-x-1'
               }`}
-            />
+            >
+              {isDark ? (
+                <Moon size={16} className="text-indigo-600" />
+              ) : (
+                <Sun size={16} className="text-amber-500" />
+              )}
+            </span>
           </button>
         </div>
       </div>
