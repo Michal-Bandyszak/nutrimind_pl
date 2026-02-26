@@ -77,18 +77,26 @@ export type ShoppingIngredient = {
   name: string;
   category: string;
   totalG: number;
-  displayAmount: string;
+  displayAmount: string;       // "13 szt." for piece-based, "350 g" for weight-based
   packageSizeG: number | null;
   packageUnit: string | null;
   packageLabel: string | null;
+  pieceWeightG: number | null; // grams per piece (e.g. egg = 60g) — null = weight-based
   packagesNeeded: number | null;
   leftoverG: number | null;
+  leftoverDisplay: string | null; // "7 szt." or "~200g"
   usedIn: {
     recipeName: string;
     mealType: string;
     days: number[];
     amountG: number;
   }[];
+};
+
+export type LeftoverItem = {
+  name: string;
+  leftoverDisplay: string;  // "7 szt." or "~200g"
+  packageInfo: string | null; // "2 × karton 10 szt."
 };
 
 export type ShoppingCategory = {
@@ -103,4 +111,5 @@ export type ShoppingList = {
   planName: string;
   categories: ShoppingCategory[];
   totalItems: number;
+  leftovers: LeftoverItem[];  // items with significant leftovers after buying full packages
 };
