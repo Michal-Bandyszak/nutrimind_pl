@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
-import type { ShoppingList, ShoppingIngredient, ShoppingCategory } from '@/lib/types';
+import type { ShoppingList, ShoppingIngredient, ShoppingCategory, LeftoverItem } from '@/lib/types';
 
 type IngredientRaw = {
   id: string;
@@ -8,6 +8,7 @@ type IngredientRaw = {
   packageSizeG: number | null;
   packageUnit: string | null;
   packageLabel: string | null;
+  pieceWeightG: number | null;
 };
 
 const CATEGORY_CONFIG: Record<string, { label: string; emoji: string; order: number }> = {
@@ -26,13 +27,25 @@ function scaleAmount(amountG: number, servings: number, scalesLinearly: boolean)
   return amountG * Math.sqrt(servings); // sqrt scaling for oils/spices
 }
 
-function formatAmount(grams: number): string {
+function formatAmount(grams: number, pieceWeightG?: number | null): string {
+  if (pieceWeightG && pieceWeightG > 0) {
+    const pieces = Math.round(grams / pieceWeightG);
+    return `${pieces} szt.`;
+  }
   if (grams >= 1000) {
     const kg = grams / 1000;
     return `${kg % 1 === 0 ? kg.toFixed(0) : kg.toFixed(1)} kg`;
   }
   if (grams < 5) return `${Math.round(grams * 10) / 10} g`;
   return `${Math.round(grams / 5) * 5} g`;
+}
+
+function formatLeftover(leftoverG: number, pieceWeightG?: number | null): string {
+  if (pieceWeightG && pieceWeightG > 0) {
+    const pieces = Math.round(leftoverG / pieceWeightG);
+    return `${pieces} szt.`;
+  }
+  return `~${Math.round(leftoverG)} g`;
 }
 
 function addIngredient(
@@ -55,8 +68,10 @@ function addIngredient(
       packageSizeG: ingredient.packageSizeG,
       packageUnit: ingredient.packageUnit,
       packageLabel: ingredient.packageLabel,
+      pieceWeightG: ingredient.pieceWeightG,
       packagesNeeded: null,
       leftoverG: null,
+      leftoverDisplay: null,
       usedIn: [usage],
     });
   }
@@ -70,7 +85,17 @@ export async function buildShoppingList(planId: string): Promise<ShoppingList> {
         include: {
           recipe: {
             include: {
-              ingredients: { include: { ingredient: true } },
+              ingredients: {
+                include: {
+                  ingredient: {
+                    select: {
+                      id: true, name: true, category: true,
+                      packageSizeG: true, packageUnit: true, packageLabel: true,
+                      pieceWeightG: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -124,12 +149,13 @@ export async function buildShoppingList(planId: string): Promise<ShoppingList> {
     }
   }
 
-  // Finalize: display amounts + package info
+  // Finalize: display amounts + package info + leftover calculation
   for (const item of ingredientMap.values()) {
-    item.displayAmount = formatAmount(item.totalG);
+    item.displayAmount = formatAmount(item.totalG, item.pieceWeightG);
     if (item.packageSizeG && item.packageSizeG > 0) {
       item.packagesNeeded = Math.ceil(item.totalG / item.packageSizeG);
       item.leftoverG = item.packagesNeeded * item.packageSizeG - item.totalG;
+      item.leftoverDisplay = formatLeftover(item.leftoverG, item.pieceWeightG);
     }
   }
 
@@ -158,10 +184,29 @@ export async function buildShoppingList(planId: string): Promise<ShoppingList> {
     return aOrder - bOrder;
   });
 
+  // Build leftovers summary — items with significant leftover (> 20g or ≥ 1 piece)
+  const leftovers: LeftoverItem[] = [];
+  for (const item of ingredientMap.values()) {
+    if (item.leftoverG === null || item.leftoverG <= 0) continue;
+    const isSignificant = item.pieceWeightG
+      ? item.leftoverG >= item.pieceWeightG        // at least 1 piece
+      : item.leftoverG > 20;                       // more than 20g
+    if (!isSignificant) continue;
+    leftovers.push({
+      name: item.name,
+      leftoverDisplay: item.leftoverDisplay!,
+      packageInfo: item.packagesNeeded && item.packageLabel
+        ? `${item.packagesNeeded} × ${item.packageLabel}`
+        : null,
+    });
+  }
+  leftovers.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+
   return {
     planId,
     planName: plan.name,
     categories,
     totalItems: ingredientMap.size,
+    leftovers,
   };
 }

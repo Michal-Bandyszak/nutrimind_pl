@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 import type { ShoppingList, ShoppingIngredient } from '@/lib/types';
 
 type Props = { list: ShoppingList };
 
 export default function ShoppingClient({ list }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [leftoversOpen, setLeftoversOpen] = useState(true);
 
   function toggle(id: string) {
     setChecked((prev) => {
@@ -17,16 +18,61 @@ export default function ShoppingClient({ list }: Props) {
     });
   }
 
+  const [copied, setCopied] = useState(false);
+
   const totalChecked = checked.size;
   const total = list.totalItems;
 
+  function exportAsText(): string {
+    const lines: string[] = [`🛒 Lista zakupów — ${list.planName}`, ''];
+    for (const cat of list.categories) {
+      lines.push(`${cat.emoji} ${cat.label}`);
+      for (const item of cat.items) {
+        const pkg = item.packageLabel && item.packagesNeeded
+          ? ` (${item.packagesNeeded} × ${item.packageLabel})`
+          : '';
+        lines.push(`  ☐ ${item.name} — ${item.displayAmount}${pkg}`);
+      }
+      lines.push('');
+    }
+    return lines.join('\n').trim();
+  }
+
+  async function handleCopy() {
+    const text = exportAsText();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
   return (
     <div className="space-y-6">
-      {/* Progress bar */}
+      {/* Progress bar + export */}
       <div className="space-y-1.5">
         <div className="flex justify-between text-xs text-gray-400">
           <span>Postęp zakupów</span>
-          <span>{totalChecked} / {total}</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1 text-xs text-gray-400 hover:text-teal-600 transition-colors"
+            >
+              {copied ? <Check size={13} className="text-teal-600" /> : <Copy size={13} />}
+              {copied ? 'Skopiowano!' : 'Kopiuj listę'}
+            </button>
+            <span>{totalChecked} / {total}</span>
+          </div>
         </div>
         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <div
@@ -35,6 +81,42 @@ export default function ShoppingClient({ list }: Props) {
           />
         </div>
       </div>
+
+      {/* Leftovers panel */}
+      {list.leftovers.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl overflow-hidden">
+          <button
+            onClick={() => setLeftoversOpen((v) => !v)}
+            className="w-full flex items-center gap-2 px-4 py-3 text-left"
+          >
+            <AlertTriangle size={15} className="text-amber-500 shrink-0" />
+            <span className="text-sm font-semibold text-amber-800 flex-1">
+              Zostanie Ci {list.leftovers.length} {list.leftovers.length === 1 ? 'produkt' : 'produkty/produktów'} po tygodniu
+            </span>
+            {leftoversOpen
+              ? <ChevronUp size={15} className="text-amber-400 shrink-0" />
+              : <ChevronDown size={15} className="text-amber-400 shrink-0" />
+            }
+          </button>
+          {leftoversOpen && (
+            <div className="border-t border-amber-200 divide-y divide-amber-100">
+              {list.leftovers.map((item) => (
+                <div key={item.name} className="flex items-baseline justify-between px-4 py-2.5">
+                  <div>
+                    <span className="text-sm text-amber-900">{item.name}</span>
+                    {item.packageInfo && (
+                      <span className="text-xs text-amber-500 ml-2">({item.packageInfo})</span>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-amber-700 ml-4 shrink-0">
+                    zostanie {item.leftoverDisplay}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Categories */}
       {list.categories.map((cat) => (
@@ -107,24 +189,16 @@ function ShoppingRow({
           </span>
         </div>
 
-        {/* Package info */}
+        {/* Package info + leftover */}
         {item.packageLabel && item.packagesNeeded && (
           <p className="text-xs text-gray-400 mt-0.5">
             {item.packagesNeeded} × {item.packageLabel}
-            {hasWaste && item.leftoverG && (
+            {hasWaste && item.leftoverDisplay && (
               <span className="ml-2 text-amber-500 font-medium">
-                (zostanie ~{Math.round(item.leftoverG)}g)
+                (zostanie {item.leftoverDisplay})
               </span>
             )}
           </p>
-        )}
-
-        {/* Waste warning */}
-        {hasWaste && item.leftoverG && item.leftoverG > 50 && !item.packageLabel && (
-          <div className="flex items-center gap-1 mt-1">
-            <AlertTriangle size={11} className="text-amber-400" />
-            <span className="text-xs text-amber-500">Zostanie ~{Math.round(item.leftoverG)}g</span>
-          </div>
         )}
 
         {/* Usage hint */}
