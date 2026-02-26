@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X } from 'lucide-react';
+import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X, CheckCircle2 } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
 import type { SubstitutionResult } from '@/lib/services/SubstitutionEngine';
 import AddRecipeModal from '@/components/recipes/AddRecipeModal';
@@ -191,6 +191,8 @@ function RecipeCard({
   })();
 
   const macroScale = servings; // macros per serving × servings
+  const isPerWhole = recipe.ingredientBasis === 'per-whole';
+  const baseServings = recipe.baseServings || 1;
 
   return (
     <div className="bg-white border border-border rounded-2xl overflow-hidden">
@@ -202,13 +204,29 @@ function RecipeCard({
       >
         <div className="flex items-start gap-3">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-1.5 mb-1 flex-wrap">
               <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_COLORS[recipe.type] ?? 'bg-gray-100 text-gray-500'}`}>
                 {TYPE_LABELS[recipe.type] ?? recipe.type}
               </span>
               {recipeTags.includes('zupa') && (
                 <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700">
                   Zupa
+                </span>
+              )}
+              {/* Source badge */}
+              {recipe.source === 'user' ? (
+                <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                  Własny
+                </span>
+              ) : null}
+              {/* Verification badge */}
+              {recipe.nutritionVerified ? (
+                <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+                  <CheckCircle2 size={10} /> Zweryfikowane
+                </span>
+              ) : (
+                <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
+                  Brak makro
                 </span>
               )}
             </div>
@@ -289,14 +307,22 @@ function RecipeCard({
           {/* Ingredients */}
           <div className="px-4 py-3">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Składniki
-              </p>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  Składniki
+                </p>
+                {isPerWhole && (
+                  <p className="text-xs text-amber-600 mt-0.5">
+                    Przepis na {baseServings} porcji — skalowane z całej formy
+                  </p>
+                )}
+              </div>
               <p className="text-xs text-gray-300">kliknij składnik → zamienniki</p>
             </div>
             <ul className="space-y-1">
               {recipe.ingredients.map((ri) => {
-                const scaled = scaleAmount(ri.amountG, servings, ri.scalesLinearly);
+                const perServing = isPerWhole ? ri.amountG / baseServings : ri.amountG;
+                const scaled = scaleAmount(perServing, servings, ri.scalesLinearly);
                 const isActive = subsFor === ri.ingredient.id;
                 return (
                   <li key={ri.id}>
