@@ -17,9 +17,10 @@ model Ingredient {
   fatPer100g     Float?
   fiberPer100g   Float?
   // Package size for waste prevention (e.g., coconut milk = 400g can)
-  packageSizeG Float?
-  packageUnit  String?  // can | bottle | bag | bunch
-  packageLabel String?  // "400ml can"
+  packageSizeG  Float?
+  packageUnit   String?  // can | bottle | bag | bunch | pack
+  packageLabel  String?  // "karton 10 szt.", "puszka 400ml"
+  pieceWeightG  Float?   // grams per piece — set for count-sold items (egg=60g)
   recipeIngredients RecipeIngredient[]
   createdAt    DateTime @default(now())
 }
