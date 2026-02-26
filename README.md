@@ -1,158 +1,248 @@
 # NutriMind
 
-AI-powered meal planning with batch cooking optimization and waste-aware shopping lists.
+Aplikacja do planowania posiłków z gotowaniem wsadowym, listą zakupów i śledzeniem resztek opakowań.
 
 ---
 
-## Quick Start (localhost)
+## Szybki start (localhost)
 
-### 1. Install dependencies
+### 1. Zainstaluj zależności
 
 ```bash
 npm install
 ```
 
-### 2. Set up environment
+### 2. Środowisko
 
-The `.env` file is already created with SQLite config:
+Plik `.env` jest już skonfigurowany z SQLite:
 
 ```
 DATABASE_URL="file:./dev.db"
 ```
 
-> When you add the Anthropic API key for AI features later, add it here:
+> Gdy dodasz klucz Anthropic API do funkcji AI (Phase 2), dopisz tutaj:
 > `ANTHROPIC_API_KEY="sk-ant-..."`
 
-### 3. The database is already seeded
+### 3. Baza danych jest już gotowa
 
-The SQLite database (`prisma/dev.db`) is pre-seeded with 58 recipes from two diet files. If it's missing or you want to reset it:
+SQLite (`prisma/dev.db`) zawiera 88 przepisów z czterech diet. Jeśli jej brakuje lub chcesz zresetować:
 
 ```bash
-# Option A: Full reset (drops everything, re-migrates, re-seeds)
+# Pełny reset (usuwa wszystko, migruje, seeduje)
 npm run db:reset
 
-# Option B: Just re-seed (schema already exists)
+# Tylko re-seed (schemat już istnieje)
 npm run db:seed
 ```
 
-### 4. Start the dev server
+### 4. Uruchom serwer
 
 ```bash
 npm run dev
 ```
 
-App runs at **http://localhost:3000**
+Aplikacja dostępna na **http://localhost:3000**
 
 ---
 
-## Adding a New Diet
+## Jak korzystać z aplikacji
 
-When you have a new diet file (`.md` format from the dietitian), drop it in the root directory and add its filename to `scripts/parse-diets.ts`:
+### Plan tygodnia (`/`)
+
+Główny widok — siatka 7 dni z posiłkami (śniadanie, drugie śniadanie, obiad, kolacja, koktajl).
+
+**Generowanie planu:**
+1. Kliknij przycisk **Generuj plan** (przycisk z ikonką ⚙️)
+2. Opcjonalnie skonfiguruj grupy batch (kliknij ⚙️ żeby rozwinąć panel `BatchConfig`)
+3. Kliknij **Generuj** — plan pojawi się w siatce
+
+**BatchConfig — jak działa:**
+- Każdy wiersz (śniadanie, drugie śniadanie, obiad, kolacja) ma 7 pól dla dni tygodnia
+- Kliknięcie w lukę między dniem **tworzy/usuwa przerwę** między partiami
+- Gruba linia = nowa partia (inny przepis), przerywana = ta sama partia
+- Domyślnie: Pn-Śr jedna partia | Cz-Nd druga partia
+
+**Drag & Drop (zamiana posiłków):**
+- Chwyć kartę przepisu i upuść na inny dzień — zamieniają się całymi grupami batch
+- Zamiana działa w obrębie całej grupy (np. zamiana obiadu Pn-Śr z obiadem Cz-Nd)
+
+**Kolory batch:**
+- Każda grupa batch ma swój kolor (teal, amber, sky, rose, violet, orange)
+- Cyfra w prawym górnym rogu karty = dzień w grupie (1, 2, 3...)
+- Dzień gotowania = świeżo gotowane (brak cyfry lub cyfra 1)
+
+---
+
+### Przepisy (`/recipes`)
+
+- Wyszukiwarka po nazwie
+- Filtr po typie posiłku (śniadanie, obiad, kolacja, itd.)
+- Kliknięcie przepisu rozija kartę z makrami i listą składników
+
+---
+
+### Lista zakupów (`/shopping`)
+
+Lista generuje się automatycznie z aktywnego planu tygodnia.
+
+**Co zawiera:**
+
+- **Pasek postępu** — zaznaczaj produkty jako kupione
+- **Panel "Zostanie Ci X produktów"** *(amber, na górze)* — zbiorczy podgląd resztek:
+  - Pokazuje wszystkie produkty, których po tygodniu zostanie więcej niż 1 szt. / 20g
+  - Format: `Jajko — zostanie 7 szt. (2 × karton 10 szt.)`
+  - Składany (kliknij żeby zwinąć)
+- **Grupy kategorii** — Warzywa, Owoce, Białko, Nabiał, Zboża, Oleje, Przyprawy, Inne
+- **Per produkt**:
+  - Nazwa + ilość (np. `13 szt.` dla jajek, `350 g` dla warzyw)
+  - Info o opakowaniu: `2 × karton 10 szt.`
+  - Resztka inline: `(zostanie 7 szt.)`
+  - Subtext: przepisy, w których jest używany
+
+**Dane opakowań (37 produktów):**
+
+| Produkt | Opakowanie |
+|---|---|
+| Jajko | karton 10 szt. |
+| Pierś z kurczaka / indyka | 500g |
+| Łosoś atlantycki | 300g |
+| Dorsz | 400g |
+| Krewetki | 300g |
+| Rukola, Roszponka | 100g |
+| Szpinak, młody szpinak | 200g |
+| Kasza gryczana / jaglana | 400g |
+| Komosa ryżowa, Makaron gryczany | 400g |
+| Ryż brązowy / dziki | 500g |
+| Płatki owsiane | 500g |
+| Pestki dyni | 100g |
+| Pestki słonecznika, Orzechy włoskie, Nasiona chia | 200g |
+| Mleczko kokosowe | puszka 400ml |
+| Napój kokosowy | karton 1L |
+| Masło migdałowe | słoik 900g |
+| Ser mozzarella | 125g |
+| Ser feta | 200g |
+| Olej kokosowy | słoik 450g |
+| Jogurt kokosowy | kubek 125g |
+| Skyr naturalny | kubek 150g |
+| Passata | butelka 700g |
+| Ciecierzyca / fasola z puszki | puszka 400g |
+| Pomidory z puszki | puszka 400g |
+| Bulion warzywny | karton 500ml |
+
+> Rozmiary opakowań skonfigurowane w `prisma/seed.ts` → `PACKAGE_SIZES`. Można edytować i uruchomić `npm run db:seed` żeby zaktualizować bazę.
+
+---
+
+### Ustawienia (`/settings`)
+
+- Zmiana docelowej kaloryczności dla Osoby A i B
+- Konfiguracja domyślnego BatchConfig (zapisywana w bazie)
+
+---
+
+## Dodawanie nowej diety
+
+Gdy masz nowy plik diety (format `.md` od dietetyka):
+
+1. Wrzuć plik do głównego katalogu projektu
+2. Dodaj nazwę pliku do `scripts/parse-diets.ts`:
 
 ```typescript
 const DIET_FILES = [
   "Plan bazowy A.md",
   "Plan bazowy B.md",
-  "nowa-dieta.md",   // ← add here
+  "nowa-dieta.md",   // ← dodaj tutaj
 ];
 ```
 
-Then run:
+3. Uruchom:
 
 ```bash
-npm run parse:diets   # extracts recipes → data/parsed/
-npm run db:seed       # upserts into database (safe to run multiple times)
+npm run parse:diets   # wyciąga przepisy → data/parsed/
+npm run db:seed       # upsertuje do bazy (bezpieczne, można wielokrotnie)
 ```
 
 ---
 
-## Useful Commands
+## Przydatne komendy
 
-| Command | What it does |
+| Komenda | Co robi |
 |---|---|
-| `npm run dev` | Start local dev server on :3000 |
-| `npm run build` | Production build |
-| `npm run parse:diets` | Parse diet .md files → `data/parsed/combined.json` |
-| `npm run db:seed` | Seed database from parsed diets (idempotent) |
-| `npm run db:reset` | Full wipe + re-migrate + re-seed |
-| `npm run db:studio` | Open Prisma Studio (visual DB browser) at :5555 |
-| `npm run db:migrate` | Run schema migrations after changing `prisma/schema.prisma` |
+| `npm run dev` | Serwer developerski na :3000 |
+| `npm run build` | Build produkcyjny |
+| `npm run parse:diets` | Parsuje pliki diet .md → `data/parsed/combined.json` |
+| `npm run db:seed` | Seeduje bazę z parsed diet (idempotent) |
+| `npm run db:reset` | Pełny reset + migracja + seed |
+| `npm run db:studio` | Przeglądarka bazy Prisma Studio na :5555 |
+| `npm run db:migrate` | Migracje schematu po zmianie `prisma/schema.prisma` |
 
 ---
 
-## Database Browser
-
-To inspect the database visually:
-
-```bash
-npm run db:studio
-```
-
-Opens at http://localhost:5555 — you can browse all recipes, ingredients, meal plans.
-
----
-
-## Project Structure
+## Struktura projektu
 
 ```
 nutrimind/
-├── app/                  # Next.js App Router pages (to be built)
-│   └── api/              # API routes (to be built)
-├── components/           # React components (to be built)
-│   └── ui/               # shadcn/ui components (to be added)
+├── app/
+│   ├── (root)/             # Plan tygodnia (strona główna)
+│   ├── recipes/            # Przeglądarka przepisów
+│   ├── shopping/           # Lista zakupów
+│   ├── settings/           # Ustawienia kalorii i batch config
+│   └── api/                # API routes (meal-plans, recipes, shopping, settings)
+├── components/
+│   ├── plan/               # WeekGrid, MealCard, GenerateButton, BatchConfigPanel, PlanView
+│   └── nav/                # Navigation (desktop sidebar + mobile bottom bar)
 ├── lib/
-│   └── services/         # Business logic (to be built)
+│   ├── services/
+│   │   ├── MealPlanGenerator.ts   # Generowanie planu tygodnia
+│   │   └── ShoppingListBuilder.ts # Lista zakupów z obliczaniem resztek
+│   ├── types/index.ts      # Typy TypeScript
+│   └── utils/
+│       └── batchColors.ts  # System kolorów dla grup batch
 ├── prisma/
-│   ├── schema.prisma     # Database schema
-│   ├── seed.ts           # Seeder script
-│   ├── dev.db            # SQLite database (git-ignored)
-│   └── migrations/       # Migration history
+│   ├── schema.prisma       # Schemat bazy
+│   ├── seed.ts             # Seeder (z PACKAGE_SIZES)
+│   ├── dev.db              # SQLite (git-ignored)
+│   └── migrations/         # Historia migracji
 ├── scripts/
-│   └── parse-diets.ts    # Diet .md → JSON parser
-├── data/
-│   └── parsed/           # Parsed recipe JSON files
-├── .env                  # Local environment variables (git-ignored)
-├── next.config.ts
-├── postcss.config.js     # Tailwind v4 PostCSS config
-└── tsconfig.json
+│   └── parse-diets.ts      # Parser diet .md → JSON
+└── data/
+    └── parsed/             # Sparsowane pliki JSON
+```
+
+---
+
+## Schemat bazy danych
+
+```
+Ingredient       — nazwa, kategoria, makra/100g, dane opakowania (packageSizeG, pieceWeightG)
+Recipe           — nazwa, typ, makra/porcję, batch-friendly, max dni przechowywania
+RecipeIngredient — łączy Recipe ↔ Ingredient z ilością w gramach
+MealPlan         — plan tygodniowy (draft/active/archived)
+MealPlanMeal     — jeden slot posiłku (dzień, typ, przepis, porcje, batchGroupId)
+AppSettings      — ustawienia: kcal celów, domyślny BatchConfig
+HealthLog        — dziennik zdrowia (Phase 2)
 ```
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
+| Warstwa | Technologia |
 |---|---|
 | Framework | Next.js 16 (App Router) |
-| Language | TypeScript |
+| Język | TypeScript |
 | UI | Tailwind CSS v4 + shadcn/ui |
-| Database | SQLite (Prisma v5) |
+| Baza danych | SQLite (Prisma v5) |
 | AI | Claude API — Anthropic SDK (Phase 2) |
 | Deploy | Vercel |
 
 ---
 
-## Database Schema (current)
+## Phase 2 — planowane funkcje
 
-```
-Ingredient       — name, category, kcal/100g macros, package size for waste tracking
-Recipe           — name, type, macros/serving, batch-friendly flag, max storage days
-RecipeIngredient — links Recipe ↔ Ingredient with gram amounts
-MealPlan         — a weekly plan (draft/active/archived)
-MealPlanMeal     — one meal slot in a plan (day, type, recipe, servings, batchGroupId)
-```
-
----
-
-## Phase 2 Setup (future)
-
-When adding Claude AI features, install the Anthropic SDK:
-
-```bash
-npm install @anthropic-ai/sdk
-```
-
-Add to `.env`:
-```
-ANTHROPIC_API_KEY="sk-ant-..."
-```
+- Generowanie planu przez Claude AI
+- Zamiana składników (silnik substytucji)
+- Chat z asystentem AI
+- Dziennik zdrowia (nastrój, energia, sen, woda, waga)
+- Dashboard z wykresami makr i Mediterranean Score
+- Multi-user (Supabase PostgreSQL + Auth)
