@@ -19,16 +19,18 @@ SCHEMA:
   "cookTimeMin": number | null,
   "batchFriendly": true | false,
   "maxStorageDays": number (1-4),
-  "kcalPerServing": number,
-  "proteinG": number,
-  "carbsG": number,
-  "fatG": number,
+  "baseServings": number (ile porcji daje cały przepis, np. 12 dla ciasta),
+  "ingredientBasis": "per-serving" | "per-whole",
+  "kcalPerServing": number | null,
+  "proteinG": number | null,
+  "carbsG": number | null,
+  "fatG": number | null,
   "fiberG": number | null,
   "instructions": ["krok 1...", "krok 2..."],
   "ingredients": [
     {
       "name": "składnik po polsku, mała litera",
-      "amountG": number (gramy na 1 porcję),
+      "amountG": number,
       "displayText": "np. '200g piersi z kurczaka' lub '2 łyżki oliwy (30g)'",
       "category": "vegetables | fruits | grains | protein | dairy | oils | nuts | spices | other",
       "scalesLinearly": true | false
@@ -37,10 +39,13 @@ SCHEMA:
 }
 
 ZASADY:
-- Wartości makroskładników NA 1 PORCJĘ (nie na 100g).
+- ingredientBasis="per-serving": składniki podane na 1 porcję (typowe dla dań głównych, zup).
+- ingredientBasis="per-whole": składniki podane na CAŁĄ RECEPTURĘ (ciasta, torty, serniki).
+  Wtedy ustaw baseServings=liczba_porcji_z_całej_formy (np. 12 dla sernika).
+- Makroskładniki NA 1 PORCJĘ (nie na 100g). Jeśli nieznane, wstaw null.
 - batchFriendly=true: zupy, gulasze, zapiekanki, potrawy jednogarnkowe.
-- batchFriendly=false: sałatki, kanapki, smoothie, dania smażone na ostatnią chwilę.
-- maxStorageDays: zupy warzywne=3-4, mięso=2-3, ryby=1-2, sałatki=1.
+- batchFriendly=false: sałatki, kanapki, smoothie, ciasta, dania smażone.
+- maxStorageDays: zupy warzywne=3-4, mięso=2-3, ryby=1-2, sałatki=1, ciasta=2-3.
 - scalesLinearly=false: oleje, oliwa, masło, sól, pieprz, zioła, czosnek, cebula.
 - Odpowiedź TYLKO jako czysty JSON, bez komentarzy, bez markdown.
 
@@ -91,10 +96,12 @@ type FileData = {
   cookTimeMin: number | null;
   batchFriendly: boolean;
   maxStorageDays: number;
-  kcalPerServing: number;
-  proteinG: number;
-  carbsG: number;
-  fatG: number;
+  baseServings?: number;
+  ingredientBasis?: 'per-serving' | 'per-whole';
+  kcalPerServing: number | null;
+  proteinG: number | null;
+  carbsG: number | null;
+  fatG: number | null;
   fiberG: number | null;
   instructions: string[];
   ingredients: {
@@ -142,6 +149,9 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
   const [fileData, setFileData] = useState<FileData | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [pasteText, setPasteText] = useState('');
+  // Upload tab ingredient basis override
+  const [uploadBasis, setUploadBasis] = useState<'per-serving' | 'per-whole'>('per-serving');
+  const [uploadBaseServings, setUploadBaseServings] = useState('1');
 
   // Manual tab
   const [name, setName] = useState('');
@@ -149,6 +159,8 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
   const [prepTimeMin, setPrepTimeMin] = useState('');
   const [batchFriendly, setBatchFriendly] = useState(false);
   const [maxStorageDays, setMaxStorageDays] = useState('1');
+  const [manualBasis, setManualBasis] = useState<'per-serving' | 'per-whole'>('per-serving');
+  const [manualBaseServings, setManualBaseServings] = useState('1');
   const [kcal, setKcal] = useState('');
   const [protein, setProtein] = useState('');
   const [carbs, setCarbs] = useState('');
@@ -203,6 +215,14 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
       }
       setFileError(null);
       setFileData(parsed);
+      // Auto-set basis from JSON if present
+      if (parsed.ingredientBasis === 'per-whole') {
+        setUploadBasis('per-whole');
+        setUploadBaseServings(String(parsed.baseServings ?? 1));
+      } else {
+        setUploadBasis('per-serving');
+        setUploadBaseServings(String(parsed.baseServings ?? 1));
+      }
     } catch {
       setFileError('Błąd parsowania JSON. Sprawdź czy tekst to poprawny JSON.');
       setFileData(null);
@@ -211,9 +231,9 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
 
   function buildPayloadFromForm(): FileData | null {
     if (!name.trim()) { setError('Nazwa przepisu jest wymagana.'); return null; }
-    if (!kcal || !protein || !carbs || !fat) { setError('Makroskładniki (kcal, białko, węgle, tłuszcze) są wymagane.'); return null; }
     const validIngredients = ingredients.filter(i => i.name.trim() && i.amountG);
     if (validIngredients.length === 0) { setError('Wymagany co najmniej 1 składnik z nazwą i ilością.'); return null; }
+    const isValidNum = (v: string) => v !== '' && !isNaN(Number(v)) && Number(v) >= 0;
     return {
       name: name.trim(),
       type,
@@ -221,11 +241,13 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
       cookTimeMin: null,
       batchFriendly,
       maxStorageDays: Number(maxStorageDays) || 1,
-      kcalPerServing: Number(kcal),
-      proteinG: Number(protein),
-      carbsG: Number(carbs),
-      fatG: Number(fat),
-      fiberG: fiber ? Number(fiber) : null,
+      baseServings: manualBasis === 'per-whole' ? (Number(manualBaseServings) || 1) : 1,
+      ingredientBasis: manualBasis,
+      kcalPerServing: isValidNum(kcal) ? Number(kcal) : null,
+      proteinG:       isValidNum(protein) ? Number(protein) : null,
+      carbsG:         isValidNum(carbs) ? Number(carbs) : null,
+      fatG:           isValidNum(fat) ? Number(fat) : null,
+      fiberG:         isValidNum(fiber) ? Number(fiber) : null,
       instructions: steps.map(s => s.text).filter(Boolean),
       ingredients: validIngredients.map(i => ({
         name: i.name.trim(),
@@ -238,14 +260,24 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
 
   async function handleSave() {
     setError(null);
-    const payload = activeTab === 'upload' ? fileData : buildPayloadFromForm();
+    let payload: FileData | null;
+    if (activeTab === 'upload') {
+      if (!fileData) return;
+      payload = {
+        ...fileData,
+        ingredientBasis: uploadBasis,
+        baseServings: Number(uploadBaseServings) || 1,
+      };
+    } else {
+      payload = buildPayloadFromForm();
+    }
     if (!payload) return;
     setSaving(true);
     try {
       const res = await fetch('/api/recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, source: 'user', nutritionVerified: false }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -307,6 +339,10 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
               fileError={fileError}
               pasteText={pasteText}
               onPasteTextChange={(text) => { setPasteText(text); processJsonText(text); }}
+              uploadBasis={uploadBasis}
+              onUploadBasisChange={setUploadBasis}
+              uploadBaseServings={uploadBaseServings}
+              onUploadBaseServingsChange={setUploadBaseServings}
             />
           ) : (
             <ManualTab
@@ -315,6 +351,8 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
               prepTimeMin={prepTimeMin} setPrepTimeMin={setPrepTimeMin}
               batchFriendly={batchFriendly} setBatchFriendly={setBatchFriendly}
               maxStorageDays={maxStorageDays} setMaxStorageDays={setMaxStorageDays}
+              manualBasis={manualBasis} setManualBasis={setManualBasis}
+              manualBaseServings={manualBaseServings} setManualBaseServings={setManualBaseServings}
               kcal={kcal} setKcal={setKcal}
               protein={protein} setProtein={setProtein}
               carbs={carbs} setCarbs={setCarbs}
@@ -366,8 +404,67 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
 // Upload tab
 // ─────────────────────────────────────────────────────────────────────────────
 
+function IngredientBasisPicker({
+  basis, onBasisChange, baseServings, onBaseServingsChange,
+}: {
+  basis: 'per-serving' | 'per-whole';
+  onBasisChange: (v: 'per-serving' | 'per-whole') => void;
+  baseServings: string;
+  onBaseServingsChange: (v: string) => void;
+}) {
+  return (
+    <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+      <p className="text-xs font-semibold text-amber-700">Składniki podane na:</p>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => onBasisChange('per-serving')}
+          className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-medium border transition ${
+            basis === 'per-serving'
+              ? 'bg-teal-700 text-white border-teal-700'
+              : 'bg-white text-gray-500 border-gray-200 hover:border-teal-300'
+          }`}
+        >
+          1 porcję
+        </button>
+        <button
+          type="button"
+          onClick={() => onBasisChange('per-whole')}
+          className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-medium border transition ${
+            basis === 'per-whole'
+              ? 'bg-amber-500 text-white border-amber-500'
+              : 'bg-white text-gray-500 border-gray-200 hover:border-amber-300'
+          }`}
+        >
+          Całą formę / recepturę
+        </button>
+      </div>
+      {basis === 'per-whole' && (
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-amber-700 shrink-0">Liczba porcji z całości:</label>
+          <input
+            type="number"
+            min="1"
+            max="50"
+            value={baseServings}
+            onChange={(e) => onBaseServingsChange(e.target.value)}
+            className="w-20 px-2 py-1 border border-amber-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition bg-white"
+          />
+          <span className="text-xs text-amber-600">porcji</span>
+        </div>
+      )}
+      <p className="text-xs text-amber-600">
+        {basis === 'per-whole'
+          ? 'Np. sernik: 750g serka na całą formę (12 porcji) → system podzieli automatycznie.'
+          : 'Standardowe dania: składniki na 1 osobę / 1 porcję.'}
+      </p>
+    </div>
+  );
+}
+
 function UploadTab({
   copied, onCopy, fileData, fileError, pasteText, onPasteTextChange,
+  uploadBasis, onUploadBasisChange, uploadBaseServings, onUploadBaseServingsChange,
 }: {
   copied: boolean;
   onCopy: () => void;
@@ -375,6 +472,10 @@ function UploadTab({
   fileError: string | null;
   pasteText: string;
   onPasteTextChange: (text: string) => void;
+  uploadBasis: 'per-serving' | 'per-whole';
+  onUploadBasisChange: (v: 'per-serving' | 'per-whole') => void;
+  uploadBaseServings: string;
+  onUploadBaseServingsChange: (v: string) => void;
 }) {
   return (
     <div className="space-y-5">
@@ -438,7 +539,7 @@ function UploadTab({
         )}
       </div>
 
-      {/* Step 3: Preview */}
+      {/* Step 3: Preview + ingredient basis */}
       {fileData && (
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
@@ -455,11 +556,13 @@ function UploadTab({
             </div>
             <p className="text-sm font-semibold text-gray-900">{fileData.name}</p>
             <div className="flex items-center gap-3 text-xs text-gray-500 flex-wrap">
-              <span className="font-medium text-gray-700">{Math.round(fileData.kcalPerServing)} kcal</span>
-              <span>B {Math.round(fileData.proteinG)}g</span>
-              <span>W {Math.round(fileData.carbsG)}g</span>
-              <span>T {Math.round(fileData.fatG)}g</span>
-              {fileData.fiberG && <span>Bł {Math.round(fileData.fiberG)}g</span>}
+              {fileData.kcalPerServing != null
+                ? <span className="font-medium text-gray-700">{Math.round(fileData.kcalPerServing)} kcal</span>
+                : <span className="text-gray-400 italic">brak makro</span>}
+              {fileData.proteinG != null && <span>B {Math.round(fileData.proteinG)}g</span>}
+              {fileData.carbsG != null && <span>W {Math.round(fileData.carbsG)}g</span>}
+              {fileData.fatG != null && <span>T {Math.round(fileData.fatG)}g</span>}
+              {fileData.fiberG != null && <span>Bł {Math.round(fileData.fiberG)}g</span>}
             </div>
             <div className="flex items-center gap-3 text-xs text-gray-400">
               <span>{fileData.ingredients.length} składników</span>
@@ -467,6 +570,15 @@ function UploadTab({
               <span>max {fileData.maxStorageDays} dni</span>
             </div>
           </div>
+          <IngredientBasisPicker
+            basis={uploadBasis}
+            onBasisChange={onUploadBasisChange}
+            baseServings={uploadBaseServings}
+            onBaseServingsChange={onUploadBaseServingsChange}
+          />
+          <p className="text-xs text-gray-400 mt-2">
+            Przepis zostanie zapisany jako <strong>Własny</strong> — nie trafi do automatycznego generatora planu.
+          </p>
         </div>
       )}
     </div>
@@ -481,6 +593,7 @@ function ManualTab({
   name, setName, type, setType,
   prepTimeMin, setPrepTimeMin,
   batchFriendly, setBatchFriendly, maxStorageDays, setMaxStorageDays,
+  manualBasis, setManualBasis, manualBaseServings, setManualBaseServings,
   kcal, setKcal, protein, setProtein, carbs, setCarbs, fat, setFat, fiber, setFiber,
   ingredients, onAddIngredient, onRemoveIngredient, onUpdateIngredient,
   steps, onAddStep, onRemoveStep, onUpdateStep,
@@ -490,6 +603,8 @@ function ManualTab({
   prepTimeMin: string; setPrepTimeMin: (v: string) => void;
   batchFriendly: boolean; setBatchFriendly: (v: boolean) => void;
   maxStorageDays: string; setMaxStorageDays: (v: string) => void;
+  manualBasis: 'per-serving' | 'per-whole'; setManualBasis: (v: 'per-serving' | 'per-whole') => void;
+  manualBaseServings: string; setManualBaseServings: (v: string) => void;
   kcal: string; setKcal: (v: string) => void;
   protein: string; setProtein: (v: string) => void;
   carbs: string; setCarbs: (v: string) => void;
@@ -568,9 +683,23 @@ function ManualTab({
         </div>
       </section>
 
+      {/* Ingredient basis */}
+      <section>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Jednostka składników</p>
+        <IngredientBasisPicker
+          basis={manualBasis}
+          onBasisChange={setManualBasis}
+          baseServings={manualBaseServings}
+          onBaseServingsChange={setManualBaseServings}
+        />
+      </section>
+
       {/* Macros */}
       <section className="space-y-3">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Makroskładniki (na 1 porcję)</p>
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Makroskładniki (na 1 porcję)</p>
+          <p className="text-xs text-gray-400">opcjonalne — bez makro przepis nie trafi do planu</p>
+        </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs text-gray-500 mb-1">Kalorie *</label>
