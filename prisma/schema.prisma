@@ -43,6 +43,11 @@ model Recipe {
   instructions   String   @default("[]") // JSON array of steps
   sourceDiet     String?  // filename of origin diet
   tags           String   @default("[]") // JSON array
+  // Recipe metadata
+  baseServings      Int     @default(1)            // portions this recipe yields
+  ingredientBasis   String  @default("per-serving") // "per-serving" | "per-whole"
+  source            String  @default("dietitian")   // "dietitian" | "user"
+  nutritionVerified Boolean @default(false)          // true = macros are reliable
   ingredients    RecipeIngredient[]
   mealPlanMeals  MealPlanMeal[]
   createdAt      DateTime @default(now())
