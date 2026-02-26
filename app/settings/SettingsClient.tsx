@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Check, Loader2, User, Sun, Moon } from 'lucide-react';
+import { Check, Loader2, User, Moon } from 'lucide-react';
 import type { AppSettingsData } from '@/lib/services/SettingsService';
 import type { BatchConfig } from '@/lib/types';
 import BatchConfigPanel from '@/components/plan/BatchConfigPanel';
@@ -138,27 +138,28 @@ function AppearanceSection() {
   return (
     <section>
       <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Wygląd</h2>
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-border p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Przełącz motyw aplikacji</p>
+      <div className="bg-white rounded-2xl border border-border p-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Moon size={18} className="text-gray-500 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-gray-900">Tryb ciemny</p>
+              <p className="text-xs text-gray-400 mt-0.5">Przełącz motyw aplikacji</p>
+            </div>
           </div>
 
-          {/* Toggle button — iOS style */}
           <button
             onClick={toggleTheme}
             role="switch"
             aria-checked={isDark}
-            className={`relative h-8 w-14 rounded-full transition-colors duration-200 ${
-              isDark ? 'bg-teal-600' : 'bg-gray-200'
+            aria-label="Tryb ciemny"
+            className={`relative shrink-0 h-7 w-12 rounded-full transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${
+              isDark ? 'bg-teal-600' : 'bg-gray-300'
             }`}
           >
             <span
-              className={`absolute top-1 left-1 h-6 w-6 rounded-full bg-white shadow-md transition-transform duration-200 ${
-                isDark ? 'translate-x-6' : 'translate-x-0'
+              className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${
+                isDark ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
           </button>
