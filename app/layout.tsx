@@ -40,6 +40,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pl" className={inter.variable}>
+      <head>
+        {/* Apply saved theme before first paint — prevents flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('nutrimind-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="font-sans antialiased bg-surface text-gray-900">
         {/* Desktop: left sidebar (lg+). Mobile: bottom nav. */}
         <Navigation />
