@@ -52,6 +52,25 @@ const TYPE_LABELS_SHORT: Record<string, string> = {
   dessert:          'Ciasto / deser',
 };
 
+function formatPieces(pieces: number): string {
+  const rounded = Math.round(pieces * 4) / 4; // round to nearest 0.25
+  if (rounded <= 0) return '—';
+  const whole = Math.floor(rounded);
+  const frac = rounded - whole;
+  const fracStr = frac === 0.25 ? '¼' : frac === 0.5 ? '½' : frac === 0.75 ? '¾' : '';
+  if (whole === 0) return `${fracStr} szt.`;
+  if (fracStr) return `${whole}${fracStr} szt.`;
+  return `${whole} szt.`;
+}
+
+function formatIngredientAmount(grams: number, pieceWeightG?: number | null): string {
+  if (pieceWeightG && pieceWeightG > 0) {
+    return formatPieces(grams / pieceWeightG);
+  }
+  if (grams >= 1000) return `${(grams / 1000).toFixed(1).replace('.0', '')} kg`;
+  return `${Math.round(grams)} g`;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
@@ -200,10 +219,8 @@ function DetailView({
                 <li key={ri.id} className="flex items-baseline justify-between gap-2 py-1.5 text-sm">
                   <span className="text-gray-800">{ri.ingredient.name}</span>
                   <span className="text-gray-400 shrink-0 tabular-nums">
-                    {ri.displayText
-                      ? ri.displayText
-                      : ri.amountG
-                      ? `${Math.round(ri.amountG * meal.servings)} g`
+                    {ri.amountG
+                      ? formatIngredientAmount(ri.amountG * meal.servings, ri.ingredient.pieceWeightG)
                       : '—'}
                   </span>
                 </li>

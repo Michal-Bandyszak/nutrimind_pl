@@ -347,7 +347,13 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
           ) : (
             <ManualTab
               name={name} setName={setName}
-              type={type} setType={setType}
+              type={type} setType={(newType) => {
+                setType(newType);
+                if (newType === 'dessert' && manualBasis === 'per-serving') {
+                  setManualBasis('per-whole');
+                  if (Number(manualBaseServings) <= 1) setManualBaseServings('10');
+                }
+              }}
               prepTimeMin={prepTimeMin} setPrepTimeMin={setPrepTimeMin}
               batchFriendly={batchFriendly} setBatchFriendly={setBatchFriendly}
               maxStorageDays={maxStorageDays} setMaxStorageDays={setMaxStorageDays}
@@ -455,7 +461,7 @@ function IngredientBasisPicker({
       )}
       <p className="text-xs text-amber-600">
         {basis === 'per-whole'
-          ? 'Np. sernik: 750g serka na całą formę (12 porcji) → system podzieli automatycznie.'
+          ? `Wpisz składniki na całą formę/recepturę. System podzieli na ${Number(baseServings) || '?'} porcji automatycznie.`
           : 'Standardowe dania: składniki na 1 osobę / 1 porcję.'}
       </p>
     </div>
