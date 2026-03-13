@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X, CheckCircle2 } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Search, Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X, Star } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
 import type { SubstitutionResult } from '@/lib/services/SubstitutionEngine';
 import AddRecipeModal from '@/components/recipes/AddRecipeModal';
 
 const TYPE_FILTERS = [
   { value: 'all',              label: 'Wszystkie' },
+  { value: 'favorites',        label: '★ Ulubione' },
   { value: 'breakfast',        label: 'Śniadania' },
   { value: 'second_breakfast', label: 'Drugie śniadanie' },
   { value: 'lunch',            label: 'Obiady' },
@@ -40,12 +41,31 @@ const TYPE_LABELS: Record<string, string> = {
 
 type Props = { recipes: RecipeWithIngredients[] };
 
+const FAVORITES_KEY = 'nutrimind-favorites';
+
 export default function RecipesClient({ recipes: initialRecipes }: Props) {
   const [recipes, setRecipes] = useState(initialRecipes);
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [expanded, setExpanded] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(FAVORITES_KEY);
+      if (saved) setFavorites(new Set(JSON.parse(saved) as string[]));
+    } catch { /* ignore */ }
+  }, []);
+
+  function toggleFavorite(id: string) {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...next])); } catch { /* ignore */ }
+      return next;
+    });
+  }
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
@@ -54,12 +74,14 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
       try { tags = JSON.parse(r.tags) as string[]; } catch { /* ignore */ }
       const matchesType =
         typeFilter === 'all' ? true :
+        typeFilter === 'favorites' ? favorites.has(r.id) :
         typeFilter === 'soup' ? tags.includes('zupa') || r.name.toLowerCase().includes('zupa') :
+        typeFilter === 'cocktail' ? tags.includes('cocktail') :
         r.type === typeFilter;
       const matchesQuery = !q || r.name.toLowerCase().includes(q);
       return matchesType && matchesQuery;
     });
-  }, [recipes, query, typeFilter]);
+  }, [recipes, query, typeFilter, favorites]);
 
   return (
     <>
@@ -111,6 +133,8 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
             recipe={recipe}
             expanded={expanded === recipe.id}
             onToggle={() => setExpanded(expanded === recipe.id ? null : recipe.id)}
+            isFavorite={favorites.has(recipe.id)}
+            onToggleFavorite={() => toggleFavorite(recipe.id)}
           />
         ))}
       </div>
@@ -137,7 +161,21 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function formatAmount(grams: number): string {
+function formatPieces(pieces: number): string {
+  const rounded = Math.round(pieces * 4) / 4; // round to nearest 0.25
+  if (rounded <= 0) return '—';
+  const whole = Math.floor(rounded);
+  const frac = rounded - whole;
+  const fracStr = frac === 0.25 ? '¼' : frac === 0.5 ? '½' : frac === 0.75 ? '¾' : '';
+  if (whole === 0) return `${fracStr} szt.`;
+  if (fracStr) return `${whole}${fracStr} szt.`;
+  return `${whole} szt.`;
+}
+
+function formatAmount(grams: number, pieceWeightG?: number | null): string {
+  if (pieceWeightG && pieceWeightG > 0) {
+    return formatPieces(grams / pieceWeightG);
+  }
   if (grams >= 1000) return `${(grams / 1000).toFixed(1).replace('.0', '')} kg`;
   if (grams < 1) return `${Math.round(grams * 10) / 10} g`;
   return `${Math.round(grams)} g`;
@@ -152,12 +190,18 @@ function RecipeCard({
   recipe,
   expanded,
   onToggle,
+  isFavorite,
+  onToggleFavorite,
 }: {
   recipe: RecipeWithIngredients;
   expanded: boolean;
   onToggle: () => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }) {
-  const [servings, setServings] = useState(2);
+  const isPerWhole = recipe.ingredientBasis === 'per-whole';
+  const baseServings = recipe.baseServings || 1;
+  const [servings, setServings] = useState(isPerWhole ? baseServings : 2);
   const [subsFor, setSubsFor] = useState<string | null>(null); // ingredientId being looked up
   const [subsData, setSubsData] = useState<SubstitutionResult | null>(null);
   const [subsLoading, setSubsLoading] = useState(false);
@@ -191,8 +235,7 @@ function RecipeCard({
   })();
 
   const macroScale = servings; // macros per serving × servings
-  const isPerWhole = recipe.ingredientBasis === 'per-whole';
-  const baseServings = recipe.baseServings || 1;
+  const maxServings = isPerWhole ? Math.max(baseServings * 2, 8) : 8;
 
   return (
     <div className="bg-white border border-border rounded-2xl overflow-hidden">
@@ -219,14 +262,10 @@ function RecipeCard({
                   Własny
                 </span>
               ) : null}
-              {/* Verification badge */}
-              {recipe.nutritionVerified ? (
-                <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">
-                  <CheckCircle2 size={10} /> Zweryfikowane
-                </span>
-              ) : (
-                <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
-                  Brak makro
+              {/* Servings badge for whole-recipe dishes */}
+              {isPerWhole && baseServings > 1 && (
+                <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                  <Users size={10} /> {baseServings} porcji
                 </span>
               )}
             </div>
@@ -251,6 +290,21 @@ function RecipeCard({
                 {(recipe.prepTimeMin ?? 0) + (recipe.cookTimeMin ?? 0)} min
               </span>
             )}
+            {recipe._count && recipe._count.mealPlanMeals > 0 && (
+              <span className="text-xs text-gray-300" title="Razy użyto w planach">
+                ×{recipe._count.mealPlanMeals}
+              </span>
+            )}
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleFavorite(); }}
+              aria-label={isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}
+              className="p-0.5 transition-colors"
+            >
+              <Star
+                size={15}
+                className={isFavorite ? 'fill-amber-400 text-amber-400' : 'text-gray-300 hover:text-amber-300'}
+              />
+            </button>
             {expanded ? (
               <ChevronUp size={16} className="text-gray-400" />
             ) : (
@@ -279,12 +333,20 @@ function RecipeCard({
               </button>
               <span className="w-6 text-center text-sm font-semibold text-gray-900">{servings}</span>
               <button
-                onClick={(e) => { e.stopPropagation(); setServings(Math.min(8, servings + 1)); }}
+                onClick={(e) => { e.stopPropagation(); setServings(Math.min(maxServings, servings + 1)); }}
                 className="w-7 h-7 rounded-full border border-border bg-white flex items-center justify-center text-gray-500 hover:border-teal-400 hover:text-teal-700 transition active:scale-95"
                 aria-label="Więcej porcji"
               >
                 <Plus size={13} />
               </button>
+              {isPerWhole && baseServings > 1 && servings !== baseServings && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setServings(baseServings); }}
+                  className="ml-1 text-xs text-amber-600 hover:text-amber-700 font-medium transition whitespace-nowrap"
+                >
+                  Cały przepis
+                </button>
+              )}
             </div>
           </div>
 
@@ -336,7 +398,7 @@ function RecipeCard({
                         {ri.ingredient.name}
                         {isActive && <ArrowRightLeft size={12} className="text-teal-500" />}
                       </span>
-                      <span className="text-gray-400 tabular-nums shrink-0">{formatAmount(scaled)}</span>
+                      <span className="text-gray-400 tabular-nums shrink-0">{formatAmount(scaled, ri.ingredient.pieceWeightG)}</span>
                     </button>
 
                     {/* Substitution panel */}
