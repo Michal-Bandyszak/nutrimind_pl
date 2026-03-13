@@ -13,6 +13,7 @@ export type RecipeWithIngredients = Recipe & {
   ingredients: (RecipeIngredient & {
     ingredient: Ingredient;
   })[];
+  _count?: { mealPlanMeals: number };
 };
 
 export type MealWithRecipe = MealPlanMeal & {
