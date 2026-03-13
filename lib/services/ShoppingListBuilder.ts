@@ -27,10 +27,20 @@ function scaleAmount(amountG: number, servings: number, scalesLinearly: boolean)
   return amountG * Math.sqrt(servings); // sqrt scaling for oils/spices
 }
 
+function formatPieces(pieces: number): string {
+  const rounded = Math.round(pieces * 2) / 2; // shopping: round to nearest 0.5
+  if (rounded <= 0) return '0 szt.';
+  const whole = Math.floor(rounded);
+  const frac = rounded - whole;
+  const fracStr = frac === 0.5 ? '½' : '';
+  if (whole === 0) return `${fracStr} szt.`;
+  if (fracStr) return `${whole}${fracStr} szt.`;
+  return `${whole} szt.`;
+}
+
 function formatAmount(grams: number, pieceWeightG?: number | null): string {
   if (pieceWeightG && pieceWeightG > 0) {
-    const pieces = Math.round(grams / pieceWeightG);
-    return `${pieces} szt.`;
+    return formatPieces(grams / pieceWeightG);
   }
   if (grams >= 1000) {
     const kg = grams / 1000;
@@ -42,8 +52,7 @@ function formatAmount(grams: number, pieceWeightG?: number | null): string {
 
 function formatLeftover(leftoverG: number, pieceWeightG?: number | null): string {
   if (pieceWeightG && pieceWeightG > 0) {
-    const pieces = Math.round(leftoverG / pieceWeightG);
-    return `${pieces} szt.`;
+    return formatPieces(leftoverG / pieceWeightG);
   }
   return `~${Math.round(leftoverG)} g`;
 }
