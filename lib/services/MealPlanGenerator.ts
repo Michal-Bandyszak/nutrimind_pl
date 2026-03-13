@@ -86,13 +86,11 @@ export async function generateWeekPlan(
 ): Promise<MealPlanWithMeals> {
   const start = weekStart ?? getMonday();
 
-  const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails, allSnacks] = await Promise.all([
+  const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners] = await Promise.all([
     prisma.recipe.findMany({ where: { type: 'breakfast',        nutritionVerified: true } }),
     prisma.recipe.findMany({ where: { type: 'second_breakfast', nutritionVerified: true } }),
     prisma.recipe.findMany({ where: { type: 'lunch',            nutritionVerified: true } }),
     prisma.recipe.findMany({ where: { type: 'dinner',           nutritionVerified: true } }),
-    prisma.recipe.findMany({ where: { type: 'cocktail',         nutritionVerified: true } }),
-    prisma.recipe.findMany({ where: { type: 'snack',            nutritionVerified: true } }),
   ]);
 
   if (!allBreakfasts.length) throw new Error('Brak przepisów na śniadanie.');
@@ -127,38 +125,6 @@ export async function generateWeekPlan(
   }
   rows.push(...buildMealRows(plan.id, 'lunch',            config.lunch,            allLunches,          SERVINGS));
   rows.push(...buildMealRows(plan.id, 'dinner',           config.dinner,           allDinners,          SERVINGS));
-
-  // Cocktails — one per day, no batching, own draggable row
-  if (allCocktails.length) {
-    const shuffledCocktails = shuffle(allCocktails);
-    for (let day = 1; day <= 7; day++) {
-      rows.push({
-        mealPlanId: plan.id,
-        dayOfWeek: day,
-        mealType: 'cocktail',
-        recipeId: shuffledCocktails[(day - 1) % shuffledCocktails.length].id,
-        servings: SERVINGS,
-        batchGroupId: null,
-        batchDayNum: null,
-      });
-    }
-  }
-
-  // Snacks — one per day, no batching
-  if (allSnacks.length) {
-    const shuffledSnacks = shuffle(allSnacks);
-    for (let day = 1; day <= 7; day++) {
-      rows.push({
-        mealPlanId: plan.id,
-        dayOfWeek: day,
-        mealType: 'snack',
-        recipeId: shuffledSnacks[(day - 1) % shuffledSnacks.length].id,
-        servings: SERVINGS,
-        batchGroupId: null,
-        batchDayNum: null,
-      });
-    }
-  }
 
   await prisma.mealPlanMeal.createMany({ data: rows });
   return fetchPlanWithMeals(plan.id);
