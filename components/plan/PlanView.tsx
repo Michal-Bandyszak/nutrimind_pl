@@ -9,6 +9,7 @@ import WeekGrid from './WeekGrid';
 import AddMealModal from './AddMealModal';
 
 type DragState = { dayOfWeek: number; mealType: string } | null;
+type AddMealTarget = { dayOfWeek: number; mealType: string } | null;
 
 type Props = { plan: MealPlanWithMeals };
 
@@ -22,7 +23,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
   const [dragOver, setDragOver] = useState<DragState>(null);
 
   // ── Add meal state ────────────────────────────────────────────────────────
-  const [addMealDay, setAddMealDay] = useState<number | null>(null);
+  const [addMealTarget, setAddMealTarget] = useState<AddMealTarget>(null);
 
   // ── Rebatch state ─────────────────────────────────────────────────────────
   const [showRebatch, setShowRebatch] = useState(false);
@@ -80,6 +81,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          mealId: meal.id,
           dayOfWeek: meal.dayOfWeek,
           mealType: meal.mealType,
           newRecipeId: newRecipe.id,
@@ -97,11 +99,11 @@ export default function PlanView({ plan: initialPlan }: Props) {
 
   // ── Add meal handler ──────────────────────────────────────────────────────
   const handleAddMeal = useCallback(
-    async (dayOfWeek: number, recipe: RecipeWithIngredients) => {
+    async (dayOfWeek: number, mealType: string, servings: number, recipe: RecipeWithIngredients) => {
       const res = await fetch(`/api/meal-plans/${plan.id}/meals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dayOfWeek, recipeId: recipe.id }),
+        body: JSON.stringify({ dayOfWeek, recipeId: recipe.id, mealType, servings }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? 'Błąd dodawania.');
@@ -215,6 +217,8 @@ export default function PlanView({ plan: initialPlan }: Props) {
   );
 
   // ── Render ────────────────────────────────────────────────────────────────
+  const currentAddMealTarget = addMealTarget;
+
   return (
     <div className="space-y-4">
       {/* Toolbar */}
@@ -277,16 +281,19 @@ export default function PlanView({ plan: initialPlan }: Props) {
         onDragEnd={handleDragEnd}
         onDrop={handleDrop}
         onReplace={handleReplace}
-        onAddMeal={(d) => setAddMealDay(d)}
+        onAddMeal={(dayOfWeek, mealType) => setAddMealTarget({ dayOfWeek, mealType })}
         onDeleteMeal={handleDeleteMeal}
       />
 
       {/* Add meal modal */}
-      {addMealDay !== null && (
+      {currentAddMealTarget !== null && (
         <AddMealModal
-          dayOfWeek={addMealDay}
-          onClose={() => setAddMealDay(null)}
-          onAdd={(recipe) => handleAddMeal(addMealDay, recipe)}
+          dayOfWeek={currentAddMealTarget.dayOfWeek}
+          mealType={currentAddMealTarget.mealType}
+          onClose={() => setAddMealTarget(null)}
+          onAdd={(recipe, mealType, servings) =>
+            handleAddMeal(currentAddMealTarget.dayOfWeek, mealType, servings, recipe)
+          }
         />
       )}
     </div>
