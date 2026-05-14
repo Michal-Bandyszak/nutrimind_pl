@@ -21,6 +21,9 @@ model Ingredient {
   packageUnit   String?  // can | bottle | bag | bunch | pack
   packageLabel  String?  // "karton 10 szt.", "puszka 400ml"
   pieceWeightG  Float?   // grams per piece — set for count-sold items (egg=60g)
+  // Hint unit for recipe display: "340 g (~2 szt.)" or "42 g (~3 łyżki)"
+  hintUnitG     Float?   // grams per hint unit (e.g. 180 for tomato, 14 for tbsp oil)
+  hintUnit      String?  // unit name: "szt." | "łyżka" | "łyżeczka" | "ząbek" | "główka"
   recipeIngredients RecipeIngredient[]
   createdAt    DateTime @default(now())
 }

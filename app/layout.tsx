@@ -30,7 +30,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0f766e',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f4efe4' },
+    { media: '(prefers-color-scheme: dark)', color: '#121714' },
+  ],
   width: 'device-width',
   initialScale: 1,
   minimumScale: 1,
@@ -44,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Apply saved theme before first paint — prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('nutrimind-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('nutrimind-theme');var d=document.documentElement;var m=document.querySelector('meta[name="theme-color"]');var dark=t==='dark';if(dark)d.classList.add('dark');if(m)m.setAttribute('content',dark?'#121714':'#f4efe4');}catch(e){}})();`,
           }}
         />
       </head>

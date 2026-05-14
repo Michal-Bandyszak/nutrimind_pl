@@ -32,7 +32,7 @@ function buildMealRows(
   planId: string,
   mealType: string,
   dividers: MealDividers,
-  recipes: { id: string }[],
+  recipes: { id: string; maxStorageDays: number }[],
   servings: number,
 ): {
   mealPlanId: string;
@@ -47,35 +47,62 @@ function buildMealRows(
   const uniqueGroups = [...new Set(groups)]; // [1, 2]
 
   const shuffled = shuffle(recipes);
-  // Map group number → recipe id (one recipe per group).
-  // Pick a distinct recipe for each group where possible; fall back to
-  // wrap-around only when there are more groups than available recipes.
-  const groupRecipe: Record<number, string> = {};
   const usedIds = new Set<string>();
-  uniqueGroups.forEach((g, i) => {
+
+  // Per day assignment created after enforcing maxStorageDays.
+  const dayAssignments = new Map<number, { recipeId: string; batchGroupId: string; batchDayNum: number }>();
+
+  uniqueGroups.forEach((group, i) => {
+    const days = groups
+      .map((g, idx) => (g === group ? idx + 1 : null))
+      .filter((d): d is number => d !== null);
+
+    // Keep distinct recipes between configured groups where possible.
     const unused = shuffled.find((r) => !usedIds.has(r.id));
     const chosen = unused ?? shuffled[i % shuffled.length];
-    groupRecipe[g] = chosen.id;
     usedIds.add(chosen.id);
-  });
-  // Map group number → stable batch UUID
-  const groupBatchId: Record<number, string> = {};
-  uniqueGroups.forEach((g) => {
-    groupBatchId[g] = crypto.randomUUID();
+
+    // Never keep one cooked batch longer than recipe storage limit.
+    const maxBatchDays = Math.max(1, chosen.maxStorageDays || 1);
+
+    for (let start = 0; start < days.length; start += maxBatchDays) {
+      const chunk = days.slice(start, start + maxBatchDays);
+      const batchGroupId = crypto.randomUUID();
+      chunk.forEach((dayOfWeek, idxInChunk) => {
+        dayAssignments.set(dayOfWeek, {
+          recipeId: chosen.id,
+          batchGroupId,
+          batchDayNum: idxInChunk + 1,
+        });
+      });
+    }
   });
 
-  return groups.map((group, idx) => {
+  return Array.from({ length: 7 }, (_, idx) => {
     const dayOfWeek = idx + 1;
-    // batchDayNum = position within this group (1-based)
-    const batchDayNum = groups.slice(0, idx).filter((g) => g === group).length + 1;
+    const assignment = dayAssignments.get(dayOfWeek);
+    if (!assignment) {
+      // Defensive fallback; should never happen with valid 7-day divider config.
+      const fallbackRecipe = shuffled[0];
+      return {
+        mealPlanId: planId,
+        dayOfWeek,
+        mealType,
+        recipeId: fallbackRecipe.id,
+        servings,
+        batchGroupId: crypto.randomUUID(),
+        batchDayNum: 1,
+      };
+    }
+
     return {
       mealPlanId: planId,
       dayOfWeek,
       mealType,
-      recipeId: groupRecipe[group],
+      recipeId: assignment.recipeId,
       servings,
-      batchGroupId: groupBatchId[group],
-      batchDayNum,
+      batchGroupId: assignment.batchGroupId,
+      batchDayNum: assignment.batchDayNum,
     };
   });
 }
@@ -86,11 +113,12 @@ export async function generateWeekPlan(
 ): Promise<MealPlanWithMeals> {
   const start = weekStart ?? getMonday();
 
-  const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners] = await Promise.all([
+  const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails] = await Promise.all([
     prisma.recipe.findMany({ where: { type: 'breakfast',        nutritionVerified: true } }),
     prisma.recipe.findMany({ where: { type: 'second_breakfast', nutritionVerified: true } }),
-    prisma.recipe.findMany({ where: { type: 'lunch',            nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'lunch',            nutritionVerified: true, batchFriendly: true } }),
     prisma.recipe.findMany({ where: { type: 'dinner',           nutritionVerified: true } }),
+    prisma.recipe.findMany({ where: { type: 'cocktail',         nutritionVerified: true } }),
   ]);
 
   if (!allBreakfasts.length) throw new Error('Brak przepisów na śniadanie.');
@@ -118,13 +146,16 @@ export async function generateWeekPlan(
     batchDayNum: number | null;
   }[] = [];
 
-  // Breakfast, second_breakfast, lunch, dinner with custom batch config
+  // Breakfast, second_breakfast, lunch, dinner, cocktail with custom batch config
   rows.push(...buildMealRows(plan.id, 'breakfast',        config.breakfast,        allBreakfasts,       SERVINGS));
   if (allSecondBreakfasts.length) {
     rows.push(...buildMealRows(plan.id, 'second_breakfast', config.second_breakfast, allSecondBreakfasts, SERVINGS));
   }
   rows.push(...buildMealRows(plan.id, 'lunch',            config.lunch,            allLunches,          SERVINGS));
   rows.push(...buildMealRows(plan.id, 'dinner',           config.dinner,           allDinners,          SERVINGS));
+  if (allCocktails.length) {
+    rows.push(...buildMealRows(plan.id, 'cocktail',         config.cocktail,         allCocktails,        SERVINGS));
+  }
 
   await prisma.mealPlanMeal.createMany({ data: rows });
   return fetchPlanWithMeals(plan.id);

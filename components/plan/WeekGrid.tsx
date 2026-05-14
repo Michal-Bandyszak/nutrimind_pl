@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL } from '@/lib/utils/batchColors';
@@ -59,16 +59,23 @@ export default function WeekGrid({
   onAddMeal,
   onDeleteMeal,
 }: Props) {
-  const colorMaps = {
-    breakfast:        buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'breakfast').map((m) => m.batchGroupId)),
-    second_breakfast: buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'second_breakfast').map((m) => m.batchGroupId)),
-    lunch:            buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'lunch').map((m) => m.batchGroupId)),
-    dinner:           buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'dinner').map((m) => m.batchGroupId)),
-    cocktail:         buildBatchColorMap(plan.meals.filter((m) => m.mealType === 'cocktail').map((m) => m.batchGroupId)),
-  };
+  const colorMaps = useMemo(() => {
+    const grouped: Record<string, (string | null)[]> = {};
+    for (const m of plan.meals) {
+      (grouped[m.mealType] ??= []).push(m.batchGroupId);
+    }
+    return Object.fromEntries(
+      MEAL_TYPES.map((t) => [t, buildBatchColorMap(grouped[t] ?? [])])
+    ) as Record<(typeof MEAL_TYPES)[number], ReturnType<typeof buildBatchColorMap>>;
+  }, [plan.meals]);
 
-  const [selectedMeal, setSelectedMeal] = useState<{ meal: MealWithRecipe; color: BatchColor | null } | null>(null);
+  const [selectedMeal, setSelectedMeal] = useState<{ meal: MealWithRecipe; color: BatchColor | null; batchDays: number } | null>(null);
   const days = buildDays(plan);
+
+  function getBatchDays(meal: MealWithRecipe): number {
+    if (!meal.batchGroupId) return 1;
+    return plan.meals.filter((m) => m.batchGroupId === meal.batchGroupId).length;
+  }
 
   function getMealColor(meal: MealWithRecipe): BatchColor | null {
     if (!meal.batchGroupId) return null;
@@ -151,7 +158,7 @@ export default function WeekGrid({
                     <MealCard
                       meal={meal}
                       color={color}
-                      onClick={() => setSelectedMeal({ meal, color })}
+                      onClick={() => setSelectedMeal({ meal, color, batchDays: getBatchDays(meal) })}
                     />
                   </div>
                 );
@@ -165,9 +172,9 @@ export default function WeekGrid({
                   onDrop={dropProps.onDrop}
                   className={`rounded-xl border-2 border-dashed transition-colors ${
                     dropProps.isDropHover
-                      ? 'border-teal-400 bg-teal-50'
+                      ? 'border-teal-400 bg-teal-50 shadow-sm'
                       : dropProps.isDropTarget
-                      ? 'border-gray-200 bg-gray-50'
+                      ? 'border-border bg-white'
                       : 'border-transparent'
                   }`}
                 />
@@ -183,13 +190,13 @@ export default function WeekGrid({
                   key={s.id}
                   meal={s}
                   color={null}
-                  onClick={() => setSelectedMeal({ meal: s, color: null })}
+                  onClick={() => setSelectedMeal({ meal: s, color: null, batchDays: 1 })}
                 />
               ))}
               {onAddMeal && (
                 <button
                   onClick={() => onAddMeal(day.dayOfWeek)}
-                  className="w-full flex items-center justify-center gap-1 py-1.5 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/50 transition-colors text-xs"
+                  className="w-full flex items-center justify-center gap-1 py-2 rounded-2xl border border-dashed border-border text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/70 transition-colors text-xs"
                   title="Dodaj przepis do tego dnia"
                 >
                   <Plus size={12} />
@@ -234,7 +241,7 @@ export default function WeekGrid({
                       <MealCard
                         meal={meal}
                         color={color}
-                        onClick={() => setSelectedMeal({ meal, color })}
+                        onClick={() => setSelectedMeal({ meal, color, batchDays: getBatchDays(meal) })}
                       />
                     </div>
                   );
@@ -243,9 +250,9 @@ export default function WeekGrid({
                   <div
                     key={mealType}
                     onDragOver={dropProps.onDragOver}
-                    onDrop={dropProps.onDrop}
-                    className={`h-12 rounded-xl border-2 border-dashed transition-colors ${
-                      dropProps.isDropHover ? 'border-teal-400 bg-teal-50' : 'border-gray-100'
+                  onDrop={dropProps.onDrop}
+                  className={`h-12 rounded-xl border-2 border-dashed transition-colors ${
+                      dropProps.isDropHover ? 'border-teal-400 bg-teal-50' : 'border-border'
                     }`}
                   />
                 );
@@ -256,7 +263,7 @@ export default function WeekGrid({
                   key={s.id}
                   meal={s}
                   color={null}
-                  onClick={() => setSelectedMeal({ meal: s, color: null })}
+                  onClick={() => setSelectedMeal({ meal: s, color: null, batchDays: 1 })}
                 />
               ))}
               {onAddMeal && (
@@ -277,7 +284,7 @@ export default function WeekGrid({
 
       {/* DnD hint */}
       {dragged && (
-        <div className="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-gray-900/80 text-white text-xs rounded-full pointer-events-none">
+        <div className="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-black/70 text-white text-xs rounded-full pointer-events-none">
           Upuść na dowolny slot żeby zamienić
         </div>
       )}
@@ -287,6 +294,7 @@ export default function WeekGrid({
         <RecipeModal
           meal={selectedMeal.meal}
           color={selectedMeal.color}
+          batchDays={selectedMeal.batchDays}
           onClose={() => setSelectedMeal(null)}
           onReplace={
             onReplace
@@ -319,15 +327,25 @@ function DayMacroSummary({ day }: { day: DayMeals }) {
     ...day.snacks,
   ].filter((m): m is MealWithRecipe => m !== null);
 
-  const kcal    = Math.round(meals.reduce((s, m) => s + (m.recipe.kcalPerServing ?? 0), 0));
-  const protein = Math.round(meals.reduce((s, m) => s + (m.recipe.proteinG ?? 0), 0));
-  const carbs   = Math.round(meals.reduce((s, m) => s + (m.recipe.carbsG ?? 0), 0));
-  const fat     = Math.round(meals.reduce((s, m) => s + (m.recipe.fatG ?? 0), 0));
+  const totals = meals.reduce(
+    (acc, m) => {
+      acc.kcal += m.recipe.kcalPerServing ?? 0;
+      acc.protein += m.recipe.proteinG ?? 0;
+      acc.carbs += m.recipe.carbsG ?? 0;
+      acc.fat += m.recipe.fatG ?? 0;
+      return acc;
+    },
+    { kcal: 0, protein: 0, carbs: 0, fat: 0 },
+  );
+  const kcal = Math.round(totals.kcal);
+  const protein = Math.round(totals.protein);
+  const carbs = Math.round(totals.carbs);
+  const fat = Math.round(totals.fat);
 
   if (!kcal) return <div className="h-14" />;
 
   return (
-    <div className="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2.5 space-y-1">
+    <div className="rounded-[1.1rem] border border-border bg-white/70 px-3 py-2.5 space-y-1 shadow-sm">
       <p className="text-sm font-bold text-gray-700 text-center tabular-nums">
         {kcal.toLocaleString('pl-PL')} kcal
       </p>

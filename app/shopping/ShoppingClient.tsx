@@ -84,7 +84,7 @@ export default function ShoppingClient({ list }: Props) {
 
       {/* Leftovers panel */}
       {list.leftovers.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl overflow-hidden">
+        <div className="rounded-[1.5rem] border border-amber-200 bg-amber-50 overflow-hidden shadow-sm">
           <button
             onClick={() => setLeftoversOpen((v) => !v)}
             className="w-full flex items-center gap-2 px-4 py-3 text-left"
@@ -127,7 +127,7 @@ export default function ShoppingClient({ list }: Props) {
             <span className="text-xs text-gray-400 ml-auto">{cat.items.length}</span>
           </div>
 
-          <div className="bg-white border border-border rounded-2xl overflow-hidden divide-y divide-border">
+          <div className="panel-surface rounded-[1.5rem] overflow-hidden divide-y divide-border">
             {cat.items.map((item) => (
               <ShoppingRow
                 key={item.ingredientId}
@@ -144,7 +144,7 @@ export default function ShoppingClient({ list }: Props) {
       {totalChecked > 0 && (
         <button
           onClick={() => setChecked(new Set())}
-          className="w-full py-2.5 text-sm text-gray-400 border border-border rounded-xl hover:text-gray-600 hover:border-gray-300 transition-colors"
+          className="btn-secondary w-full py-2.5 text-sm rounded-2xl transition-colors"
         >
           Resetuj zaznaczenia
         </button>
@@ -166,7 +166,7 @@ function ShoppingRow({
 
   return (
     <div
-      className={`flex items-start gap-3 px-4 py-3 cursor-pointer select-none transition-colors ${checked ? 'bg-gray-50' : 'hover:bg-gray-50/50'}`}
+      className={`flex items-start gap-3 px-4 py-3 cursor-pointer select-none transition-colors ${checked ? 'bg-gray-50/90' : 'hover:bg-gray-50/60'}`}
       onClick={onToggle}
     >
       {/* Checkbox */}

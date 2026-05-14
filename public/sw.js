@@ -4,7 +4,7 @@
 //   - /api/**         → network-only (live data from SQLite)
 //   - pages           → network-first, fall back to cache
 
-const CACHE = 'nutrimind-v1';
+const CACHE = 'nutrimind-v2';
 
 self.addEventListener('install', () => {
   self.skipWaiting();

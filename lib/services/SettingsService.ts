@@ -13,7 +13,11 @@ function parseBatchConfig(raw: string): BatchConfig {
   if (!raw) return DEFAULT_BATCH_CONFIG;
   try {
     const parsed = JSON.parse(raw) as Partial<BatchConfig>;
-    if (parsed.breakfast && parsed.second_breakfast && parsed.lunch && parsed.dinner) return parsed as BatchConfig;
+    if (parsed.breakfast && parsed.second_breakfast && parsed.lunch && parsed.dinner && parsed.cocktail) return parsed as BatchConfig;
+    // Partial saved config — merge with defaults so all fields are present
+    if (parsed.breakfast || parsed.lunch || parsed.dinner) {
+      return { ...DEFAULT_BATCH_CONFIG, ...parsed } as BatchConfig;
+    }
   } catch {
     // fall through
   }
