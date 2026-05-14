@@ -1,5 +1,5 @@
 /**
- * Seeds the database from data/parsed/combined.json
+ * Seeds the database from parsed diet files and curated recipe add-ons.
  * Safe to run multiple times (upserts, not duplicates).
  */
 
@@ -17,6 +17,7 @@ const PACKAGE_SIZES: Record<string, { sizeG: number; unit: string; label: string
   "mleczko kokosowe":    { sizeG: 400, unit: "can",     label: "puszka 400ml" },
   "napój kokosowy":      { sizeG: 1000, unit: "carton", label: "karton 1L" },
   "jogurt kokosowy":     { sizeG: 125, unit: "pot",     label: "kubek 125g" },
+  "kefir":               { sizeG: 1000, unit: "bottle",  label: "butelka 1L" },
   "skyr naturalny":      { sizeG: 150, unit: "pot",     label: "kubek 150g" },
   "ser mozzarella":      { sizeG: 125, unit: "pack",    label: "opakowanie 125g" },
   "masło migdałowe":     { sizeG: 900, unit: "jar",     label: "słoik 900g" },
@@ -26,7 +27,10 @@ const PACKAGE_SIZES: Record<string, { sizeG: number; unit: string; label: string
   "pierś z indyka":      { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
   "mięso mielone":       { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
   "łosoś atlantycki":    { sizeG: 300, unit: "pack",    label: "opakowanie 300g" },
+  "łosoś wędzony":       { sizeG: 100, unit: "pack",    label: "opakowanie 100g" },
   "dorsz":               { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
+  "sardynki":            { sizeG: 120, unit: "can",     label: "puszka 120g" },
+  "tuńczyk":             { sizeG: 170, unit: "can",     label: "puszka 170g" },
   "krewetki":            { sizeG: 300, unit: "pack",    label: "opakowanie 300g" },
   // ── Warzywa na sztuki ─────────────────────────────────────────────────────
   "pomidor":             { sizeG: 1000, unit: "kg",     label: "1 kg",           pieceWeightG: 150 },
@@ -63,6 +67,7 @@ const PACKAGE_SIZES: Record<string, { sizeG: number; unit: string; label: string
   "makaron gryczany":    { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
   "ryż":                 { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
   "płatki owsiane":      { sizeG: 500, unit: "pack",    label: "opakowanie 500g" },
+  "kasza pęczak":        { sizeG: 400, unit: "pack",    label: "opakowanie 400g" },
   // ── Orzechy i pestki ──────────────────────────────────────────────────────
   "pestki dyni":         { sizeG: 100, unit: "bag",     label: "opakowanie 100g" },
   "pestki słonecznika":  { sizeG: 200, unit: "bag",     label: "opakowanie 200g" },
@@ -75,6 +80,8 @@ const PACKAGE_SIZES: Record<string, { sizeG: number; unit: string; label: string
   "pomidory z puszki":   { sizeG: 400, unit: "can",     label: "puszka 400g" },
   "soczewica z puszki":  { sizeG: 400, unit: "can",     label: "puszka 400g" },
   "bulion warzywny":     { sizeG: 500, unit: "carton",  label: "karton 500ml" },
+  "ogórek kiszony":      { sizeG: 500, unit: "jar",     label: "słoik 500g" },
+  "kapusta kiszona":     { sizeG: 500, unit: "bag",     label: "opakowanie 500g" },
   // ── Słoiki ────────────────────────────────────────────────────────────────
   "olej kokosowy":       { sizeG: 450, unit: "jar",     label: "słoik 450g" },
 };
@@ -115,7 +122,14 @@ async function main() {
   }
 
   const combined = JSON.parse(fs.readFileSync(combinedPath, "utf-8"));
-  const recipes = combined.recipes as any[];
+  const curatedPath = path.join(__dirname, "../data/curated/mediterranean-microbiome-recipes.json");
+  const curated = fs.existsSync(curatedPath)
+    ? JSON.parse(fs.readFileSync(curatedPath, "utf-8"))
+    : { recipes: [] };
+  const recipes = [
+    ...(combined.recipes as any[]),
+    ...(curated.recipes as any[]),
+  ];
 
   console.log(`\n🌱 Seeding ${recipes.length} recipes into database...\n`);
 
@@ -157,6 +171,8 @@ async function main() {
           where: { id: existing.id },
           data: {
             type: recipe.type,
+            prepTimeMin: recipe.prepTimeMin ?? null,
+            cookTimeMin: recipe.cookTimeMin ?? null,
             batchFriendly: recipe.batchFriendly,
             maxStorageDays: recipe.maxStorageDays,
             kcalPerServing: recipe.kcalPerServing,
@@ -166,6 +182,7 @@ async function main() {
             fiberG: recipe.fiberG,
             instructions: JSON.stringify(recipe.instructions || []),
             sourceDiet: recipe.sourceDiet,
+            tags: JSON.stringify(recipe.tags || []),
             baseServings: recipe.baseServings ?? 1,
             ingredientBasis: recipe.ingredientBasis ?? "per-serving",
             source: recipe.source ?? "dietitian",
@@ -179,6 +196,8 @@ async function main() {
           data: {
             name: recipe.name,
             type: recipe.type,
+            prepTimeMin: recipe.prepTimeMin ?? null,
+            cookTimeMin: recipe.cookTimeMin ?? null,
             batchFriendly: recipe.batchFriendly,
             maxStorageDays: recipe.maxStorageDays,
             kcalPerServing: recipe.kcalPerServing,
@@ -188,6 +207,7 @@ async function main() {
             fiberG: recipe.fiberG,
             instructions: JSON.stringify(recipe.instructions || []),
             sourceDiet: recipe.sourceDiet,
+            tags: JSON.stringify(recipe.tags || []),
             baseServings: recipe.baseServings ?? 1,
             ingredientBasis: recipe.ingredientBasis ?? "per-serving",
             source: recipe.source ?? "dietitian",

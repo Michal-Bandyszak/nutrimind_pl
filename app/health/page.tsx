@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
+import { safeJsonParse } from '@/lib/utils/formatUnits';
 import HealthClient from './HealthClient';
 
 export const dynamic = 'force-dynamic';
@@ -17,8 +18,8 @@ export default async function HealthPage() {
   // Parse JSON fields before passing to client component
   const initialLog = raw
     ? {
-        morningDone: (() => { try { return JSON.parse(raw.morningDone) as string[]; } catch { return []; } })(),
-        eveningDone: (() => { try { return JSON.parse(raw.eveningDone) as string[]; } catch { return []; } })(),
+        morningDone: safeJsonParse<string[]>(raw.morningDone, []),
+        eveningDone: safeJsonParse<string[]>(raw.eveningDone, []),
         waterGlasses: raw.waterGlasses ?? 0,
         sleepH: raw.sleepH,
         sleepQuality: raw.sleepQuality,

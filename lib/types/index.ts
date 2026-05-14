@@ -40,6 +40,7 @@ export type BatchConfig = {
   second_breakfast: MealDividers;
   lunch: MealDividers;
   dinner: MealDividers;
+  cocktail: MealDividers;
 };
 
 export const DEFAULT_BATCH_CONFIG: BatchConfig = {
@@ -48,6 +49,7 @@ export const DEFAULT_BATCH_CONFIG: BatchConfig = {
   second_breakfast: [false, false, true, false, false, false],
   lunch:            [false, false, true, false, false, false],
   dinner:           [false, false, true, false, false, false],
+  cocktail:         [false, false, true, false, false, false],
 };
 
 /** Convert dividers array → group numbers array (length 7) */

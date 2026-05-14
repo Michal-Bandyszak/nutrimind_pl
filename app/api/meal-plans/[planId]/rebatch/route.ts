@@ -3,6 +3,14 @@ import { prisma } from '@/lib/db/prisma';
 import type { BatchConfig } from '@/lib/types';
 import { dividersToGroups } from '@/lib/types';
 
+const REBATCH_MEAL_TYPES = [
+  'breakfast',
+  'second_breakfast',
+  'lunch',
+  'dinner',
+  'cocktail',
+] as const;
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ planId: string }> },
@@ -11,7 +19,7 @@ export async function PATCH(
     const { planId } = await params;
     const { config } = (await req.json()) as { config: BatchConfig };
 
-    for (const mealType of ['breakfast', 'lunch', 'dinner'] as const) {
+    for (const mealType of REBATCH_MEAL_TYPES) {
       const dividers = config[mealType];
       const groups = dividersToGroups(dividers); // e.g. [1,1,2,2,3,3,3]
       const uniqueGroups = [...new Set(groups)];
@@ -22,51 +30,63 @@ export async function PATCH(
       });
       if (meals.length === 0) continue;
 
-      // ── Determine recipe for each new group ──────────────────────────────
-      // Rule: use the recipe from the first day in each group.
-      // If two groups would get the same recipe (group split), pick a
-      // different recipe from the DB for the second group.
-      const groupRecipe: Record<number, string> = {};
-      const groupBatchId: Record<number, string> = {};
+      const mealsByDay = new Map(meals.map((m) => [m.dayOfWeek, m]));
       const usedRecipes = new Set<string>();
 
       // Fetch all recipes of this type once (for fallback on splits)
       const allRecipesOfType = await prisma.recipe.findMany({
         where: { type: mealType },
-        orderBy: { name: 'asc' },
+        select: { id: true, maxStorageDays: true },
+        orderBy: [{ maxStorageDays: 'desc' }, { name: 'asc' }],
       });
+      if (allRecipesOfType.length === 0) continue;
 
-      for (const g of uniqueGroups) {
-        groupBatchId[g] = crypto.randomUUID();
+      const updates: ReturnType<typeof prisma.mealPlanMeal.update>[] = [];
 
-        const firstDayIdx = groups.findIndex((grp) => grp === g);
-        const firstMeal = meals[firstDayIdx];
-        const candidateRecipeId = firstMeal?.recipeId ?? meals[0].recipeId;
+      for (const group of uniqueGroups) {
+        const daysInGroup = groups
+          .map((g, idx) => (g === group ? idx + 1 : null))
+          .filter((d): d is number => d !== null);
 
-        if (!usedRecipes.has(candidateRecipeId)) {
-          // Unchanged or merged group → keep recipe
-          groupRecipe[g] = candidateRecipeId;
-        } else {
-          // Split-off piece → pick a different recipe from DB
-          const alternative = allRecipesOfType.find((r) => !usedRecipes.has(r.id));
-          groupRecipe[g] = alternative?.id ?? candidateRecipeId; // fallback: allow repeat
+        const firstDay = daysInGroup[0];
+        const firstMeal = firstDay ? mealsByDay.get(firstDay) : null;
+        const preferredRecipeId = firstMeal?.recipeId ?? meals[0].recipeId;
+
+        // Prefer current recipe from the first day in group.
+        // If already used by another new group, choose another recipe if possible.
+        const preferredRecipe = allRecipesOfType.find((r) => r.id === preferredRecipeId);
+        const chosenRecipe =
+          (preferredRecipe && !usedRecipes.has(preferredRecipe.id) ? preferredRecipe : null) ??
+          allRecipesOfType.find((r) => !usedRecipes.has(r.id)) ??
+          preferredRecipe ??
+          allRecipesOfType[0];
+
+        usedRecipes.add(chosenRecipe.id);
+
+        // Split long configured groups by recipe shelf-life.
+        const maxBatchDays = Math.max(1, chosenRecipe.maxStorageDays || 1);
+        for (let start = 0; start < daysInGroup.length; start += maxBatchDays) {
+          const chunk = daysInGroup.slice(start, start + maxBatchDays);
+          const batchGroupId = crypto.randomUUID();
+          chunk.forEach((dayOfWeek, idxInChunk) => {
+            const meal = mealsByDay.get(dayOfWeek);
+            if (!meal) return;
+            updates.push(
+              prisma.mealPlanMeal.update({
+                where: { id: meal.id },
+                data: {
+                  recipeId: chosenRecipe.id,
+                  batchGroupId,
+                  batchDayNum: idxInChunk + 1,
+                },
+              }),
+            );
+          });
         }
-        usedRecipes.add(groupRecipe[g]);
       }
 
-      // ── Update meals in DB ───────────────────────────────────────────────
-      for (let i = 0; i < meals.length; i++) {
-        const group = groups[i];
-        const batchDayNum = groups.slice(0, i).filter((g) => g === group).length + 1;
-
-        await prisma.mealPlanMeal.update({
-          where: { id: meals[i].id },
-          data: {
-            recipeId: groupRecipe[group],
-            batchGroupId: groupBatchId[group],
-            batchDayNum,
-          },
-        });
+      if (updates.length) {
+        await prisma.$transaction(updates);
       }
     }
 

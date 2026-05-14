@@ -33,7 +33,7 @@ export default function GenerateButton() {
       <button
         onClick={handleGenerate}
         disabled={loading}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-700 text-white text-sm font-medium hover:bg-teal-800 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+        className="btn-primary flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-medium active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
         {loading ? 'Generowanie…' : 'Nowy plan'}
