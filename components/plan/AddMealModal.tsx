@@ -101,11 +101,11 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      className="modal-scrim fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-[2px]"
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden"
+        className="modal-panel relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-[1.75rem]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -116,7 +116,7 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            className="p-1.5 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
           >
             <X size={18} />
           </button>
@@ -132,7 +132,7 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               autoFocus
-              className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-border rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-400 transition"
+              className="input-base w-full pl-8 pr-3 py-2 rounded-xl text-sm placeholder:text-gray-400"
             />
           </div>
 
@@ -141,9 +141,9 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
               <button
                 key={value}
                 onClick={() => setTypeFilter(value)}
-                className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
                   typeFilter === value
-                    ? 'bg-teal-700 text-white'
+                    ? 'bg-teal-800 text-white'
                     : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >
@@ -168,7 +168,7 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
                   <button
                     onClick={() => handleSelect(recipe)}
                     disabled={saving !== null}
-                    className="w-full text-left px-3 py-3 rounded-xl border border-border hover:border-teal-300 hover:bg-teal-50/50 transition-colors disabled:opacity-50 group"
+                    className="w-full text-left px-3 py-3 rounded-2xl border border-border bg-white/60 hover:border-teal-300 hover:bg-teal-50/70 transition-colors disabled:opacity-50 group"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">

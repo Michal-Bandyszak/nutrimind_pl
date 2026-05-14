@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Check, Loader2, User, Moon } from 'lucide-react';
+import { Check, Loader2, User, Moon, Sun } from 'lucide-react';
 import type { AppSettingsData } from '@/lib/services/SettingsService';
 import type { BatchConfig } from '@/lib/types';
 import BatchConfigPanel from '@/components/plan/BatchConfigPanel';
@@ -76,7 +76,7 @@ export default function SettingsClient({ initialSettings }: Props) {
             Używane przy generowaniu nowego planu (można zmienić per-plan).
           </p>
         </div>
-        <div className="bg-white rounded-2xl border border-border p-4">
+        <div className="panel-surface rounded-[1.5rem] p-4">
           <BatchConfigPanel
             config={settings.defaultBatchConfig}
             onChange={(cfg: BatchConfig) => setField('defaultBatchConfig', cfg)}
@@ -89,7 +89,7 @@ export default function SettingsClient({ initialSettings }: Props) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-700 text-white text-sm font-medium hover:bg-teal-800 active:scale-95 transition-all disabled:opacity-60 shadow-sm"
+          className="btn-primary flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-medium active:scale-95 transition-all disabled:opacity-60"
         >
           {saving ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
           {saving ? 'Zapisywanie…' : 'Zapisz ustawienia'}
@@ -117,9 +117,11 @@ type PersonCardProps = {
 };
 
 function AppearanceSection() {
+  const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     setIsDark(document.documentElement.classList.contains('dark'));
   }, []);
 
@@ -133,18 +135,21 @@ function AppearanceSection() {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('nutrimind-theme', 'light');
     }
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next ? '#121714' : '#f4efe4');
   }
 
   return (
     <section>
       <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Wygląd</h2>
-      <div className="bg-white rounded-2xl border border-border p-4">
+      <div className="panel-surface rounded-[1.5rem] p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Moon size={18} className="text-gray-500 shrink-0" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-50 ring-1 ring-teal-100">
+              <Moon size={18} className="text-teal-600 shrink-0" />
+            </div>
             <div>
               <p className="text-sm font-medium text-gray-900">Tryb ciemny</p>
-              <p className="text-xs text-gray-400 mt-0.5">Przełącz motyw aplikacji</p>
+              <p className="text-xs text-gray-400 mt-0.5">Ciepły motyw nocny z oliwkowym akcentem</p>
             </div>
           </div>
 
@@ -153,13 +158,18 @@ function AppearanceSection() {
             role="switch"
             aria-checked={isDark}
             aria-label="Tryb ciemny"
-            className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${isDark ? 'bg-teal-500' : 'bg-gray-200'
-              }`}
+            disabled={!mounted}
+            className={`relative w-12 h-7 shrink-0 rounded-full border transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+              isDark && mounted ? 'bg-teal-600 border-teal-700' : 'bg-gray-200 border-border'
+            }`}
           >
             <span
-              className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-[#ffffff] shadow ring-0 transition duration-200 ease-in-out ${isDark ? 'translate-x-6' : 'translate-x-0'
-                }`}
-            />
+              className={`absolute top-0.5 left-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-[#fffdf8] shadow-sm transition-transform duration-200 ${
+                isDark && mounted ? 'translate-x-[22px]' : 'translate-x-0'
+              }`}
+            >
+              {isDark && mounted ? <Moon size={12} className="text-teal-700" /> : <Sun size={12} className="text-amber-500" />}
+            </span>
           </button>
         </div>
       </div>
@@ -169,9 +179,9 @@ function AppearanceSection() {
 
 function PersonCard({ label, name, kcal, onNameChange, onKcalChange }: PersonCardProps) {
   return (
-    <div className="bg-white rounded-2xl border border-border p-4 space-y-3">
+    <div className="panel-surface rounded-[1.5rem] p-4 space-y-3">
       <div className="flex items-center gap-2 mb-1">
-        <div className="w-7 h-7 rounded-full bg-teal-50 flex items-center justify-center">
+        <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-teal-50 ring-1 ring-teal-100">
           <User size={14} className="text-teal-600" />
         </div>
         <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{label}</span>
@@ -184,7 +194,7 @@ function PersonCard({ label, name, kcal, onNameChange, onKcalChange }: PersonCar
           value={name}
           maxLength={30}
           onChange={(e) => onNameChange(e.target.value)}
-          className="w-full px-3 py-2 rounded-xl border border-border bg-surface text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+          className="input-base w-full px-3 py-2 rounded-xl text-sm placeholder:text-gray-300"
           placeholder="Imię osoby"
         />
       </div>
@@ -202,7 +212,7 @@ function PersonCard({ label, name, kcal, onNameChange, onKcalChange }: PersonCar
               const v = parseInt(e.target.value, 10);
               if (!isNaN(v)) onKcalChange(v);
             }}
-            className="w-full px-3 py-2 pr-12 rounded-xl border border-border bg-surface text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+            className="input-base w-full px-3 py-2 pr-12 rounded-xl text-sm"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
             kcal

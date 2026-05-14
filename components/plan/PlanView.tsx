@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { SlidersHorizontal, Check, X, Loader2 } from 'lucide-react';
 import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { planToBatchConfig } from '@/lib/utils/planUtils';
@@ -14,6 +14,8 @@ type Props = { plan: MealPlanWithMeals };
 
 export default function PlanView({ plan: initialPlan }: Props) {
   const [plan, setPlan] = useState<MealPlanWithMeals>(initialPlan);
+  // Track last confirmed (server-synced) plan state for accurate reverts
+  const confirmedPlan = useRef<MealPlanWithMeals>(initialPlan);
 
   // ── Drag-and-drop state ───────────────────────────────────────────────────
   const [dragged, setDragged] = useState<DragState>(null);
@@ -48,7 +50,9 @@ export default function PlanView({ plan: initialPlan }: Props) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? 'Błąd zmiany grupowania.');
-      setPlan(json.data as MealPlanWithMeals);
+      const updated = json.data as MealPlanWithMeals;
+      setPlan(updated);
+      confirmedPlan.current = updated;
       setShowRebatch(false);
     } catch (e) {
       setRebatchError(e instanceof Error ? e.message : 'Spróbuj ponownie.');
@@ -83,10 +87,12 @@ export default function PlanView({ plan: initialPlan }: Props) {
       });
 
       if (!res.ok) {
-        setPlan(initialPlan);
+        setPlan(confirmedPlan.current);
+      } else {
+        setPlan((cur) => { confirmedPlan.current = cur; return cur; });
       }
     },
-    [plan.id, initialPlan],
+    [plan.id],
   );
 
   // ── Add meal handler ──────────────────────────────────────────────────────
@@ -99,7 +105,11 @@ export default function PlanView({ plan: initialPlan }: Props) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? 'Błąd dodawania.');
-      setPlan((prev) => ({ ...prev, meals: [...prev.meals, json.data as MealWithRecipe] }));
+      setPlan((prev) => {
+        const updated = { ...prev, meals: [...prev.meals, json.data as MealWithRecipe] };
+        confirmedPlan.current = updated;
+        return updated;
+      });
     },
     [plan.id],
   );
@@ -112,7 +122,9 @@ export default function PlanView({ plan: initialPlan }: Props) {
         method: 'DELETE',
       });
       if (!res.ok) {
-        setPlan((prev) => ({ ...prev, meals: [...prev.meals, meal] }));
+        setPlan(confirmedPlan.current);
+      } else {
+        setPlan((cur) => { confirmedPlan.current = cur; return cur; });
       }
     },
     [plan.id],
@@ -194,10 +206,12 @@ export default function PlanView({ plan: initialPlan }: Props) {
       });
 
       if (!res.ok) {
-        setPlan(initialPlan);
+        setPlan(confirmedPlan.current);
+      } else {
+        setPlan((cur) => { confirmedPlan.current = cur; return cur; });
       }
     },
-    [dragged, plan.id, initialPlan],
+    [dragged, plan.id],
   );
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -207,10 +221,10 @@ export default function PlanView({ plan: initialPlan }: Props) {
       <div className="flex items-center justify-end">
         <button
           onClick={openRebatch}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border text-xs font-medium transition-all ${
             showRebatch
-              ? 'bg-teal-50 border-teal-300 text-teal-700'
-              : 'bg-white border-border text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              ? 'bg-teal-50 border-teal-200 text-teal-700 shadow-sm'
+              : 'btn-secondary'
           }`}
         >
           <SlidersHorizontal size={13} />
@@ -227,7 +241,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
             <button
               onClick={applyRebatch}
               disabled={rebatchLoading}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-700 text-white text-sm font-medium hover:bg-teal-800 active:scale-95 transition-all disabled:opacity-60 shadow-sm"
+              className="btn-primary flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-medium active:scale-95 transition-all disabled:opacity-60"
             >
               {rebatchLoading ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -240,7 +254,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
             <button
               onClick={() => { setShowRebatch(false); setRebatchError(null); }}
               disabled={rebatchLoading}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border bg-white text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition disabled:opacity-50"
+              className="btn-secondary flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-medium transition disabled:opacity-50"
             >
               <X size={14} />
               Anuluj
