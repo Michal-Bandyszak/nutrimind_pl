@@ -163,23 +163,23 @@ body {
 }
 
 html.dark {
-  --color-surface:       #0f1211;
-  --color-card:          #161b1a;
-  --color-card-muted:    #1b2120;
-  --color-card-strong:   #202726;
-  --color-border:        #2c3331;
-  --color-border-light:  #39413e;
-  --color-border-strong: #505957;
+  --color-surface:       #0d1110;
+  --color-card:          #171d1b;
+  --color-card-muted:    #202725;
+  --color-card-strong:   #242c2a;
+  --color-border:        #3b4541;
+  --color-border-light:  #46514d;
+  --color-border-strong: #66706c;
 
-  --color-white:    #f5f7f5;
+  --color-white:    #f7faf7;
   --color-gray-50:  #171c1a;
   --color-gray-100: #1d2321;
   --color-gray-200: #28302d;
-  --color-gray-300: #39423f;
-  --color-gray-400: #67706c;
-  --color-gray-500: #8d9590;
-  --color-gray-600: #b8c0bb;
-  --color-gray-700: #d0d5d1;
+  --color-gray-300: #4e5854;
+  --color-gray-400: #96a09b;
+  --color-gray-500: #b2bbb6;
+  --color-gray-600: #c7ceca;
+  --color-gray-700: #d7ddd9;
   --color-gray-800: #e3e8e4;
   --color-gray-900: #f1f4f1;
   --color-gray-950: #fffdf8;
@@ -358,6 +358,42 @@ select option {
 
 .bg-white\/95 {
   background-color: color-mix(in srgb, var(--color-card) 92%, transparent) !important;
+}
+
+html.dark .bg-white\/95 {
+  background-color: color-mix(in srgb, var(--color-card-strong) 92%, transparent) !important;
+}
+
+html.dark .bg-white\/80 {
+  background-color: color-mix(in srgb, var(--color-card-strong) 80%, transparent) !important;
+}
+
+html.dark .bg-white\/70 {
+  background-color: color-mix(in srgb, var(--color-card-strong) 70%, transparent) !important;
+}
+
+html.dark .bg-white\/60,
+html.dark .bg-white\/55,
+html.dark .bg-white\/40 {
+  background-color: color-mix(in srgb, var(--color-card-muted) 72%, transparent) !important;
+}
+
+html.dark .border-white\/70,
+html.dark .border-white\/45 {
+  border-color: color-mix(in srgb, var(--color-border-light) 70%, transparent) !important;
+}
+
+html.dark .bg-gray-50\/90,
+html.dark .bg-gray-50\/80,
+html.dark .bg-gray-50\/70,
+html.dark .bg-gray-50\/60 {
+  background-color: color-mix(in srgb, var(--color-card-muted) 82%, transparent) !important;
+}
+
+html.dark .hover\:bg-gray-50\/80:hover,
+html.dark .hover\:bg-gray-50\/70:hover,
+html.dark .hover\:bg-gray-50\/60:hover {
+  background-color: color-mix(in srgb, var(--color-card-strong) 86%, transparent) !important;
 }
 
 .panel-surface {
