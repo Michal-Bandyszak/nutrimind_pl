@@ -43,12 +43,258 @@ function toBooleanOrDefault(value: unknown, fallback: boolean) {
   return typeof value === 'boolean' ? value : fallback;
 }
 
+function normalizeLine(line: string) {
+  return line
+    .replace(/^#{1,6}\s*/, '')
+    .replace(/^[-*•]\s*/, '')
+    .replace(/^\d+[.)]\s*/, '')
+    .trim();
+}
+
+function isIngredientHeading(line: string) {
+  return /^(składniki|skladniki|ingredients|potrzebujesz)\b/i.test(normalizeLine(line));
+}
+
+function isInstructionHeading(line: string) {
+  return /^(przygotowanie|wykonanie|sposób przygotowania|sposob przygotowania|instrukcje|kroki|method|directions)\b/i.test(normalizeLine(line));
+}
+
+function metadataValue(line: string, label: string) {
+  const match = normalizeLine(line).match(new RegExp(`^${label}\\s*:\\s*(.+)$`, 'i'));
+  return match?.[1]?.trim() ?? null;
+}
+
+function isMetadataLine(line: string) {
+  return /^(nazwa|typ|porcje|czas|czas przygotowania)\s*:/i.test(normalizeLine(line));
+}
+
+function normalizeRecipeType(value: string | null) {
+  if (!value) return null;
+  const v = value.toLowerCase();
+  if (/drugie/.test(v)) return 'second_breakfast';
+  if (/śniad|sniad/.test(v)) return 'breakfast';
+  if (/obiad|lunch/.test(v)) return 'lunch';
+  if (/kolac/.test(v)) return 'dinner';
+  if (/koktajl|smoothie/.test(v)) return 'cocktail';
+  if (/deser|ciast|słod|slod/.test(v)) return 'dessert';
+  if (/przeką|przekas|snack/.test(v)) return 'snack';
+  return null;
+}
+
+function parseFirstNumber(text: string | null) {
+  if (!text) return null;
+  const match = text.match(/\d+(?:[,.]\d+)?/);
+  return match ? Number(match[0].replace(',', '.')) : null;
+}
+
+function parseAmountToken(value: string) {
+  const normalized = value.replace(',', '.').trim();
+  if (normalized.includes('/')) {
+    const [nominator, denominator] = normalized.split('/').map(Number);
+    return denominator ? nominator / denominator : Number.NaN;
+  }
+  const unicodeFractions: Record<string, number> = {
+    '¼': 0.25,
+    '½': 0.5,
+    '¾': 0.75,
+  };
+  return unicodeFractions[normalized] ?? Number(normalized);
+}
+
+function estimateUnitAmountG(amount: number, unit: string | null, ingredientName: string) {
+  if (!Number.isFinite(amount) || amount <= 0) return null;
+  const normalizedUnit = unit?.toLowerCase() ?? '';
+  const normalizedName = ingredientName.toLowerCase();
+
+  if (/^kg|kilogram/.test(normalizedUnit)) return amount * 1000;
+  if (/^g|gram/.test(normalizedUnit)) return amount;
+  if (/^l$|litr/.test(normalizedUnit)) return amount * 1000;
+  if (/^ml|mililitr/.test(normalizedUnit)) return amount;
+  if (/łyżk|lyzk/.test(normalizedUnit)) return amount * 15;
+  if (/łyżecz|lyzecz/.test(normalizedUnit)) return amount * 5;
+  if (/szklank/.test(normalizedUnit)) return amount * 250;
+  if (/ząb|zab/.test(normalizedUnit)) return amount * 5;
+  if (/szczypt/.test(normalizedUnit)) return amount;
+  if (/garś|garsc|garść/.test(normalizedUnit)) {
+    if (/rukol|sałat|salat|szpinak|natk|zioł/.test(normalizedName)) return amount * 20;
+    return amount * 30;
+  }
+  if (/szt|sztuk|kromk/.test(normalizedUnit) || !normalizedUnit) {
+    if (/jaj/.test(normalizedName)) return amount * 60;
+    if (/banan/.test(normalizedName)) return amount * 120;
+    if (/jabł|jabl/.test(normalizedName)) return amount * 150;
+    if (/pomidor/.test(normalizedName)) return amount * 180;
+    if (/cebula/.test(normalizedName)) return amount * 100;
+    if (/marchew/.test(normalizedName)) return amount * 70;
+    if (/cytryn/.test(normalizedName)) return amount * 80;
+    if (/kromk/.test(normalizedUnit)) return amount * 35;
+  }
+
+  return null;
+}
+
+function inferCategory(name: string) {
+  const n = name.toLowerCase();
+  if (/pomidor|papryk|cebula|czosnek|marchew|ogór|ogor|brokuł|brokul|cukini|rukol|sałat|salat|szpinak|ziemniak|batat|burak|kapust|kalafior|por\b/.test(n)) return 'vegetables';
+  if (/jabł|jabl|banan|truskawk|borów|borow|malin|cytryn|limonk|gruszk|owoc/.test(n)) return 'fruits';
+  if (/mąk|mak|ryż|ryz|makaron|płatk|platk|kasz|chleb|tortill|bułk|bulk|owsian|komos|quinoa/.test(n)) return 'grains';
+  if (/kurczak|indyk|woł|wol|łosoś|losos|tuńczyk|tunczyk|dorsz|jaj|tofu|ciecierzyc|soczewic|fasol|krewet|mięso|mieso/.test(n)) return 'protein';
+  if (/jogurt|mleko|ser\b|feta|mozzarella|twaróg|twarog|kefir|śmietan|smietan/.test(n)) return 'dairy';
+  if (/oliw|olej|masło|maslo/.test(n)) return 'oils';
+  if (/orzech|migdał|migdal|nasion|pestk|siemi|sezam/.test(n)) return 'nuts';
+  if (/sól|sol|pieprz|bazyl|oregano|curry|zioł|ziol|przypraw|cynamon|papryka słodka|papryka ostra|tymianek|rozmaryn/.test(n)) return 'spices';
+  return 'other';
+}
+
+function shouldScaleLinearly(name: string, category: string) {
+  const n = name.toLowerCase();
+  if (category === 'spices' || category === 'oils') return false;
+  if (/czosnek|cebula|sól|sol|pieprz|zioł|ziol/.test(n)) return false;
+  return true;
+}
+
+function parseIngredientLine(line: string) {
+  const cleaned = normalizeLine(line)
+    .replace(/\s+/g, ' ')
+    .replace(/\s*[-–]\s*/g, ' ')
+    .trim();
+  if (!cleaned) return null;
+
+  const unitPattern = '(kg|g|gram(?:y|ów|ow)?|ml|l|litr(?:y|ów|ow)?|łyżki|łyżka|łyżek|lyzki|lyzka|lyzek|łyżeczki|łyżeczka|łyżeczek|lyzeczki|lyzeczka|lyzeczek|szklanki|szklanka|szt\\.?|sztuki|sztuka|ząbki|ząbek|zabki|zabek|garść|garści|garsc|garsci|szczypta|szczypty|kromka|kromki)?';
+  const amountPattern = '(\\d+(?:[,.]\\d+)?|\\d+\\/\\d+|¼|½|¾)';
+  const startMatch = cleaned.match(new RegExp(`^${amountPattern}\\s*${unitPattern}\\s+(.+)$`, 'i'));
+  const endMatch = cleaned.match(new RegExp(`^(.+?)\\s+${amountPattern}\\s*${unitPattern}$`, 'i'));
+
+  let amount: number | null = null;
+  let unit: string | null = null;
+  let name = cleaned;
+
+  if (startMatch) {
+    amount = parseAmountToken(startMatch[1]);
+    unit = startMatch[2] || null;
+    name = startMatch[3];
+  } else if (endMatch) {
+    name = endMatch[1];
+    amount = parseAmountToken(endMatch[2]);
+    unit = endMatch[3] || null;
+  }
+
+  name = name
+    .replace(/\([^)]*\)/g, '')
+    .replace(/[,;:.]+$/g, '')
+    .trim()
+    .toLowerCase();
+
+  if (!name || name.length < 2) return null;
+
+  const category = inferCategory(name);
+  const amountG = amount != null ? estimateUnitAmountG(amount, unit, name) : null;
+
+  return {
+    name,
+    amountG,
+    displayText: cleaned,
+    category,
+    scalesLinearly: shouldScaleLinearly(name, category),
+  };
+}
+
+function inferRecipeType(name: string, ingredients: UploadRecipeDraft['ingredients']) {
+  const text = `${name} ${ingredients.map((ingredient) => ingredient.name).join(' ')}`.toLowerCase();
+  if (/koktajl|smoothie|shake/.test(text)) return 'cocktail';
+  if (/ciasto|sernik|deser|brownie|tarta|muffin|placuszki/.test(text)) return 'dessert';
+  if (/owsiank|jajecznic|omlet|kanapk|śniadan|sniadan|płatki|platki/.test(text)) return 'breakfast';
+  if (/zupa|gulasz|leczo|curry|obiad|makaron|ryż|ryz|kasz/.test(text)) return 'lunch';
+  if (/sałatk|salatk|kolacj|tost/.test(text)) return 'dinner';
+  return 'lunch';
+}
+
+function inferStorageDays(name: string, type: string) {
+  const n = name.toLowerCase();
+  if (/zupa|gulasz|curry|leczo|zapiekank/.test(n)) return 3;
+  if (/ryb|łosoś|losos|tuńczyk|tunczyk|dorsz/.test(n)) return 1;
+  if (type === 'dessert') return 3;
+  if (/sałatk|salatk|kanapk|smoothie|koktajl/.test(n)) return 1;
+  return 2;
+}
+
+function inferBatchFriendly(name: string, type: string) {
+  const n = name.toLowerCase();
+  if (type === 'dessert' || type === 'cocktail') return false;
+  return /zupa|gulasz|curry|leczo|zapiekank|jednogarnk|chili/.test(n);
+}
+
+function parsePlainRecipe(text: string): UploadRecipeDraft | null {
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (lines.length < 2) return null;
+
+  const ingredientHeadingIdx = lines.findIndex(isIngredientHeading);
+  const instructionHeadingIdx = lines.findIndex(isInstructionHeading);
+  const explicitName = lines.map((line) => metadataValue(line, 'nazwa')).find(Boolean);
+  const explicitType = lines.map((line) => metadataValue(line, 'typ')).find(Boolean);
+  const explicitServings = lines.map((line) => metadataValue(line, 'porcje')).find(Boolean);
+  const ingredientHeading = ingredientHeadingIdx >= 0 ? lines[ingredientHeadingIdx] : null;
+
+  const nameSource = lines.find((line, idx) => (
+    idx !== ingredientHeadingIdx &&
+    idx !== instructionHeadingIdx &&
+    !isIngredientHeading(line) &&
+    !isInstructionHeading(line) &&
+    !isMetadataLine(line)
+  ));
+  const name = normalizeLine(explicitName ?? nameSource ?? 'Nowy przepis').replace(/:$/, '');
+
+  const ingredientStart = ingredientHeadingIdx >= 0 ? ingredientHeadingIdx + 1 : 1;
+  const ingredientEnd = instructionHeadingIdx > ingredientStart ? instructionHeadingIdx : lines.length;
+  const likelyIngredientLines = lines
+    .slice(ingredientStart, ingredientEnd)
+    .filter((line) => !isIngredientHeading(line) && !isInstructionHeading(line) && !isMetadataLine(line));
+
+  const ingredients = likelyIngredientLines
+    .map(parseIngredientLine)
+    .filter((ingredient): ingredient is NonNullable<ReturnType<typeof parseIngredientLine>> => ingredient !== null);
+
+  if (ingredients.length === 0) return null;
+
+  const instructionLines = instructionHeadingIdx >= 0
+    ? lines.slice(instructionHeadingIdx + 1)
+    : lines.slice(ingredientEnd);
+  const instructions = instructionLines
+    .map(normalizeLine)
+    .filter((line) => line && !isIngredientHeading(line) && !isInstructionHeading(line));
+
+  const type = normalizeRecipeType(explicitType ?? null) ?? inferRecipeType(name, ingredients);
+  const maxStorageDays = inferStorageDays(name, type);
+  const baseServings = parseFirstNumber(explicitServings ?? ingredientHeading ?? null) ?? 1;
+
+  return {
+    name,
+    type,
+    prepTimeMin: null,
+    cookTimeMin: null,
+    batchFriendly: inferBatchFriendly(name, type),
+    maxStorageDays,
+    baseServings,
+    ingredientBasis: baseServings > 1 ? 'per-whole' : 'per-serving',
+    kcalPerServing: null,
+    proteinG: null,
+    carbsG: null,
+    fatG: null,
+    fiberG: null,
+    instructions,
+    ingredients,
+  };
+}
+
 function parseUploadRecipe(text: string): UploadRecipeDraft | null {
   let raw: unknown;
   try {
     raw = JSON.parse(text.trim());
   } catch {
-    return null;
+    return parsePlainRecipe(text);
   }
   if (!isRecord(raw)) return null;
 
@@ -260,7 +506,7 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
 
     const parsed = parseUploadRecipe(trimmed);
     if (!parsed) {
-      setFileError('Błąd parsowania lub brak wymaganych pól. Sprawdź, czy to poprawny JSON z name, type i ingredients.');
+      setFileError('Nie udało się rozpoznać przepisu. Wklej nazwę, sekcję "Składniki" i opcjonalnie "Przygotowanie".');
       setFileData(null);
       return;
     }
@@ -304,6 +550,42 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
         scalesLinearly: i.scalesLinearly,
       })),
     };
+  }
+
+  function applyUploadToManualForm() {
+    if (!fileData) return;
+    setName(fileData.name);
+    setType(fileData.type);
+    setPrepTimeMin(fileData.prepTimeMin != null ? String(fileData.prepTimeMin) : '');
+    setBatchFriendly(fileData.batchFriendly);
+    setMaxStorageDays(String(fileData.maxStorageDays || 1));
+    setManualBasis(uploadBasis);
+    setManualBaseServings(uploadBaseServings);
+    setKcal(fileData.kcalPerServing != null ? String(fileData.kcalPerServing) : '');
+    setProtein(fileData.proteinG != null ? String(fileData.proteinG) : '');
+    setCarbs(fileData.carbsG != null ? String(fileData.carbsG) : '');
+    setFat(fileData.fatG != null ? String(fileData.fatG) : '');
+    setFiber(fileData.fiberG != null ? String(fileData.fiberG) : '');
+    setIngredients(
+      fileData.ingredients.length
+        ? fileData.ingredients.map((ingredient) => ({
+          id: genId(),
+          name: ingredient.name,
+          amountG: ingredient.amountG != null && Number.isFinite(ingredient.amountG)
+            ? String(Math.round(ingredient.amountG * 10) / 10)
+            : '',
+          category: ingredient.category,
+          scalesLinearly: ingredient.scalesLinearly,
+        }))
+        : [{ id: genId(), name: '', amountG: '', category: 'other', scalesLinearly: true }],
+    );
+    setSteps(
+      fileData.instructions.length
+        ? fileData.instructions.map((step) => ({ id: genId(), text: step }))
+        : [{ id: genId(), text: '' }],
+    );
+    setError(null);
+    setActiveTab('manual');
   }
 
   const uploadQuality = useMemo(
@@ -373,7 +655,7 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
                   : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              {tab === 'upload' ? 'Wklej JSON' : 'Wpisz ręcznie'}
+              {tab === 'upload' ? 'Wklej przepis' : 'Dopracuj ręcznie'}
             </button>
           ))}
         </div>
@@ -389,6 +671,7 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
               fileError={fileError}
               pasteText={pasteText}
               onPasteTextChange={(text) => { setPasteText(text); processJsonText(text); }}
+              onUseDraft={applyUploadToManualForm}
               uploadBasis={uploadBasis}
               onUploadBasisChange={setUploadBasis}
               uploadBaseServings={uploadBaseServings}
