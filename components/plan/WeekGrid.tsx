@@ -124,9 +124,9 @@ export default function WeekGrid({
 
   return (
     <>
-      {/* ——— Desktop: row-per-meal-type so all 7 cells in a row share the same height ——— */}
-      <div className="hidden lg:block overflow-x-auto">
-        <div className="grid grid-cols-7 gap-x-4 gap-y-5 min-w-[900px]">
+      {/* ——— Week grid: row-per-meal-type so all 7 cells in a row share the same height ——— */}
+      <div className="hidden md:block overflow-x-auto pb-1">
+        <div className="grid grid-cols-7 gap-x-3 gap-y-5 min-w-[900px] lg:gap-x-4">
 
           {/* Row 0: Day headers */}
           {days.map((day) => (
@@ -224,8 +224,8 @@ export default function WeekGrid({
         </div>
       </div>
 
-      {/* ——— Mobile: vertical day list ——— */}
-      <div className="lg:hidden space-y-5">
+      {/* ——— Phone: vertical day list ——— */}
+      <div className="md:hidden space-y-5">
         {days.map((day, i) => (
           <section key={day.dayOfWeek}>
             <div className="flex items-baseline gap-2 px-4 mb-2">
@@ -308,7 +308,7 @@ export default function WeekGrid({
 
       {/* DnD hint */}
       {dragged && (
-        <div className="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-black/70 text-white text-xs rounded-full pointer-events-none">
+        <div className="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-black/70 text-white text-xs rounded-full pointer-events-none">
           Upuść na dowolny slot żeby zamienić
         </div>
       )}
