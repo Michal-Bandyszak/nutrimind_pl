@@ -9,6 +9,8 @@ const MEAL_LABELS: Record<string, string> = {
   dinner: 'Kolacja',
   snack: 'Przekąska',
   cocktail: 'Koktajl',
+  dessert: 'Ciasto / deser',
+  extra: 'Dodatkowy',
 };
 
 type Props = {

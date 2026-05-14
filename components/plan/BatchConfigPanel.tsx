@@ -28,11 +28,11 @@ const GROUP_ACCENT = [
 
 // Quick presets: [label, dividers]
 const PRESETS: { label: string; d: MealDividers }[] = [
-  { label: '1 przepis',           d: [false, false, false, false, false, false] },
-  { label: '2 przepisy',          d: [false, false, true,  false, false, false] },
-  { label: '3 przepisy',          d: [false, true,  false, false, true,  false] },
-  { label: '4 przepisy',          d: [false, true,  false, true,  false, true ] },
-  { label: 'Każdy dzień inny',    d: [true,  true,  true,  true,  true,  true ] },
+  { label: '1 gotowanie',          d: [false, false, false, false, false, false] },
+  { label: '2 gotowania',          d: [false, false, true,  false, false, false] },
+  { label: '3 gotowania',          d: [false, true,  false, false, true,  false] },
+  { label: 'Weekend osobno',       d: [false, false, false, false, true,  false] },
+  { label: 'Każdy dzień osobno',   d: [true,  true,  true,  true,  true,  true ] },
 ];
 
 type Props = {
@@ -41,6 +41,7 @@ type Props = {
 };
 
 const MEAL_KEYS = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
+type MealKey = typeof MEAL_KEYS[number];
 const MEAL_LABELS: Record<typeof MEAL_KEYS[number], string> = {
   breakfast:        'Śniadanie',
   second_breakfast: 'Drugie śniadanie',
@@ -50,7 +51,7 @@ const MEAL_LABELS: Record<typeof MEAL_KEYS[number], string> = {
 };
 
 export default function BatchConfigPanel({ config, onChange }: Props) {
-  function toggleDivider(meal: typeof MEAL_KEYS[number], idx: number) {
+  function toggleDivider(meal: MealKey, idx: number) {
     const d = [...config[meal]] as MealDividers;
     d[idx] = !d[idx];
     onChange({ ...config, [meal]: d });
@@ -62,11 +63,7 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
     onChange(newConfig);
   }
 
-  function applyPresetToMeal(meal: typeof MEAL_KEYS[number], d: MealDividers) {
-    onChange({ ...config, [meal]: [...d] as MealDividers });
-  }
-
-  function applyToAll(meal: typeof MEAL_KEYS[number]) {
+  function applyToAll(meal: MealKey) {
     const newConfig = {} as BatchConfig;
     for (const key of MEAL_KEYS) newConfig[key] = [...config[meal]] as MealDividers;
     onChange(newConfig);
@@ -79,7 +76,7 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
       {/* ── Presets ── */}
       <div className="px-4 py-3 border-b border-border bg-gray-50/80">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-          Szybki wybór — zastosuj do wszystkich posiłków
+          Układy
         </p>
         <div className="flex flex-wrap gap-2">
           {PRESETS.map((p) => {
@@ -90,9 +87,10 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
               <button
                 key={p.label}
                 onClick={() => applyPreset(p.d)}
+                title={p.label}
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   active
-                    ? 'bg-teal-800 text-white shadow-sm'
+                    ? 'bg-teal-800 text-white shadow-sm ring-1 ring-teal-900/10'
                     : 'btn-secondary'
                 }`}
               >
@@ -111,18 +109,10 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
             label={MEAL_LABELS[meal]}
             dividers={config[meal]}
             groupCount={uniqueGroupCount(config[meal])}
-            presets={PRESETS}
             onToggle={(idx) => toggleDivider(meal, idx)}
-            onApplyPreset={(d) => applyPresetToMeal(meal, d)}
             onApplyToAll={() => applyToAll(meal)}
           />
         ))}
-      </div>
-
-      <div className="px-4 py-2.5 bg-gray-50/80 border-t border-border">
-        <p className="text-xs text-gray-400">
-          Kliknij <Scissors className="inline w-3 h-3" /> żeby podzielić grupę · Kliknij <Link2 className="inline w-3 h-3" /> żeby połączyć · Dni w tej samej grupie mają ten sam przepis.
-        </p>
       </div>
     </div>
   );
@@ -134,20 +124,16 @@ function MealRow({
   label,
   dividers,
   groupCount,
-  presets,
   onToggle,
-  onApplyPreset,
   onApplyToAll,
 }: {
   label: string;
   dividers: MealDividers;
   groupCount: number;
-  presets: { label: string; d: MealDividers }[];
   onToggle: (idx: number) => void;
-  onApplyPreset: (d: MealDividers) => void;
   onApplyToAll: () => void;
 }) {
-  const groups = dividersToGroups(dividers);
+  const segments = buildSegments(dividers);
 
   return (
     <div className="px-4 py-3 space-y-2.5">
@@ -156,40 +142,65 @@ function MealRow({
         <span className="text-sm font-medium text-gray-700">
           {label}
           <span className="ml-2 text-xs font-normal text-gray-400">
-            {groupCount} {groupCount === 1 ? 'przepis' : groupCount < 5 ? 'przepisy' : 'przepisów'}
+            {formatGroupCount(groupCount)}
           </span>
         </span>
-        <button onClick={onApplyToAll} className="text-xs text-teal-600 hover:text-teal-800 hover:underline shrink-0">
+        <button
+          onClick={onApplyToAll}
+          className="text-xs text-teal-600 hover:text-teal-800 hover:underline shrink-0"
+        >
           Zastosuj do wszystkich
         </button>
       </div>
 
-      {/* Day pills + divider buttons */}
-      <div className="flex items-center">
-        {DAY_SHORT.map((day, dayIdx) => {
-          const group = groups[dayIdx];
-          const bgCls = GROUP_BG[(group - 1) % GROUP_BG.length];
-          const isLastInGroup = dayIdx < 6 && dividers[dayIdx];
-          const accentCls = GROUP_ACCENT[(group - 1) % GROUP_ACCENT.length];
+      {/* Group segments + divider buttons */}
+      <div className="flex flex-wrap items-stretch gap-1.5">
+        {segments.map((segment, segmentIdx) => {
+          const bgCls = GROUP_BG[(segment.group - 1) % GROUP_BG.length];
+          const accentCls = GROUP_ACCENT[(segment.group - 1) % GROUP_ACCENT.length];
+          const isLastSegment = segmentIdx === segments.length - 1;
 
           return (
-            <div key={day} className="flex items-center">
-              {/* Day pill */}
-              <div className="flex flex-col items-center gap-0.5">
-                <span className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold select-none ${bgCls}`}>
-                  {day}
-                </span>
-                {/* Group indicator underline */}
-                <div className={`h-0.5 w-full rounded-full ${accentCls}`} />
+            <div key={`${segment.start}-${segment.end}`} className="flex items-stretch gap-1.5">
+              <div
+                className={`min-w-[5rem] flex-1 rounded-xl border border-border px-3 py-2 shadow-sm ${bgCls}`}
+              >
+                <div className="flex h-full flex-col justify-center text-center">
+                  <span className="text-sm font-semibold leading-tight">{segment.label}</span>
+                  <span className={`mt-1 h-0.5 rounded-full ${accentCls}`} />
+                  <div className="mt-1 flex items-center justify-center gap-1">
+                    <span className="text-[10px] font-medium uppercase tracking-wide text-current/65">
+                      {segment.dayCount} {segment.dayCount === 1 ? 'dzień' : 'dni'}
+                    </span>
+                    {segment.dayCount > 1 && (
+                      <div className="flex items-center gap-0.5">
+                        {Array.from(
+                          { length: segment.end - segment.start },
+                          (_, offset) => segment.start + offset,
+                        ).map((dividerIdx) => (
+                          <button
+                            key={dividerIdx}
+                            type="button"
+                            onClick={() => onToggle(dividerIdx)}
+                            title={`Podziel po ${DAY_SHORT[dividerIdx]}`}
+                            aria-label={`Podziel po ${DAY_SHORT[dividerIdx]}`}
+                            className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/60 text-current/60 hover:bg-white hover:text-teal-700 transition-colors"
+                          >
+                            <Scissors size={10} className="rotate-90" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* Divider button between this and next day */}
-              {dayIdx < 6 && (
+              {!isLastSegment && (
                 <DividerButton
-                  active={dividers[dayIdx]}
-                  onToggle={() => onToggle(dayIdx)}
-                  leftDay={DAY_SHORT[dayIdx]}
-                  rightDay={DAY_SHORT[dayIdx + 1]}
+                  active={dividers[segment.end]}
+                  onToggle={() => onToggle(segment.end)}
+                  leftLabel={segment.label}
+                  rightLabel={segments[segmentIdx + 1].label}
                 />
               )}
             </div>
@@ -202,46 +213,77 @@ function MealRow({
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+function formatGroupCount(groupCount: number) {
+  if (groupCount === 1) return '1 grupa';
+  if (groupCount % 10 >= 2 && groupCount % 10 <= 4 && (groupCount % 100 < 10 || groupCount % 100 >= 20)) {
+    return `${groupCount} grupy`;
+  }
+  return `${groupCount} grup`;
+}
+
+function buildSegments(dividers: MealDividers) {
+  const segments: { start: number; end: number; group: number; label: string; dayCount: number }[] = [];
+  let start = 0;
+
+  for (let i = 0; i < dividers.length; i++) {
+    if (dividers[i]) {
+      segments.push({
+        start,
+        end: i,
+        group: segments.length + 1,
+        label: formatDayRange(start, i),
+        dayCount: i - start + 1,
+      });
+      start = i + 1;
+    }
+  }
+
+  segments.push({
+    start,
+    end: 6,
+    group: segments.length + 1,
+    label: formatDayRange(start, 6),
+    dayCount: 7 - start,
+  });
+
+  return segments;
+}
+
+function formatDayRange(start: number, end: number) {
+  return start === end ? DAY_SHORT[start] : `${DAY_SHORT[start]}-${DAY_SHORT[end]}`;
+}
+
 function DividerButton({
   active,
   onToggle,
-  leftDay,
-  rightDay,
+  leftLabel,
+  rightLabel,
 }: {
   active: boolean;
   onToggle: () => void;
-  leftDay: string;
-  rightDay: string;
+  leftLabel: string;
+  rightLabel: string;
 }) {
+  const label = active
+    ? `Połącz ${leftLabel} i ${rightLabel} w jedną grupę`
+    : `Podziel na ${leftLabel} i ${rightLabel}`;
+
   return (
     <button
+      type="button"
       onClick={onToggle}
-      title={active ? `Połącz ${leftDay} i ${rightDay} w jedną grupę` : `Podziel: ${leftDay} i ${rightDay} mają różne przepisy`}
-      className="group flex items-center justify-center mx-0.5"
-      style={{ width: 28, height: 44 }}
+      title={label}
+      aria-label={label}
+      className={`group inline-flex h-10 w-8 shrink-0 items-center justify-center self-center rounded-full border transition-colors ${
+        active
+          ? 'border-teal-200 bg-teal-50 text-teal-700 hover:border-teal-300 hover:bg-teal-100'
+          : 'border-dashed border-gray-200 bg-white text-gray-500 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700'
+      }`}
     >
       {active ? (
-        /* ── SPLIT active — click to MERGE ── */
-        <div className="relative flex flex-col items-center gap-0 w-full h-full justify-center">
-          {/* vertical bar */}
-          <div className="w-0.5 h-8 bg-gray-300 group-hover:bg-red-300 rounded-full transition-colors" />
-          {/* icon overlay in the middle */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <span className="bg-white rounded-full p-0.5 shadow-sm">
-              <Link2 size={11} className="text-red-400" />
-            </span>
-          </div>
-        </div>
+        <Link2 size={13} className="transition-transform group-hover:scale-110" />
       ) : (
-        /* ── NO split — click to SPLIT ── */
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="w-0.5 h-5 bg-gray-200 border-l border-dashed border-gray-200 group-hover:bg-teal-300 rounded-full transition-all group-hover:h-8" />
-          <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity">
-            <span className="bg-white rounded-full p-0.5 shadow-sm">
-              <Scissors size={11} className="text-teal-500 rotate-90" />
-            </span>
-          </div>
-        </div>
+        <Scissors size={13} className="rotate-90 transition-transform group-hover:scale-110" />
       )}
     </button>
   );
