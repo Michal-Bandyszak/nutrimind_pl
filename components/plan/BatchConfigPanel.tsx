@@ -40,12 +40,13 @@ type Props = {
   onChange: (config: BatchConfig) => void;
 };
 
-const MEAL_KEYS = ['breakfast', 'second_breakfast', 'lunch', 'dinner'] as const;
+const MEAL_KEYS = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
 const MEAL_LABELS: Record<typeof MEAL_KEYS[number], string> = {
   breakfast:        'Śniadanie',
   second_breakfast: 'Drugie śniadanie',
   lunch:            'Obiad',
   dinner:           'Kolacja',
+  cocktail:         'Koktajl',
 };
 
 export default function BatchConfigPanel({ config, onChange }: Props) {
@@ -56,12 +57,9 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
   }
 
   function applyPreset(d: MealDividers) {
-    onChange({
-      breakfast:        [...d] as MealDividers,
-      second_breakfast: [...d] as MealDividers,
-      lunch:            [...d] as MealDividers,
-      dinner:           [...d] as MealDividers,
-    });
+    const newConfig = {} as BatchConfig;
+    for (const key of MEAL_KEYS) newConfig[key] = [...d] as MealDividers;
+    onChange(newConfig);
   }
 
   function applyPresetToMeal(meal: typeof MEAL_KEYS[number], d: MealDividers) {
@@ -69,20 +67,17 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
   }
 
   function applyToAll(meal: typeof MEAL_KEYS[number]) {
-    onChange({
-      breakfast:        [...config[meal]] as MealDividers,
-      second_breakfast: [...config[meal]] as MealDividers,
-      lunch:            [...config[meal]] as MealDividers,
-      dinner:           [...config[meal]] as MealDividers,
-    });
+    const newConfig = {} as BatchConfig;
+    for (const key of MEAL_KEYS) newConfig[key] = [...config[meal]] as MealDividers;
+    onChange(newConfig);
   }
 
   const uniqueGroupCount = (d: MealDividers) => new Set(dividersToGroups(d)).size;
 
   return (
-    <div className="bg-white border border-border rounded-2xl overflow-hidden">
+    <div className="panel-surface rounded-[1.5rem] overflow-hidden">
       {/* ── Presets ── */}
-      <div className="px-4 py-3 border-b border-border bg-gray-50">
+      <div className="px-4 py-3 border-b border-border bg-gray-50/80">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
           Szybki wybór — zastosuj do wszystkich posiłków
         </p>
@@ -95,10 +90,10 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
               <button
                 key={p.label}
                 onClick={() => applyPreset(p.d)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   active
-                    ? 'bg-teal-700 text-white shadow-sm'
-                    : 'bg-white border border-border text-gray-600 hover:border-teal-400 hover:text-teal-700'
+                    ? 'bg-teal-800 text-white shadow-sm'
+                    : 'btn-secondary'
                 }`}
               >
                 {p.label}
@@ -124,7 +119,7 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
         ))}
       </div>
 
-      <div className="px-4 py-2.5 bg-gray-50 border-t border-border">
+      <div className="px-4 py-2.5 bg-gray-50/80 border-t border-border">
         <p className="text-xs text-gray-400">
           Kliknij <Scissors className="inline w-3 h-3" /> żeby podzielić grupę · Kliknij <Link2 className="inline w-3 h-3" /> żeby połączyć · Dni w tej samej grupie mają ten sam przepis.
         </p>
@@ -164,10 +159,7 @@ function MealRow({
             {groupCount} {groupCount === 1 ? 'przepis' : groupCount < 5 ? 'przepisy' : 'przepisów'}
           </span>
         </span>
-        <button
-          onClick={onApplyToAll}
-          className="text-xs text-teal-600 hover:text-teal-800 hover:underline shrink-0"
-        >
+        <button onClick={onApplyToAll} className="text-xs text-teal-600 hover:text-teal-800 hover:underline shrink-0">
           Zastosuj do wszystkich
         </button>
       </div>

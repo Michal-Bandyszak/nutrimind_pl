@@ -11,13 +11,13 @@ export default async function ShoppingPage() {
   if (!plan) {
     return (
       <div className="max-w-[1400px] mx-auto">
-        <div className="sticky top-0 z-30 bg-surface/90 backdrop-blur-sm border-b border-border">
+        <div className="glass-header sticky top-0 z-30">
           <div className="px-4 lg:px-6 py-4">
             <h1 className="text-lg font-semibold text-gray-900">Lista zakupów</h1>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-          <div className="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mb-4">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-[1.75rem] bg-teal-50 shadow-sm ring-1 ring-teal-100">
             <ShoppingCart size={28} className="text-teal-600" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900 mb-1">Brak aktywnego planu</h2>
@@ -33,7 +33,7 @@ export default async function ShoppingPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="sticky top-0 z-30 bg-surface/90 backdrop-blur-sm border-b border-border">
+      <div className="glass-header sticky top-0 z-30">
         <div className="px-4 lg:px-6 py-4">
           <h1 className="text-lg font-semibold text-gray-900">Lista zakupów</h1>
           <p className="text-xs text-gray-400 mt-0.5">
