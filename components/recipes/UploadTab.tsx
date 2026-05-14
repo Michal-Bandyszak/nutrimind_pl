@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   ClipboardPaste,
   Copy,
+  PencilLine,
   Info,
   X,
 } from 'lucide-react';
@@ -11,44 +12,26 @@ import IngredientBasisPicker from './IngredientBasisPicker';
 import { TYPE_COLORS, MEAL_TYPE_LABELS } from '@/lib/utils/recipeConstants';
 import type { UploadQualityState, UploadRecipeDraft } from './types';
 
-const LLM_PROMPT = `Jesteś asystentem kuchennym. Zwróć WYŁĄCZNIE jeden obiekt JSON, bez markdown, bez komentarzy i bez \`\`\`.
+const LLM_PROMPT = `Przepisz poniższy przepis po polsku w prostym, czytelnym formacie.
 
-Uzupełnij pola:
-{
-  "name": "pełna nazwa przepisu po polsku",
-  "type": "breakfast | second_breakfast | lunch | dinner | snack | cocktail | dessert",
-  "prepTimeMin": number | null,
-  "cookTimeMin": number | null,
-  "batchFriendly": true | false,
-  "maxStorageDays": number,
-  "baseServings": number,
-  "ingredientBasis": "per-serving" | "per-whole",
-  "kcalPerServing": number | null,
-  "proteinG": number | null,
-  "carbsG": number | null,
-  "fatG": number | null,
-  "fiberG": number | null,
-  "instructions": ["krok 1", "krok 2"],
-  "ingredients": [
-    {
-      "name": "składnik po polsku, mała litera",
-      "amountG": number,
-      "displayText": "oryginalny zapis porcji, np. 2 łyżki oliwy (30g)",
-      "category": "vegetables | fruits | grains | protein | dairy | oils | nuts | spices | other",
-      "scalesLinearly": true | false
-    }
-  ]
-}
+Format odpowiedzi:
+Nazwa: ...
+Typ: śniadanie / drugie śniadanie / obiad / kolacja / przekąska / koktajl / deser
+Porcje: ...
+
+Składniki:
+- 200 g ...
+- 2 łyżki ... (30 g)
+
+Przygotowanie:
+1. ...
+2. ...
 
 Zasady:
-- ingredientBasis="per-serving" gdy składniki są na 1 porcję.
-- ingredientBasis="per-whole" gdy składniki są na całą recepturę; wtedy baseServings musi być > 1.
-- maxStorageDays = liczba dni przechowywania.
-- ingredients[].category wybieraj tylko z: vegetables, fruits, grains, protein, dairy, oils, nuts, spices, other.
-- ingredients[].displayText zachowuje naturalny zapis porcji i pomaga w podglądzie.
-- ingredients[].scalesLinearly=false dla oliwy, masła, soli, pieprzu, ziół, czosnku i cebuli.
-- kcalPerServing, proteinG, carbsG, fatG i fiberG podaj na 1 porcję; jeśli nie wiesz, wpisz null.
-- Nie dodawaj żadnego tekstu poza JSON.`;
+- Przy składnikach podawaj ilości w gramach, jeśli da się je ustalić.
+- Zachowaj naturalny zapis porcji, np. "2 łyżki oliwy (30 g)".
+- Nie używaj JSON ani markdown table.
+- Nie dodawaj komentarzy poza przepisem.`;
 
 type Props = {
   copied: boolean;
@@ -58,6 +41,7 @@ type Props = {
   fileError: string | null;
   pasteText: string;
   onPasteTextChange: (text: string) => void;
+  onUseDraft: () => void;
   uploadBasis: 'per-serving' | 'per-whole';
   onUploadBasisChange: (v: 'per-serving' | 'per-whole') => void;
   uploadBaseServings: string;
@@ -86,6 +70,7 @@ export default function UploadTab({
   fileError,
   pasteText,
   onPasteTextChange,
+  onUseDraft,
   uploadBasis,
   onUploadBasisChange,
   uploadBaseServings,
@@ -108,9 +93,9 @@ export default function UploadTab({
     <div className="space-y-5">
       <div className="rounded-[1.25rem] border border-border bg-gray-50/80 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Instrukcja dla AI</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Wklej przepis</p>
           <p className="mt-1 text-sm text-gray-600">
-            Jedna odpowiedź JSON, bez markdown. Wklej ją poniżej, sprawdź podgląd i zapisz.
+            Tekst z notatki, strony internetowej albo odpowiedź z AI.
           </p>
         </div>
         <button
@@ -119,22 +104,22 @@ export default function UploadTab({
           className="btn-secondary flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium shadow-sm shrink-0"
         >
           {copied ? <Check size={12} className="text-teal-600" /> : <Copy size={12} />}
-          {copied ? 'Skopiowano' : 'Kopiuj instrukcję dla AI'}
+          {copied ? 'Skopiowano' : 'Kopiuj prośbę do AI'}
         </button>
       </div>
 
       <div>
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-          1. Wklej odpowiedź JSON z AI
+          1. Treść przepisu
         </p>
         <div className="relative">
           <textarea
             value={pasteText}
             onChange={(e) => onPasteTextChange(e.target.value)}
-            placeholder={'{\n  "name": "Owsianka z owocami",\n  "type": "breakfast",\n  ...\n}'}
-            rows={8}
-            spellCheck={false}
-            className={`w-full px-3 py-2.5 border rounded-[1.25rem] text-xs font-mono text-gray-700 placeholder:text-gray-300 resize-none focus:outline-none focus:ring-2 transition ${
+            placeholder={'Owsianka z jabłkiem\n\nSkładniki:\n- 50 g płatków owsianych\n- 150 g jabłka\n- 200 ml mleka\n\nPrzygotowanie:\n1. Ugotuj płatki z mlekiem.\n2. Dodaj jabłko i cynamon.'}
+            rows={10}
+            spellCheck
+            className={`w-full px-3 py-2.5 border rounded-[1.25rem] text-sm leading-relaxed text-gray-700 placeholder:text-gray-300 resize-none focus:outline-none focus:ring-2 transition ${
               fileData
                 ? 'border-teal-300 bg-teal-50 focus:ring-teal-500/30 focus:border-teal-400'
                 : fileError
@@ -157,7 +142,7 @@ export default function UploadTab({
         {!pasteText && (
           <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
             <ClipboardPaste size={11} />
-            Wklej JSON skopiowany bezpośrednio z odpowiedzi AI
+            Najlepiej działa układ: nazwa, składniki, przygotowanie.
           </p>
         )}
       </div>
@@ -258,6 +243,22 @@ export default function UploadTab({
                 ))}
               </div>
             )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={onUseDraft}
+                className="btn-secondary inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium"
+              >
+                <PencilLine size={13} />
+                Dopracuj w formularzu
+              </button>
+              <span className="text-xs text-gray-500">
+                {hasBlockingIssues
+                  ? 'Uzupełnij brakujące gramatury przed zapisem.'
+                  : 'Możesz też zapisać od razu.'}
+              </span>
+            </div>
           </div>
 
           <IngredientBasisPicker
