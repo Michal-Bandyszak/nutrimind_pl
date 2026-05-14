@@ -3,12 +3,14 @@
 import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
-import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL } from '@/lib/utils/batchColors';
+import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL, MEAL_TYPE_LABELS } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import MealCard from './MealCard';
 import RecipeModal from './RecipeModal';
 
 type DragState = { dayOfWeek: number; mealType: string } | null;
+const CORE_MEAL_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
+const MULTI_MEAL_TYPES = ['snack', 'dessert', 'extra'] as const;
 
 type Props = {
   plan: MealPlanWithMeals;
@@ -19,11 +21,9 @@ type Props = {
   onDragEnd: () => void;
   onDrop: (targetDay: number, mealType: string) => void;
   onReplace?: (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => Promise<void>;
-  onAddMeal?: (dayOfWeek: number) => void;
+  onAddMeal?: (dayOfWeek: number, mealType: string) => void;
   onDeleteMeal?: (meal: MealWithRecipe) => Promise<void>;
 };
-
-const MEAL_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
 
 function buildDays(plan: MealPlanWithMeals): DayMeals[] {
   const weekStart = new Date(plan.weekStart);
@@ -42,7 +42,7 @@ function buildDays(plan: MealPlanWithMeals): DayMeals[] {
       lunch:            dayMeals.find((m) => m.mealType === 'lunch') ?? null,
       dinner:           dayMeals.find((m) => m.mealType === 'dinner') ?? null,
       cocktail:         dayMeals.find((m) => m.mealType === 'cocktail') ?? null,
-      snacks:           dayMeals.filter((m) => m.mealType === 'snack'),
+      snacks:           dayMeals.filter((m) => MULTI_MEAL_TYPES.includes(m.mealType as (typeof MULTI_MEAL_TYPES)[number])),
     };
   });
 }
@@ -65,8 +65,8 @@ export default function WeekGrid({
       (grouped[m.mealType] ??= []).push(m.batchGroupId);
     }
     return Object.fromEntries(
-      MEAL_TYPES.map((t) => [t, buildBatchColorMap(grouped[t] ?? [])])
-    ) as Record<(typeof MEAL_TYPES)[number], ReturnType<typeof buildBatchColorMap>>;
+      CORE_MEAL_TYPES.map((t) => [t, buildBatchColorMap(grouped[t] ?? [])])
+    ) as Record<(typeof CORE_MEAL_TYPES)[number], ReturnType<typeof buildBatchColorMap>>;
   }, [plan.meals]);
 
   const [selectedMeal, setSelectedMeal] = useState<{ meal: MealWithRecipe; color: BatchColor | null; batchDays: number } | null>(null);
@@ -137,7 +137,7 @@ export default function WeekGrid({
           ))}
 
           {/* Rows 1-3: one row per meal type — CSS grid auto-equalises row height */}
-          {MEAL_TYPES.map((mealType) =>
+          {CORE_MEAL_TYPES.map((mealType) =>
             days.map((day) => {
               const meal = day[mealType];
               const dropProps = getDropProps(day.dayOfWeek, mealType);
@@ -170,14 +170,26 @@ export default function WeekGrid({
                   key={`${mealType}-${day.dayOfWeek}`}
                   onDragOver={dropProps.onDragOver}
                   onDrop={dropProps.onDrop}
-                  className={`rounded-xl border-2 border-dashed transition-colors ${
+                  className={`relative flex items-center justify-center rounded-xl border-2 border-dashed transition-colors ${
                     dropProps.isDropHover
                       ? 'border-teal-400 bg-teal-50 shadow-sm'
                       : dropProps.isDropTarget
                       ? 'border-border bg-white'
                       : 'border-transparent'
                   }`}
-                />
+                >
+                  {onAddMeal && (
+                    <button
+                      type="button"
+                      onClick={() => onAddMeal(day.dayOfWeek, mealType)}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-dashed border-transparent text-gray-400 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-600 transition-colors"
+                      title={`Dodaj ${MEAL_TYPE_LABELS[mealType] ?? mealType}`}
+                      aria-label={`Dodaj ${MEAL_TYPE_LABELS[mealType] ?? mealType}`}
+                    >
+                      <Plus size={14} />
+                    </button>
+                  )}
+                </div>
               );
             })
           )}
@@ -195,7 +207,7 @@ export default function WeekGrid({
               ))}
               {onAddMeal && (
                 <button
-                  onClick={() => onAddMeal(day.dayOfWeek)}
+                  onClick={() => onAddMeal(day.dayOfWeek, 'snack')}
                   className="w-full flex items-center justify-center gap-1 py-2 rounded-2xl border border-dashed border-border text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/70 transition-colors text-xs"
                   title="Dodaj przepis do tego dnia"
                 >
@@ -222,7 +234,7 @@ export default function WeekGrid({
             </div>
 
             <div className="px-4 space-y-5">
-              {MEAL_TYPES.map((mealType) => {
+              {CORE_MEAL_TYPES.map((mealType) => {
                 const meal = day[mealType];
                 const dropProps = getDropProps(day.dayOfWeek, mealType);
                 if (meal) {
@@ -250,11 +262,23 @@ export default function WeekGrid({
                   <div
                     key={mealType}
                     onDragOver={dropProps.onDragOver}
-                  onDrop={dropProps.onDrop}
-                  className={`h-12 rounded-xl border-2 border-dashed transition-colors ${
+                    onDrop={dropProps.onDrop}
+                    className={`relative flex h-12 items-center justify-center rounded-xl border-2 border-dashed transition-colors ${
                       dropProps.isDropHover ? 'border-teal-400 bg-teal-50' : 'border-border'
                     }`}
-                  />
+                  >
+                    {onAddMeal && (
+                      <button
+                        type="button"
+                        onClick={() => onAddMeal(day.dayOfWeek, mealType)}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-dashed border-transparent text-gray-400 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-600 transition-colors"
+                        title={`Dodaj ${MEAL_TYPE_LABELS[mealType] ?? mealType}`}
+                        aria-label={`Dodaj ${MEAL_TYPE_LABELS[mealType] ?? mealType}`}
+                      >
+                        <Plus size={14} />
+                      </button>
+                    )}
+                  </div>
                 );
               })}
 
@@ -268,7 +292,7 @@ export default function WeekGrid({
               ))}
               {onAddMeal && (
                 <button
-                  onClick={() => onAddMeal(day.dayOfWeek)}
+                  onClick={() => onAddMeal(day.dayOfWeek, 'snack')}
                   className="flex items-center gap-1.5 py-2 px-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/50 transition-colors text-xs"
                 >
                   <Plus size={12} />
@@ -302,7 +326,7 @@ export default function WeekGrid({
               : undefined
           }
           onDelete={
-            onDeleteMeal && selectedMeal.meal.mealType === 'snack'
+            onDeleteMeal && MULTI_MEAL_TYPES.includes(selectedMeal.meal.mealType as (typeof MULTI_MEAL_TYPES)[number])
               ? async () => {
                   await onDeleteMeal(selectedMeal.meal);
                   setSelectedMeal(null);
@@ -329,10 +353,10 @@ function DayMacroSummary({ day }: { day: DayMeals }) {
 
   const totals = meals.reduce(
     (acc, m) => {
-      acc.kcal += m.recipe.kcalPerServing ?? 0;
-      acc.protein += m.recipe.proteinG ?? 0;
-      acc.carbs += m.recipe.carbsG ?? 0;
-      acc.fat += m.recipe.fatG ?? 0;
+      acc.kcal += (m.recipe.kcalPerServing ?? 0) * m.servings;
+      acc.protein += (m.recipe.proteinG ?? 0) * m.servings;
+      acc.carbs += (m.recipe.carbsG ?? 0) * m.servings;
+      acc.fat += (m.recipe.fatG ?? 0) * m.servings;
       return acc;
     },
     { kcal: 0, protein: 0, carbs: 0, fat: 0 },

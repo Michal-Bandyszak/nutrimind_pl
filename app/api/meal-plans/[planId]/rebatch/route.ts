@@ -35,7 +35,11 @@ export async function PATCH(
 
       // Fetch all recipes of this type once (for fallback on splits)
       const allRecipesOfType = await prisma.recipe.findMany({
-        where: { type: mealType },
+        where: {
+          type: mealType,
+          nutritionVerified: true,
+          ...(mealType === 'lunch' ? { batchFriendly: true } : {}),
+        },
         select: { id: true, maxStorageDays: true },
         orderBy: [{ maxStorageDays: 'desc' }, { name: 'asc' }],
       });

@@ -1,20 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
+const CORE_MEAL_TYPES = new Set(['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail']);
+const ALLOWED_MEAL_TYPES = new Set([...CORE_MEAL_TYPES, 'snack', 'dessert', 'extra']);
+
+function mealTypeLabel(mealType: string) {
+  switch (mealType) {
+    case 'breakfast':
+      return 'Śniadanie';
+    case 'second_breakfast':
+      return 'Drugie śniadanie';
+    case 'lunch':
+      return 'Obiad';
+    case 'dinner':
+      return 'Kolacja';
+    case 'cocktail':
+      return 'Koktajl';
+    case 'dessert':
+      return 'Ciasto / deser';
+    case 'extra':
+      return 'Dodatkowy';
+    case 'snack':
+    default:
+      return 'Przekąska';
+  }
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ planId: string }> },
 ) {
   try {
     const { planId } = await params;
-    const { dayOfWeek, recipeId } = await req.json() as {
+    const body = await req.json() as {
       dayOfWeek: number;
       recipeId: string;
+      mealType?: string;
+      servings?: number;
     };
+    const mealType = typeof body.mealType === 'string' && body.mealType.trim() ? body.mealType.trim() : 'snack';
+    const servings = Number.isFinite(Number(body.servings)) && Number(body.servings) > 0
+      ? Number(body.servings)
+      : 1;
+    const dayOfWeek = Number(body.dayOfWeek);
+    const recipeId = body.recipeId;
 
     if (!dayOfWeek || dayOfWeek < 1 || dayOfWeek > 7 || !recipeId) {
       return NextResponse.json(
         { error: 'Wymagane: dayOfWeek (1–7) i recipeId.' },
+        { status: 400 },
+      );
+    }
+    if (!ALLOWED_MEAL_TYPES.has(mealType)) {
+      return NextResponse.json(
+        { error: 'Nieprawidłowy typ posiłku.' },
         { status: 400 },
       );
     }
@@ -31,13 +70,27 @@ export async function POST(
       return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
     }
 
+    if (CORE_MEAL_TYPES.has(mealType)) {
+      const existing = await prisma.mealPlanMeal.findFirst({
+        where: { mealPlanId: planId, dayOfWeek, mealType },
+        select: { id: true },
+      });
+
+      if (existing) {
+        return NextResponse.json(
+          { error: `W dniu ${dayOfWeek} slot "${mealTypeLabel(mealType)}" jest już zajęty.` },
+          { status: 409 },
+        );
+      }
+    }
+
     const created = await prisma.mealPlanMeal.create({
       data: {
         mealPlanId: planId,
         dayOfWeek,
-        mealType: 'snack',
+        mealType,
         recipeId,
-        servings: 1,
+        servings,
         batchGroupId: null,
         batchDayNum: null,
       },

@@ -2,15 +2,16 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Search, Check, Loader2 } from 'lucide-react';
+import { X, Search, Check, Loader2, ChevronDown, Minus, Plus } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
 import { DAY_NAMES_FULL } from '@/lib/utils/batchColors';
+import { MEAL_TYPE_LABELS } from '@/lib/utils/recipeConstants';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 
-const TYPE_FILTERS = [
+const RECIPE_TYPE_FILTERS = [
   { value: 'all',              label: 'Wszystkie' },
   { value: 'dessert',          label: 'Ciasta i desery' },
   { value: 'snack',            label: 'Przekąski' },
@@ -21,6 +22,17 @@ const TYPE_FILTERS = [
   { value: 'cocktail',         label: 'Koktajle' },
 ];
 
+const MEAL_TYPE_OPTIONS = [
+  { value: 'breakfast',        label: 'Śniadanie' },
+  { value: 'second_breakfast', label: 'Drugie śniadanie' },
+  { value: 'lunch',            label: 'Obiad' },
+  { value: 'dinner',           label: 'Kolacja' },
+  { value: 'cocktail',         label: 'Koktajl' },
+  { value: 'snack',            label: 'Przekąska' },
+  { value: 'dessert',          label: 'Ciasto / deser' },
+  { value: 'extra',            label: 'Dodatkowy' },
+];
+
 const TYPE_COLORS: Record<string, string> = {
   breakfast:        'bg-amber-100 text-amber-700',
   second_breakfast: 'bg-orange-100 text-orange-700',
@@ -29,16 +41,7 @@ const TYPE_COLORS: Record<string, string> = {
   snack:            'bg-rose-100 text-rose-700',
   cocktail:         'bg-violet-100 text-violet-700',
   dessert:          'bg-pink-100 text-pink-700',
-};
-
-const TYPE_LABELS_SHORT: Record<string, string> = {
-  breakfast:        'Śniadanie',
-  second_breakfast: 'Drugie śniadanie',
-  lunch:            'Obiad',
-  dinner:           'Kolacja',
-  snack:            'Przekąska',
-  cocktail:         'Koktajl',
-  dessert:          'Ciasto / deser',
+  extra:            'bg-gray-100 text-gray-700',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -47,16 +50,24 @@ const TYPE_LABELS_SHORT: Record<string, string> = {
 
 type Props = {
   dayOfWeek: number; // 1 = Mon … 7 = Sun
+  mealType: string;
   onClose: () => void;
-  onAdd: (recipe: RecipeWithIngredients) => Promise<void>;
+  onAdd: (recipe: RecipeWithIngredients, mealType: string, servings: number) => Promise<void>;
 };
 
-export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
+function mealTypeToRecipeFilter(mealType: string) {
+  return mealType === 'extra' ? 'all' : mealType;
+}
+
+export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onClose, onAdd }: Props) {
   const [allRecipes, setAllRecipes] = useState<RecipeWithIngredients[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [mealType, setMealType] = useState(initialMealType);
+  const [typeFilter, setTypeFilter] = useState(mealTypeToRecipeFilter(initialMealType));
+  const [servings, setServings] = useState(1);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -89,12 +100,20 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
 
   async function handleSelect(recipe: RecipeWithIngredients) {
     setSaving(recipe.id);
+    setError(null);
     try {
-      await onAdd(recipe);
+      await onAdd(recipe, mealType, servings);
       onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Nie udało się dodać posiłku.');
     } finally {
       setSaving(null);
     }
+  }
+
+  function handleMealTypeChange(nextMealType: string) {
+    setMealType(nextMealType);
+    setTypeFilter(mealTypeToRecipeFilter(nextMealType));
   }
 
   const dayLabel = DAY_NAMES_FULL[dayOfWeek - 1] ?? `Dzień ${dayOfWeek}`;
@@ -123,7 +142,67 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
         </div>
 
         {/* Search + type filters */}
-        <div className="px-4 pt-3 pb-2 shrink-0 space-y-2">
+        <div className="px-4 pt-3 pb-2 shrink-0 space-y-3">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+            <label className="min-w-0">
+              <span className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-gray-400">
+                Dodaj jako
+              </span>
+              <div className="relative">
+                <select
+                  value={mealType}
+                  onChange={(e) => handleMealTypeChange(e.target.value)}
+                  className="input-base w-full appearance-none rounded-xl py-2 pl-3 pr-9 text-sm"
+                >
+                  {MEAL_TYPE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={14}
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+              </div>
+            </label>
+
+            <label className="w-28">
+              <span className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-gray-400">
+                Porcje
+              </span>
+              <div className="flex items-center rounded-xl border border-border bg-white px-1.5 py-1">
+                <button
+                  type="button"
+                  onClick={() => setServings((value) => Math.max(1, value - 1))}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                  aria-label="Zmniejsz liczbę porcji"
+                >
+                  <Minus size={14} />
+                </button>
+                <input
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={servings}
+                  onChange={(e) => {
+                    const next = Number(e.target.value);
+                    setServings(Number.isFinite(next) && next > 0 ? Math.round(next) : 1);
+                  }}
+                  className="w-full border-0 bg-transparent px-0 text-center text-sm font-semibold text-gray-900 focus:ring-0"
+                />
+                <button
+                  type="button"
+                  onClick={() => setServings((value) => value + 1)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                  aria-label="Zwiększ liczbę porcji"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+            </label>
+          </div>
+
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             <input
@@ -137,7 +216,7 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
           </div>
 
           <div className="flex gap-1.5 overflow-x-auto pb-0.5">
-            {TYPE_FILTERS.map(({ value, label }) => (
+            {RECIPE_TYPE_FILTERS.map(({ value, label }) => (
               <button
                 key={value}
                 onClick={() => setTypeFilter(value)}
@@ -155,6 +234,11 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
 
         {/* Recipe list */}
         <div className="overflow-y-auto flex-1 px-4 pb-4">
+          {error && (
+            <p className="mb-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+              {error}
+            </p>
+          )}
           {loading ? (
             <div className="flex items-center justify-center py-12 text-gray-400">
               <Loader2 size={20} className="animate-spin" />
@@ -174,7 +258,7 @@ export default function AddMealModal({ dayOfWeek, onClose, onAdd }: Props) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
                           <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${TYPE_COLORS[recipe.type] ?? 'bg-gray-100 text-gray-500'}`}>
-                            {TYPE_LABELS_SHORT[recipe.type] ?? recipe.type}
+                            {MEAL_TYPE_LABELS[recipe.type] ?? recipe.type}
                           </span>
                         </div>
                         <p className="text-sm font-medium text-gray-900 leading-snug">{recipe.name}</p>

@@ -7,13 +7,14 @@ export async function PATCH(
 ) {
   try {
     const { planId } = await params;
-    const { dayOfWeek, mealType, newRecipeId } = await req.json() as {
+    const { mealId, dayOfWeek, mealType, newRecipeId } = await req.json() as {
+      mealId?: string;
       dayOfWeek: number;
       mealType: string;
       newRecipeId: string;
     };
 
-    if (dayOfWeek == null || !mealType || !newRecipeId) {
+    if (!newRecipeId || (!mealId && (dayOfWeek == null || !mealType))) {
       return NextResponse.json({ error: 'Brakuje wymaganych pól.' }, { status: 400 });
     }
 
@@ -23,7 +24,9 @@ export async function PATCH(
     }
 
     const meal = await prisma.mealPlanMeal.findFirst({
-      where: { mealPlanId: planId, dayOfWeek, mealType },
+      where: mealId
+        ? { mealPlanId: planId, id: mealId }
+        : { mealPlanId: planId, dayOfWeek, mealType },
     });
 
     if (!meal) {
@@ -34,10 +37,10 @@ export async function PATCH(
     await prisma.mealPlanMeal.updateMany({
       where: {
         mealPlanId: planId,
-        mealType,
+        mealType: meal.mealType,
         ...(meal.batchGroupId
           ? { batchGroupId: meal.batchGroupId }
-          : { dayOfWeek }),
+          : { id: meal.id }),
       },
       data: { recipeId: newRecipeId },
     });
