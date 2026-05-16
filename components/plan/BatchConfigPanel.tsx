@@ -4,7 +4,7 @@ import type { BatchConfig, MealDividers } from '@/lib/types';
 import { dividersToGroups } from '@/lib/types';
 
 const DAY_SHORT = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Ndz'];
-const DAY_FULL = ['poniedziałek', 'wtorek', 'środę', 'czwartek', 'piątek', 'sobotę', 'niedzielę'];
+const DAY_ACTION = ['poniedziałek', 'wtorek', 'środę', 'czwartek', 'piątek', 'sobotę', 'niedzielę'];
 const DAY_PAIRS = ['Pon-Wt', 'Wt-Śr', 'Śr-Czw', 'Czw-Pt', 'Pt-Sob', 'Sob-Ndz'];
 
 const GROUP_BG = [
@@ -160,8 +160,8 @@ function GroupingTimeline({
   return (
     <div className="overflow-x-auto pb-1">
       <div
-        className="grid min-w-[820px] items-stretch gap-1.5"
-        style={{ gridTemplateColumns: 'repeat(6, minmax(4.75rem, 1fr) 4rem) minmax(4.75rem, 1fr)' }}
+        className="grid min-w-[760px] items-stretch gap-1.5"
+        style={{ gridTemplateColumns: 'repeat(6, minmax(4.5rem, 1fr) 3.35rem) minmax(4.5rem, 1fr)' }}
       >
         {DAY_SHORT.map((day, idx) => {
           const group = groups[idx] ?? 1;
@@ -170,7 +170,7 @@ function GroupingTimeline({
           return (
             <div key={day} className="contents">
               <div
-                className={`flex min-h-16 flex-1 flex-col items-center justify-center rounded-xl border border-border px-2 py-2 text-center shadow-sm ${bgCls}`}
+                className={`flex min-h-14 flex-1 flex-col items-center justify-center rounded-xl border border-border px-2 py-1.5 text-center shadow-sm ${bgCls}`}
               >
                 <span className="block text-sm font-semibold leading-tight">{day}</span>
                 <span className="mt-1 block text-[10px] font-medium leading-tight text-current/65">
@@ -202,27 +202,25 @@ function BoundaryToggle({
   isSplit: boolean;
   onToggle: (idx: number) => void;
 }) {
-  const state = isSplit ? 'Osobno' : 'Razem';
+  const action = isSplit ? 'Połącz' : 'Rozdziel';
   const title = isSplit
-    ? `${DAY_FULL[idx]} i ${DAY_FULL[idx + 1]} są osobno. Kliknij, aby połączyć.`
-    : `${DAY_FULL[idx]} i ${DAY_FULL[idx + 1]} są razem. Kliknij, aby rozdzielić.`;
+    ? `Połącz ${DAY_ACTION[idx]} i ${DAY_ACTION[idx + 1]} w jeden blok.`
+    : `Rozdziel ${DAY_ACTION[idx]} i ${DAY_ACTION[idx + 1]} na osobne bloki.`;
 
   return (
     <button
       type="button"
-      aria-pressed={!isSplit}
       aria-label={title}
       title={title}
       onClick={() => onToggle(idx)}
-      className={`flex w-full flex-col items-center justify-center rounded-xl border px-1 text-center text-[11px] font-semibold leading-tight transition-colors ${
+      className={`flex w-full flex-col items-center justify-center rounded-lg border px-1 py-1 text-center text-[10px] font-semibold leading-tight transition-colors ${
         isSplit
-          ? 'border-border bg-white/70 text-gray-500 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700'
-          : 'border-teal-200 bg-teal-50 text-teal-700 ring-1 ring-teal-100 hover:bg-teal-100'
+          ? 'border-border bg-white/65 text-gray-600 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700'
+          : 'border-teal-200 bg-teal-50/85 text-teal-700 ring-1 ring-teal-100 hover:bg-teal-100'
       }`}
     >
-      <span>{state}</span>
-      <span className="mt-1 block h-0.5 w-6 rounded-full bg-current/35" />
-      <span className="mt-1 text-[10px] font-medium text-current/65">{DAY_PAIRS[idx]}</span>
+      <span>{action}</span>
+      <span className="mt-0.5 text-[9px] font-medium text-current/60">{DAY_PAIRS[idx]}</span>
     </button>
   );
 }
