@@ -49,7 +49,6 @@ function buildMealRows(
   const shuffled = shuffle(recipes);
   const usedIds = new Set<string>();
 
-  // Per day assignment created after enforcing maxStorageDays.
   const dayAssignments = new Map<number, { recipeId: string; batchGroupId: string; batchDayNum: number }>();
 
   uniqueGroups.forEach((group, i) => {
@@ -57,25 +56,23 @@ function buildMealRows(
       .map((g, idx) => (g === group ? idx + 1 : null))
       .filter((d): d is number => d !== null);
 
-    // Keep distinct recipes between configured groups where possible.
+    // Keep the configured group intact. Prefer recipes whose storage time can
+    // cover the whole block, but do not silently split a user-selected group.
+    const requiredStorageDays = days.length;
+    const unusedFit = shuffled.find((r) => r.maxStorageDays >= requiredStorageDays && !usedIds.has(r.id));
+    const anyFit = shuffled.find((r) => r.maxStorageDays >= requiredStorageDays);
     const unused = shuffled.find((r) => !usedIds.has(r.id));
-    const chosen = unused ?? shuffled[i % shuffled.length];
+    const chosen = unusedFit ?? anyFit ?? unused ?? shuffled[i % shuffled.length];
     usedIds.add(chosen.id);
 
-    // Never keep one cooked batch longer than recipe storage limit.
-    const maxBatchDays = Math.max(1, chosen.maxStorageDays || 1);
-
-    for (let start = 0; start < days.length; start += maxBatchDays) {
-      const chunk = days.slice(start, start + maxBatchDays);
-      const batchGroupId = crypto.randomUUID();
-      chunk.forEach((dayOfWeek, idxInChunk) => {
-        dayAssignments.set(dayOfWeek, {
-          recipeId: chosen.id,
-          batchGroupId,
-          batchDayNum: idxInChunk + 1,
-        });
+    const batchGroupId = crypto.randomUUID();
+    days.forEach((dayOfWeek, idxInGroup) => {
+      dayAssignments.set(dayOfWeek, {
+        recipeId: chosen.id,
+        batchGroupId,
+        batchDayNum: idxInGroup + 1,
       });
-    }
+    });
   });
 
   return Array.from({ length: 7 }, (_, idx) => {
