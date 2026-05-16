@@ -52,13 +52,14 @@ export default function RecipeCard({
   return (
     <div className="panel-surface rounded-[1.5rem] overflow-hidden">
       {/* Summary row (always visible, clickable) */}
-      <button
-        className="w-full text-left px-4 py-4 hover:bg-gray-50/70 transition-colors"
-        onClick={onToggle}
-        aria-expanded={expanded}
-      >
+      <div className="px-4 py-4 hover:bg-gray-50/70 transition-colors">
         <div className="flex items-start gap-3">
-          <div className="flex-1 min-w-0">
+          <button
+            type="button"
+            className="flex-1 min-w-0 text-left"
+            onClick={onToggle}
+            aria-expanded={expanded}
+          >
             <div className="flex items-center gap-1.5 mb-1 flex-wrap">
               <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_COLORS[recipe.type] ?? 'bg-gray-100 text-gray-500'}`}>
                 {MEAL_TYPE_LABELS[recipe.type] ?? recipe.type}
@@ -90,7 +91,7 @@ export default function RecipeCard({
               {recipe.fatG && <span>T {Math.round(recipe.fatG)}g</span>}
               {recipe.kcalPerServing && <span className="text-gray-300">/ 1 porcja</span>}
             </div>
-          </div>
+          </button>
 
           <div className="flex items-center gap-2 shrink-0 mt-0.5">
             {(recipe.prepTimeMin || recipe.cookTimeMin) && (
@@ -114,14 +115,22 @@ export default function RecipeCard({
                 className={isFavorite ? 'fill-amber-400 text-amber-400' : 'text-gray-300 hover:text-amber-300'}
               />
             </button>
-            {expanded ? (
-              <ChevronUp size={16} className="text-gray-400" />
-            ) : (
-              <ChevronDown size={16} className="text-gray-400" />
-            )}
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-label={expanded ? 'Zwiń przepis' : 'Rozwiń przepis'}
+              aria-expanded={expanded}
+              className="p-0.5 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              {expanded ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </button>
           </div>
         </div>
-      </button>
+      </div>
 
       {/* Expanded detail */}
       {expanded && (
