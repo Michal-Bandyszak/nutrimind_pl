@@ -14,24 +14,23 @@ npm install
 
 ### 2. Środowisko
 
-Plik `.env` jest już skonfigurowany z SQLite:
-
-```
-DATABASE_URL="file:./dev.db"
-```
-
-> Gdy dodasz klucz Anthropic API do funkcji AI (Phase 2), dopisz tutaj:
-> `ANTHROPIC_API_KEY="sk-ant-..."`
-
-### 3. Baza danych jest już gotowa
-
-SQLite (`prisma/dev.db`) zawiera 88 przepisów z czterech diet. Jeśli jej brakuje lub chcesz zresetować:
+Skopiuj `.env.example` do `.env` i wklej URL-e do bazy Postgres:
 
 ```bash
-# Pełny reset (usuwa wszystko, migruje, seeduje)
-npm run db:reset
+cp .env.example .env
+```
 
-# Tylko re-seed (schemat już istnieje)
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require&pgbouncer=true"
+DIRECT_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require"
+```
+
+`DATABASE_URL` powinien wskazywać pooled connection string, a `DIRECT_URL` direct connection string do migracji.
+
+### 3. Przygotuj bazę
+
+```bash
+npm run db:deploy
 npm run db:seed
 ```
 
@@ -173,6 +172,7 @@ npm run db:seed       # upsertuje do bazy (bezpieczne, można wielokrotnie)
 | `npm run parse:diets` | Parsuje pliki diet .md → `data/parsed/combined.json` |
 | `npm run db:seed` | Seeduje bazę z parsed diet (idempotent) |
 | `npm run db:reset` | Pełny reset + migracja + seed |
+| `npm run db:deploy` | Uruchamia gotowe migracje na bazie Postgres |
 | `npm run db:studio` | Przeglądarka bazy Prisma Studio na :5555 |
 | `npm run db:migrate` | Migracje schematu po zmianie `prisma/schema.prisma` |
 
@@ -201,7 +201,6 @@ nutrimind/
 ├── prisma/
 │   ├── schema.prisma       # Schemat bazy
 │   ├── seed.ts             # Seeder (z PACKAGE_SIZES)
-│   ├── dev.db              # SQLite (git-ignored)
 │   └── migrations/         # Historia migracji
 ├── scripts/
 │   └── parse-diets.ts      # Parser diet .md → JSON
@@ -232,9 +231,13 @@ HealthLog        — dziennik zdrowia (Phase 2)
 | Framework | Next.js 16 (App Router) |
 | Język | TypeScript |
 | UI | Tailwind CSS v4 + shadcn/ui |
-| Baza danych | SQLite (Prisma v5) |
+| Baza danych | PostgreSQL (Prisma v5) |
 | AI | Claude API — Anthropic SDK (Phase 2) |
 | Deploy | Vercel |
+
+## Deploy na Vercel
+
+Instrukcja krok po kroku jest w [docs/deploy-vercel.md](docs/deploy-vercel.md).
 
 ---
 
