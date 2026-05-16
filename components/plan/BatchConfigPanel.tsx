@@ -4,7 +4,8 @@ import type { BatchConfig, MealDividers } from '@/lib/types';
 import { dividersToGroups } from '@/lib/types';
 
 const DAY_SHORT = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Ndz'];
-const DAY_BOUNDARIES = ['Pon-Wt', 'Wt-Śr', 'Śr-Czw', 'Czw-Pt', 'Pt-Sob', 'Sob-Ndz'];
+const DAY_FULL = ['poniedziałek', 'wtorek', 'środę', 'czwartek', 'piątek', 'sobotę', 'niedzielę'];
+const DAY_PAIRS = ['Pon-Wt', 'Wt-Śr', 'Śr-Czw', 'Czw-Pt', 'Pt-Sob', 'Sob-Ndz'];
 
 const GROUP_BG = [
   'bg-teal-100 text-teal-800 dark:text-teal-700',
@@ -142,75 +143,87 @@ function MealRow({
         </button>
       </div>
 
-      <DayTimeline groups={groups} />
-      <BoundaryControls dividers={dividers} onToggle={onToggle} />
+      <GroupingTimeline groups={groups} dividers={dividers} onToggle={onToggle} />
     </div>
   );
 }
 
-function DayTimeline({ groups }: { groups: number[] }) {
-  return (
-    <div className="grid grid-cols-7 gap-1.5">
-      {DAY_SHORT.map((day, idx) => {
-        const group = groups[idx] ?? 1;
-        const bgCls = GROUP_BG[(group - 1) % GROUP_BG.length];
-
-        return (
-          <div
-            key={day}
-            className={`min-h-14 rounded-xl border border-border px-1.5 py-2 text-center shadow-sm ${bgCls}`}
-          >
-            <span className="block text-xs font-semibold leading-tight">{day}</span>
-            <span className="mt-1 block text-[10px] font-medium leading-tight text-current/65">
-              blok {group}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function BoundaryControls({
+function GroupingTimeline({
+  groups,
   dividers,
   onToggle,
 }: {
+  groups: number[];
   dividers: MealDividers;
   onToggle: (idx: number) => void;
 }) {
   return (
-    <div className="space-y-2">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-        Łączenia dni
-      </p>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
-        {dividers.map((isSplit, idx) => {
-          const action = isSplit ? 'Połącz' : 'Rozdziel';
-          const label = `${action} ${DAY_BOUNDARIES[idx]}`;
+    <div className="overflow-x-auto pb-1">
+      <div
+        className="grid min-w-[820px] items-stretch gap-1.5"
+        style={{ gridTemplateColumns: 'repeat(6, minmax(4.75rem, 1fr) 4rem) minmax(4.75rem, 1fr)' }}
+      >
+        {DAY_SHORT.map((day, idx) => {
+          const group = groups[idx] ?? 1;
+          const bgCls = GROUP_BG[(group - 1) % GROUP_BG.length];
 
           return (
-            <button
-              key={DAY_BOUNDARIES[idx]}
-              type="button"
-              aria-pressed={isSplit}
-              aria-label={label}
-              title={label}
-              onClick={() => onToggle(idx)}
-              className={`rounded-xl border px-3 py-2 text-left transition-colors ${
-                isSplit
-                  ? 'border-teal-300 bg-teal-50 text-teal-800 ring-1 ring-teal-100 hover:bg-teal-100'
-                  : 'border-border bg-white/70 text-gray-600 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700'
-              }`}
-            >
-              <span className="block text-xs font-semibold leading-tight">{action}</span>
-              <span className="mt-0.5 block text-[11px] font-medium leading-tight text-current/70">
-                {DAY_BOUNDARIES[idx]}
-              </span>
-            </button>
+            <div key={day} className="contents">
+              <div
+                className={`flex min-h-16 flex-1 flex-col items-center justify-center rounded-xl border border-border px-2 py-2 text-center shadow-sm ${bgCls}`}
+              >
+                <span className="block text-sm font-semibold leading-tight">{day}</span>
+                <span className="mt-1 block text-[10px] font-medium leading-tight text-current/65">
+                  blok {group}
+                </span>
+              </div>
+
+              {idx < dividers.length && (
+                <BoundaryToggle
+                  idx={idx}
+                  isSplit={dividers[idx]}
+                  onToggle={onToggle}
+                />
+              )}
+            </div>
           );
         })}
       </div>
     </div>
+  );
+}
+
+function BoundaryToggle({
+  idx,
+  isSplit,
+  onToggle,
+}: {
+  idx: number;
+  isSplit: boolean;
+  onToggle: (idx: number) => void;
+}) {
+  const state = isSplit ? 'Osobno' : 'Razem';
+  const title = isSplit
+    ? `${DAY_FULL[idx]} i ${DAY_FULL[idx + 1]} są osobno. Kliknij, aby połączyć.`
+    : `${DAY_FULL[idx]} i ${DAY_FULL[idx + 1]} są razem. Kliknij, aby rozdzielić.`;
+
+  return (
+    <button
+      type="button"
+      aria-pressed={!isSplit}
+      aria-label={title}
+      title={title}
+      onClick={() => onToggle(idx)}
+      className={`flex w-full flex-col items-center justify-center rounded-xl border px-1 text-center text-[11px] font-semibold leading-tight transition-colors ${
+        isSplit
+          ? 'border-border bg-white/70 text-gray-500 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700'
+          : 'border-teal-200 bg-teal-50 text-teal-700 ring-1 ring-teal-100 hover:bg-teal-100'
+      }`}
+    >
+      <span>{state}</span>
+      <span className="mt-1 block h-0.5 w-6 rounded-full bg-current/35" />
+      <span className="mt-1 text-[10px] font-medium text-current/65">{DAY_PAIRS[idx]}</span>
+    </button>
   );
 }
 
