@@ -32,27 +32,27 @@ export default function RecipeDetailView({
   return (
     <>
       {/* Header */}
-      <div className="bg-gray-50/80 px-6 py-5 border-b border-border shrink-0">
+      <div className="shrink-0 border-b border-border bg-gray-50/80 px-4 py-4 sm:px-6 sm:py-5">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white/70 px-3 py-1 text-xs font-medium text-gray-500">
+          <div className="min-w-0 flex-1">
+            <div className="mb-2.5 flex flex-wrap items-center gap-1.5 sm:mb-3 sm:gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white/70 px-2.5 py-1 text-[11px] font-medium text-gray-500 sm:px-3 sm:text-xs">
                 {MEAL_TYPE_EMOJI[meal.mealType] ?? '🍽'} {MEAL_TYPE_LABELS[meal.mealType] ?? meal.mealType}
               </span>
               {color && batchDays > 1 && (
-                <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${color.bg} ${color.border} ${color.text}`}>
+                <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium sm:px-3 sm:text-xs ${color.bg} ${color.border} ${color.text}`}>
                   <span className={`h-1.5 w-1.5 rounded-full ${color.dot}`} />
                   Partia na {batchDays} dni
                 </span>
               )}
             </div>
-            <h2 className="text-[1.35rem] font-semibold leading-snug text-gray-900">
+            <h2 className="max-w-[18ch] text-[1.08rem] font-semibold leading-[1.2] text-gray-900 sm:max-w-none sm:text-[1.35rem] sm:leading-snug">
               {recipe.name}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="shrink-0 p-1.5 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-black/5 transition-colors mt-0.5"
+            className="mt-0.5 shrink-0 rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-black/5 hover:text-gray-700"
           >
             <X size={18} />
           </button>
@@ -60,7 +60,7 @@ export default function RecipeDetailView({
 
         {/* Macros */}
         {(kcal || recipe.proteinG) && (
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
+          <div className="mt-3 grid grid-cols-3 gap-2 sm:mt-4 sm:grid-cols-5">
             {kcal && <MacroPill label="kcal" value={String(kcal)} />}
             {recipe.proteinG && <MacroPill label="B" value={`${Math.round(recipe.proteinG * displayServings)}g`} />}
             {recipe.carbsG && <MacroPill label="W" value={`${Math.round(recipe.carbsG * displayServings)}g`} />}
@@ -71,62 +71,64 @@ export default function RecipeDetailView({
       </div>
 
       {/* Scrollable body */}
-      <div className="overflow-y-auto px-6 py-4 space-y-5 flex-1">
-        {/* Ingredients */}
-        {recipe.ingredients.length > 0 && (
-          <section>
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 flex items-center justify-between">
-              <span>
-                Składniki · {displayServings} {displayServings === 1 ? 'porcja' : displayServings < 5 ? 'porcje' : 'porcji'}
-              </span>
-              {batchDays > 1 && (
-                <button
-                  onClick={() => setShowTotal((v) => !v)}
-                  className="normal-case font-normal text-teal-600 hover:underline text-xs"
-                >
-                  {showTotal ? `na ${batchDays} dni` : 'na 1 dzień'}
-                </button>
-              )}
-            </h3>
-            <ul className="divide-y divide-border">
-              {recipe.ingredients.map((ri) => (
-                <li key={ri.id} className="flex items-baseline justify-between gap-2 py-1.5 text-sm">
-                  <span className="text-gray-800">{ri.ingredient.name}</span>
-                  <span className="text-gray-400 shrink-0 tabular-nums">
-                    {formatIngredientAmount(
-                      (isPerWhole ? ri.amountG / baseServings : ri.amountG) * displayServings,
-                      ri.ingredient.pieceWeightG,
-                      ri.ingredient.hintUnitG,
-                      ri.ingredient.hintUnit,
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+      <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
+        <div className="space-y-4 sm:space-y-5">
+          {/* Ingredients */}
+          {recipe.ingredients.length > 0 && (
+            <section className="rounded-[1.25rem] border border-border bg-white/55 p-3 sm:p-4">
+              <h3 className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <span>
+                  Składniki · {displayServings} {displayServings === 1 ? 'porcja' : displayServings < 5 ? 'porcje' : 'porcji'}
+                </span>
+                {batchDays > 1 && (
+                  <button
+                    onClick={() => setShowTotal((v) => !v)}
+                    className="shrink-0 rounded-full bg-teal-50 px-2.5 py-1 text-[11px] font-medium normal-case text-teal-700 transition hover:bg-teal-100"
+                  >
+                    {showTotal ? `na ${batchDays} dni` : 'na 1 dzień'}
+                  </button>
+                )}
+              </h3>
+              <ul className="divide-y divide-border">
+                {recipe.ingredients.map((ri) => (
+                  <li key={ri.id} className="flex items-start justify-between gap-3 py-2 text-sm">
+                    <span className="pr-2 leading-snug text-gray-800">{ri.ingredient.name}</span>
+                    <span className="shrink-0 text-right tabular-nums text-gray-500">
+                      {formatIngredientAmount(
+                        (isPerWhole ? ri.amountG / baseServings : ri.amountG) * displayServings,
+                        ri.ingredient.pieceWeightG,
+                        ri.ingredient.hintUnitG,
+                        ri.ingredient.hintUnit,
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
-        {/* Instructions */}
-        {instructions.length > 0 && (
-          <section>
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Przygotowanie</h3>
-            <ol className="space-y-3">
-              {instructions.map((step, i) => (
-                <li key={i} className="flex gap-3 text-sm text-gray-700">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-teal-100 text-teal-700 text-xs font-semibold flex items-center justify-center mt-0.5">
-                    {i + 1}
-                  </span>
-                  <span className="leading-relaxed">{step}</span>
-                </li>
-              ))}
-            </ol>
-          </section>
-        )}
+          {/* Instructions */}
+          {instructions.length > 0 && (
+            <section className="rounded-[1.25rem] border border-border bg-white/55 p-3 sm:p-4">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">Przygotowanie</h3>
+              <ol className="space-y-3">
+                {instructions.map((step, i) => (
+                  <li key={i} className="flex gap-3 text-sm text-gray-700">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal-100 text-xs font-semibold text-teal-700">
+                      {i + 1}
+                    </span>
+                    <span className="leading-relaxed">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
+        </div>
       </div>
 
       {/* Footer with delete / replace buttons */}
       {(onOpenReplace || onDelete) && (
-        <div className="bg-gray-50/80 px-6 py-3 border-t border-border shrink-0 flex items-center justify-between gap-3">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border bg-gray-50/80 px-4 py-3 sm:px-6">
           {onDelete && (
             <button
               onClick={async () => {
@@ -135,7 +137,7 @@ export default function RecipeDetailView({
                 finally { setDeleting(false); }
               }}
               disabled={deleting}
-              className="flex items-center gap-1.5 px-3 py-2 text-red-500 hover:text-red-700 hover:bg-red-50 text-sm font-medium rounded-xl transition disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
             >
               {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
               Usuń z planu
@@ -144,7 +146,7 @@ export default function RecipeDetailView({
           {onOpenReplace && (
             <button
               onClick={onOpenReplace}
-              className="btn-primary ml-auto flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-2xl transition"
+              className="btn-primary ml-auto flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium transition"
             >
               Zamień przepis
             </button>
@@ -157,9 +159,9 @@ export default function RecipeDetailView({
 
 function MacroPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-white/70 px-3 py-2">
-      <p className="text-[11px] uppercase tracking-[0.18em] text-gray-400">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-gray-900">{value}</p>
+    <div className="rounded-xl border border-border bg-white/70 px-2.5 py-2 sm:px-3">
+      <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400 sm:text-[11px]">{label}</p>
+      <p className="mt-0.5 text-[0.95rem] font-semibold text-gray-900 sm:mt-1 sm:text-sm">{value}</p>
     </div>
   );
 }
