@@ -44,12 +44,12 @@ export type BatchConfig = {
 };
 
 export const DEFAULT_BATCH_CONFIG: BatchConfig = {
-  // Mon-Wed same recipe | Thu-Sun same recipe
-  breakfast:        [false, false, true, false, false, false],
-  second_breakfast: [false, false, true, false, false, false],
-  lunch:            [false, false, true, false, false, false],
-  dinner:           [false, false, true, false, false, false],
-  cocktail:         [false, false, true, false, false, false],
+  // Mon-Tue | Wed-Thu | Fri-Sat | Sunday solo
+  breakfast:        [false, true,  false, true,  false, true],
+  second_breakfast: [false, true,  false, true,  false, true],
+  lunch:            [false, true,  false, true,  false, true],
+  dinner:           [false, true,  false, true,  false, true],
+  cocktail:         [false, true,  false, true,  false, true],
 };
 
 /** Convert dividers array → group numbers array (length 7) */

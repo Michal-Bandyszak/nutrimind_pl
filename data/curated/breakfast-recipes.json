@@ -1,0 +1,3741 @@
+{
+  "sourceDiet": "Zestaw sniadan A",
+  "recipes": [
+    {
+      "name": "Białkowa siemianka z bananem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 626,
+      "proteinG": 41,
+      "fatG": 32,
+      "carbsG": 51,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Napój kokosowy",
+          "amountG": 250,
+          "displayText": "Napój kokosowy - 1 szklanka / 250g",
+          "category": "dairy"
+        },
+        {
+          "name": "Odżywka białkowa",
+          "amountG": 30,
+          "displayText": "Odżywka białkowa - 30g",
+          "category": "protein"
+        },
+        {
+          "name": "Siemię lniane",
+          "amountG": 30,
+          "displayText": "Siemię lniane - 3 łyżka / 30g",
+          "category": "nuts"
+        },
+        {
+          "name": "Cynamon mielony",
+          "amountG": 1,
+          "displayText": "Cynamon mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Kardamon mielony",
+          "amountG": 1,
+          "displayText": "Kardamon mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Stewia",
+          "amountG": 1,
+          "displayText": "Stewia - 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Banan",
+          "amountG": 120,
+          "displayText": "Banan - 1 średnia sztuka / 120g",
+          "category": "fruits"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 30,
+          "displayText": "Masło migdałowe - 1.5 łyżka / 30g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Napój zagotować. Dodać odżywkę, zmielone siemię lniane, przyprawy i stewię. Zdjąć z ognia i energicznie mieszać przez 1-2 minuty.",
+        "Na wierzch dodać pokrojonego banana i masło."
+      ]
+    },
+    {
+      "name": "Jajecznica z marchewką i cukinią",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 595,
+      "proteinG": 26,
+      "fatG": 52,
+      "carbsG": 10,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Marchew",
+          "amountG": 60,
+          "displayText": "Marchew - 1 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Cukinia",
+          "amountG": 50,
+          "displayText": "Cukinia - 50g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni - 1.5 łyżka / 15g",
+          "category": "nuts"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 5,
+          "displayText": "Koper świeży - 1 łyżeczka / 5g",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Marchew i cukinię zetrzeć na tarce.",
+        "Na oleju z dodatkiem odrobiny wody poddusić warzywa do miękkości.",
+        "Jaja wymieszać z przyprawami i wylać na patelnię z warzywami. Mieszać do momentu uzyskania pożądanej konsystencji.",
+        "Posypać pestkami i skropić olejem wymieszanym z posiekanym koperkiem."
+      ]
+    },
+    {
+      "name": "Jajecznica z pieczarkami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 598,
+      "proteinG": 28,
+      "fatG": 52,
+      "carbsG": 9,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Pieczarki",
+          "amountG": 150,
+          "displayText": "Pieczarki - 150g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 6,
+          "displayText": "Natka pietruszki - 1 łyżeczka / 6g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni - 1.5 łyżka / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Pieczarki pokroić na mniejsze kawałki. Poddusić na oleju z dodatkiem odrobiny wody do zmięknięcia.",
+        "Jaja wymieszać z przyprawami i wylać na patelnię z warzywami. Mieszać do momentu uzyskania pożądanej konsystencji.",
+        "Skropić olejem wymieszanym z posiekaną natką pietruszki i posypać pestkami."
+      ]
+    },
+    {
+      "name": "Jajecznica ze szpinakiem i pieczarkami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 622,
+      "proteinG": 29,
+      "fatG": 55,
+      "carbsG": 9,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Pieczarki",
+          "amountG": 100,
+          "displayText": "Pieczarki - 100g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak - 2 garść / 50g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 5,
+          "displayText": "Koper świeży - 1 łyżeczka / 5g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Pieczarki pokroić na mniejsze kawałki. Poddusić warzywa na oleju z dodatkiem odrobiny wody do zmięknięcia.",
+        "Jaja wymieszać z przyprawami i wylać na patelnię z warzywami. Mieszać do momentu uzyskania pożądanej konsystencji.",
+        "Skropić olejem wymieszanym z posiekanym koperkiem i posypać pestkami."
+      ]
+    },
+    {
+      "name": "Jajecznica z wiosenną sałatką z rzodkiewką i ogórkiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 598,
+      "proteinG": 26,
+      "fatG": 52,
+      "carbsG": 11,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Rzodkiewka",
+          "amountG": 75,
+          "displayText": "Rzodkiewka - 5 sztuka / 75g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 10,
+          "displayText": "Koper świeży - 2 łyżeczka / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni - 1.5 łyżka / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jaja wymieszać z przyprawami i wylać na patelnię z olejem. Mieszać do momentu uzyskania pożądanej konsystencji.",
+        "Warzywa pokroić i ułożyć na sałacie. Skropić olejem wymieszanym z posiekanym koperkiem i posypać pestkami."
+      ]
+    },
+    {
+      "name": "Jajecznica ze szczypiorkiem i salsą",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 621,
+      "proteinG": 27,
+      "fatG": 54,
+      "carbsG": 10,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Szczypiorek",
+          "amountG": 5,
+          "displayText": "Szczypiorek - 1 łyżka / 5g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 120,
+          "displayText": "Pomidor - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 20,
+          "displayText": "Bazylia świeża - 2 garść / 20g",
+          "category": "spices"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jaja wymieszać z przyprawami i posiekanym szczypiorkiem. Wylać na patelnię z rozgrzanym olejem. Mieszać do momentu uzyskania pożądanej konsystencji.",
+        "Pomidora pokroić w drobną kostkę, wymieszać z olejem, posiekaną bazylią, ziołami prowansalskimi i pestkami."
+      ]
+    },
+    {
+      "name": "Omlet curry z papryką i szpinakiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 603,
+      "proteinG": 27,
+      "fatG": 50,
+      "carbsG": 16,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Curry",
+          "amountG": 1,
+          "displayText": "Curry - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Imbir mielony",
+          "amountG": 1,
+          "displayText": "Imbir mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Kurkuma mielona",
+          "amountG": 1,
+          "displayText": "Kurkuma mielona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 120,
+          "displayText": "Papryka czerwona - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak - 2 garść / 50g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 40,
+          "displayText": "Rukola - 2 garść / 40g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany - 1.5 łyżka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Sezam",
+          "amountG": 20,
+          "displayText": "Sezam - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Roztrzepać jajka z przyprawami.",
+        "Paprykę pokroić w słupki i poddusić razem ze szpinakiem na oleju z dodatkiem odrobiny wody.",
+        "Masę jajeczną wylać na patelnię z warzywami i przygotować omlet.",
+        "Udekorować rukolą. Skropić olejem i posypać sezamem."
+      ]
+    },
+    {
+      "name": "Omlet z tzatzikami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 613,
+      "proteinG": 31,
+      "fatG": 47,
+      "carbsG": 22,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Ogórek świeży",
+          "amountG": 180,
+          "displayText": "Ogórek świeży - 1 sztuka / 180g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 100,
+          "displayText": "Jogurt naturalny 2% - 100g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 5,
+          "displayText": "Olej lniany - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 5,
+          "displayText": "Koper świeży - 1 łyżeczka / 5g",
+          "category": "spices"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Pestki słonecznika",
+          "amountG": 30,
+          "displayText": "Pestki słonecznika - 3 łyżka / 30g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Ogórka zetrzeć na tarce. Wymieszać z jogurtem, olejem i posiekanym koperkiem.",
+        "Roztrzepać jajka z przyprawami. Masę jajeczną wylać na patelnię z olejem i przygotować omlet.",
+        "Całość posypać pestkami."
+      ]
+    },
+    {
+      "name": "Bazyliowy omlet z pomidorem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 608,
+      "proteinG": 30,
+      "fatG": 52,
+      "carbsG": 11,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 20,
+          "displayText": "Bazylia świeża - 2 garść / 20g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 120,
+          "displayText": "Pomidor - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 40,
+          "displayText": "Rukola - 2 garść / 40g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany - 1.5 łyżka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 25,
+          "displayText": "Pestki dyni - 2.5 łyżka / 25g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Zmiksować jajka z przyprawami i bazylią.",
+        "Na patelni rozgrzać olej. Wlać masę jajeczną i smażyć przez około 2 minuty (masa na brzegach ma bulgotać), następnie dodać pokrojone w plastry pomidory i smażyć jeszcze przez kilka minut.",
+        "Udekorować rukolą. Skropić olejem i posypać pestkami."
+      ]
+    },
+    {
+      "name": "Omlet z papryką, bakłażanem i rukolą",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 599,
+      "proteinG": 27,
+      "fatG": 49,
+      "carbsG": 19,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 1,
+          "displayText": "Oregano suszone - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 60,
+          "displayText": "Papryka czerwona - 0.5 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Bakłażan",
+          "amountG": 125,
+          "displayText": "Bakłażan - 0.5 sztuka / 125g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola - 1 garść / 20g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 5,
+          "displayText": "Olej lniany - 0.5 łyżka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża - 1 garść / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 30,
+          "displayText": "Orzechy włoskie - 1 garść / 30g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Roztrzepać jajka z przyprawami.",
+        "Paprykę pokroić w paski, a bakłażana w cienkie plastry. Poddusić na oleju z dodatkiem odrobiny wody.",
+        "Masę jajeczną wylać na patelnię z warzywami i przygotować omlet.",
+        "Udekorować rukolą. Skropić olejem wymieszanym z posiekaną bazylią i posypać orzechami."
+      ]
+    },
+    {
+      "name": "Omlet ze szpinakiem i guacamole",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 597,
+      "proteinG": 26,
+      "fatG": 50,
+      "carbsG": 18,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Kolendra suszona",
+          "amountG": 1,
+          "displayText": "Kolendra suszona - 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 1,
+          "displayText": "Oregano suszone - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak - 2 garść / 50g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 15,
+          "displayText": "Olej z awokado - 1.5 łyżka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "displayText": "Awokado - 0.5 sztuka / 70g",
+          "category": "fruits"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 120,
+          "displayText": "Pomidor - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Szczypiorek",
+          "amountG": 10,
+          "displayText": "Szczypiorek - 2 łyżka / 10g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sok z cytryny",
+          "amountG": 6,
+          "displayText": "Sok z cytryny - 1 łyżka / 6g",
+          "category": "fruits"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola - 1 garść / 20g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 15,
+          "displayText": "Orzechy włoskie - 0.5 garść / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Roztrzepać jajka z przyprawami.",
+        "Szpinak poddusić na oleju z dodatkiem odrobiny wody.",
+        "Masę jajeczną wylać na patelnię z warzywami i przygotować omlet.",
+        "Miąższ z awokado rozgnieść i wymieszać z pokrojonym drobno pomidorem, posiekanym szczypiorkiem i sokiem z cytryny.",
+        "Omlet posmarować guacamole, dodać rukolę i orzechy."
+      ]
+    },
+    {
+      "name": "Wrap z omleta ze świeżymi warzywami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 611,
+      "proteinG": 25,
+      "fatG": 51,
+      "carbsG": 16,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 1,
+          "displayText": "Oregano suszone - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 80,
+          "displayText": "Jogurt naturalny 2% - 4 łyżka / 80g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 25,
+          "displayText": "Olej lniany - 2.5 łyżka / 25g",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża - 1 garść / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 60,
+          "displayText": "Papryka czerwona - 0.5 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola - 1 garść / 20g",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Roztrzepać jajka z przyprawami.",
+        "Masę jajeczną wylać na patelnię z rozgrzanym olejem i przygotować omlet.",
+        "Jogurt wymieszać z olejem i posiekaną bazylią.",
+        "Omlet posmarować dipem jogurtowym, dodać pokrojone warzywa i zawinąć."
+      ]
+    },
+    {
+      "name": "Bazyliowa pasta jajeczna z cukinią",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 614,
+      "proteinG": 30,
+      "fatG": 50,
+      "carbsG": 15,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Cukinia",
+          "amountG": 100,
+          "displayText": "Cukinia - 10 plaster / 100g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 4 łyżeczka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 40,
+          "displayText": "Jogurt naturalny 2% - 2 łyżka / 40g",
+          "category": "dairy"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża - 1 garść / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 60,
+          "displayText": "Marchew - 1 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jajka ugotować na twardo, ostudzić i obrać, a następnie zgnieść widelcem na drobne kawałki.",
+        "Cukinię pokroić w cienkie plastry i zgrillować na oleju po około 2-3 minuty z każdej strony, a następnie pokroić w drobną kostkę.",
+        "W misce wymieszać dokładnie jajka, cukinię, olej lniany, jogurt, sól, pieprz i posiekaną bazylię.",
+        "Podawać ze słupkami marchewki oraz pestkami."
+      ]
+    },
+    {
+      "name": "Koperkowa pasta jajeczna ze słupkami warzyw",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 614,
+      "proteinG": 29,
+      "fatG": 51,
+      "carbsG": 15,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 5,
+          "displayText": "Koper świeży - 1 łyżeczka / 5g",
+          "category": "spices"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 60,
+          "displayText": "Jogurt naturalny 2% - 3 łyżka / 60g",
+          "category": "dairy"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 25,
+          "displayText": "Olej lniany - 2.5 łyżka / 25g",
+          "category": "oils"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 60,
+          "displayText": "Papryka czerwona - 0.5 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jajka ugotować na miękko. Rozgnieść w misce razem z posiekanym koperkiem, jogurtem, solą, pieprzem i olejem.",
+        "Podawać z słupkami warzyw i pestkami."
+      ]
+    },
+    {
+      "name": "Szakszuka ze szpinakiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 613,
+      "proteinG": 29,
+      "fatG": 50,
+      "carbsG": 17,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 240,
+          "displayText": "Pomidor - 2 średnia sztuka / 240g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka słodka",
+          "amountG": 1,
+          "displayText": "Papryka słodka - 1 szczypta / 1g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Gałka muszkatołowa mielona",
+          "amountG": 1,
+          "displayText": "Gałka muszkatołowa mielona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Kumin",
+          "amountG": 1,
+          "displayText": "Kumin - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 50,
+          "displayText": "Szpinak - 2 garść / 50g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Na patelni rozgrzać olej. Dodać pokrojone pomidory, przyprawy i poddusić przez około 5 minut.",
+        "Liście szpinaku włożyć w pomidory i poddusić do zwiędnięcia.",
+        "Następnie wbić jajka, przykryć patelnię pokrywką i gotować przez ok. 3 minuty lub do czasu aż białka będą ścięte.",
+        "Szakszukę posypać posiekana natką pietruszki i pestkami. Skropić olejem."
+      ]
+    },
+    {
+      "name": "Szakszuka z papryką",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 600,
+      "proteinG": 27,
+      "fatG": 50,
+      "carbsG": 14,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 60,
+          "displayText": "Papryka czerwona - 0.5 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 120,
+          "displayText": "Pomidor - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka słodka",
+          "amountG": 1,
+          "displayText": "Papryka słodka - 1 szczypta / 1g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Gałka muszkatołowa mielona",
+          "amountG": 1,
+          "displayText": "Gałka muszkatołowa mielona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Kumin",
+          "amountG": 1,
+          "displayText": "Kumin - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany - 3 łyżeczka / 15g",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Na patelni rozgrzać olej. Dodać pokrojone warzywa, przyprawy i poddusić przez około 5-10 minut.",
+        "Następnie wbić jajka, przykryć patelnię pokrywką i gotować przez około 3 minuty lub do czasu aż białka będą ścięte.",
+        "Szakszukę posypać posiekana natką pietruszki i pestkami. Skropić olejem."
+      ]
+    },
+    {
+      "name": "Jajka w koszulce z jogurtem i fasolką szparagową",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 605,
+      "proteinG": 32,
+      "fatG": 47,
+      "carbsG": 19,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr"
+      ],
+      "ingredients": [
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 100,
+          "displayText": "Jogurt naturalny 2% - 100g",
+          "category": "dairy"
+        },
+        {
+          "name": "Sok z cytryny",
+          "amountG": 3,
+          "displayText": "Sok z cytryny - 1 łyżeczka / 3g",
+          "category": "fruits"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Papryka słodka",
+          "amountG": 1,
+          "displayText": "Papryka słodka - 1 szczypta / 1g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ocet jabłkowy",
+          "amountG": 15,
+          "displayText": "Ocet jabłkowy - 1 łyżka / 15g",
+          "category": "fruits"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        },
+        {
+          "name": "Fasolka szparagowa",
+          "amountG": 100,
+          "displayText": "Fasolka szparagowa - 100g",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Jogurt wymieszać z sokiem z cytryny i solą.",
+        "Olej wymieszać z papryką.",
+        "Do garnka z gotującą się wodą dodać łyżkę octu. Jajka wbić pojedynczo do miseczki.",
+        "W wodzie zrobić wir, do którego wrzucić jedno jajko. Gotować 2-3 minuty. Wyjąć łyżką cedzakową i odsączyć z nadmiaru wody. Tak samo postąpić z resztą jajek.",
+        "Na talerz dodać jogurt i jajka w koszulce. Polać olejem, posypać posiekaną natką pietruszki, pieprzem i pestkami.",
+        "Podawać z ugotowaną fasolką."
+      ]
+    },
+    {
+      "name": "Śródziemnomorska sałatka z burakiem, awokado i jajkiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 596,
+      "proteinG": 27,
+      "fatG": 45,
+      "carbsG": 29,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Burak ugotowany",
+          "amountG": 180,
+          "displayText": "Burak ugotowany - 1.5 sztuka / 180g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "displayText": "Awokado - 0.5 sztuka / 70g",
+          "category": "fruits"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola - 1 garść / 20g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany - 2 łyżeczka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża - 1 garść / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 15,
+          "displayText": "Orzechy włoskie - 1 łyżka / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jajka ugotować na miękko.",
+        "Buraka i awokado pokroić. Ułożyć na sałacie razem z przekrojonymi jajkami.",
+        "Skropić olejem wymieszanym z przyprawami i posiekaną bazylią. Posypać orzechami."
+      ]
+    },
+    {
+      "name": "Bowl z dipem koperkowym, brokułem i jajkiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 612,
+      "proteinG": 33,
+      "fatG": 45,
+      "carbsG": 24,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Brokuł",
+          "amountG": 100,
+          "displayText": "Brokuł - 100g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidory koktajlowe",
+          "amountG": 200,
+          "displayText": "Pomidory koktajlowe - 2 garść / 200g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 100,
+          "displayText": "Jogurt naturalny 2% - 5 łyżka / 100g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 10,
+          "displayText": "Koper świeży - 2 łyżeczka / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni - 1.5 łyżka / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jajka ugotować na twardo.",
+        "Brokuły ugotować. Ułożyć na sałacie. Dodać przekrojone jajka i pomidorki.",
+        "Jogurt wymieszać z olejem lnianym, przyprawami i posiekanym koperkiem.",
+        "Bowl polać dipem i posypać pestkami."
+      ]
+    },
+    {
+      "name": "Jajka sadzone na szparagach",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 597,
+      "proteinG": 27,
+      "fatG": 52,
+      "carbsG": 10,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Szparagi",
+          "amountG": 150,
+          "displayText": "Szparagi - 150g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 15,
+          "displayText": "Olej z awokado - 1.5 łyżka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany - 3 łyżeczka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni - 1.5 łyżka / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Od szparagów oderwać zdrewniałe końce. Ugotować je w wodzie przez około 5-10 minut.",
+        "Przygotować jajka sadzone na rozgrzanym oleju.",
+        "Na talerzu ułożyć szparagi. Dodać jajka i doprawić.",
+        "Całość skropić olejem lnianym. Posypać posiekaną natką pietruszki i pestkami."
+      ]
+    },
+    {
+      "name": "Zielona sałatka z jajkiem na miękko i fasolką",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 585,
+      "proteinG": 30,
+      "fatG": 47,
+      "carbsG": 16,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Fasolka szparagowa",
+          "amountG": 100,
+          "displayText": "Fasolka szparagowa - 100g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 25,
+          "displayText": "Pestki dyni - 2.5 łyżka / 25g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Fasolkę ugotować.",
+        "Jajka ugotować na miękko.",
+        "W misce ułożyć roszponke, fasolkę, przekrojone jajka i pokrojonego ogórka.",
+        "Skropić olejem wymieszanym z posiekaną natką pietruszki i przyprawami. Posypać pestkami."
+      ]
+    },
+    {
+      "name": "Sałatka z jajkiem, pomidorkami, rukolą i orzechami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 595,
+      "proteinG": 27,
+      "fatG": 49,
+      "carbsG": 18,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Pomidory koktajlowe",
+          "amountG": 200,
+          "displayText": "Pomidory koktajlowe - 2 garść / 200g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 20,
+          "displayText": "Rukola - 1 garść / 20g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 30,
+          "displayText": "Orzechy włoskie - 1 garść / 30g",
+          "category": "nuts"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany - 1.5 łyżka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Sok z cytryny",
+          "amountG": 3,
+          "displayText": "Sok z cytryny - 1 łyżeczka / 3g",
+          "category": "fruits"
+        }
+      ],
+      "instructions": [
+        "Ugotować jajka na twardo i pokroić na ćwiartki.",
+        "Warzywa pokroić i ułożyć na rukoli. Dodać jajka.",
+        "Posypać posiekanymi orzechami i doprawić. Skropić olejem i sokiem z cytryny."
+      ]
+    },
+    {
+      "name": "Kremowa pasta jajeczna z awokado i warzywami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 613,
+      "proteinG": 31,
+      "fatG": 46,
+      "carbsG": 28,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 140,
+          "displayText": "Awokado - 1 sztuka / 140g",
+          "category": "fruits"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 25,
+          "displayText": "Jogurt naturalny 2% - 25g",
+          "category": "dairy"
+        },
+        {
+          "name": "Bazylia suszona",
+          "amountG": 1,
+          "displayText": "Bazylia suszona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Szczypiorek",
+          "amountG": 5,
+          "displayText": "Szczypiorek - 1 łyżka / 5g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 120,
+          "displayText": "Papryka czerwona - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Jajka ugotować na półmiękko, ostudzić i obrać, a następnie zgnieść widelcem na drobne kawałki razem z awokado, jogurtem, przyprawami i posiekanym szczypiorkiem.",
+        "Podawać z słupkami warzyw i pestkami."
+      ]
+    },
+    {
+      "name": "Omlet bananowo-marchewkowy",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 618,
+      "proteinG": 26,
+      "fatG": 41,
+      "carbsG": 40,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr"
+      ],
+      "ingredients": [
+        {
+          "name": "Banan",
+          "amountG": 60,
+          "displayText": "Banan - 0.5 średnia sztuka / 60g",
+          "category": "fruits"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 24,
+          "displayText": "Mąka kokosowa - 2 łyżka / 24g",
+          "category": "grains"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Cynamon mielony",
+          "amountG": 2,
+          "displayText": "Cynamon mielony - 0.5 łyżeczka / 2g",
+          "category": "spices"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 60,
+          "displayText": "Marchew - 1 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Pasta kokosowa",
+          "amountG": 30,
+          "displayText": "Pasta kokosowa - 1.5 łyżka / 30g",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Banana, mąkę, jajka i cynamon zblendować na jednolitą konsystencję.",
+        "Marchewkę zetrzeć na małych oczkach, dodać ją do masy i dokładnie wymieszać.",
+        "Rozgrzać patelnię z olejem i smażyć z jednej strony pod przykryciem, a po odwróceniu już tylko przez minutę bez przykrycia.",
+        "Posmarować pastą."
+      ]
+    },
+    {
+      "name": "Cynamonowy omlet z malinami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 613,
+      "proteinG": 26,
+      "fatG": 41,
+      "carbsG": 37,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 24,
+          "displayText": "Mąka kokosowa - 2 łyżka / 24g",
+          "category": "grains"
+        },
+        {
+          "name": "Cynamon mielony",
+          "amountG": 1,
+          "displayText": "Cynamon mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Stewia",
+          "amountG": 2,
+          "displayText": "Stewia - 2g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Pasta kokosowa",
+          "amountG": 30,
+          "displayText": "Pasta kokosowa - 3 łyżeczka / 30g",
+          "category": "oils"
+        },
+        {
+          "name": "Maliny",
+          "amountG": 120,
+          "displayText": "Maliny - ) 2 garść / 120g",
+          "category": "fruits"
+        }
+      ],
+      "instructions": [
+        "Jajka wymieszać z mąką, cynamonem i słodzikiem.",
+        "Omlet przygotować na patelni z rozgrzanym olejem.",
+        "Podawać z dodatkami."
+      ]
+    },
+    {
+      "name": "Omlet szarlotka",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 603,
+      "proteinG": 27,
+      "fatG": 39,
+      "carbsG": 40,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 24,
+          "displayText": "Mąka kokosowa - 2 łyżka / 24g",
+          "category": "grains"
+        },
+        {
+          "name": "Cynamon mielony",
+          "amountG": 2,
+          "displayText": "Cynamon mielony - 0.5 łyżeczka / 2g",
+          "category": "spices"
+        },
+        {
+          "name": "Proszek do pieczenia",
+          "amountG": 1,
+          "displayText": "Proszek do pieczenia - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Jabłko",
+          "amountG": 140,
+          "displayText": "Jabłko - 1 średnia sztuka / 140g",
+          "category": "fruits"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 20,
+          "displayText": "Masło migdałowe - 2 tyzeczka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Wymieszać jajka z mąką, cynamonem i proszkiem do pieczenia.",
+        "Jabłko pokroić w kostkę i poddusić na oleju z niewielką ilością wody.",
+        "Masę jajeczną wlać na patelnię i przygotować omlet.",
+        "Omlet posmarować masłem."
+      ]
+    },
+    {
+      "name": "Keto naleśniki z pastą kokosową i borówkami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 592,
+      "proteinG": 25,
+      "fatG": 41,
+      "carbsG": 34,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Mleczko kokosowe",
+          "amountG": 30,
+          "displayText": "Mleczko kokosowe - 3 łyżka / 30g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 24,
+          "displayText": "Mąka kokosowa - 2 łyżka / 24g",
+          "category": "grains"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Pasta kokosowa",
+          "amountG": 20,
+          "displayText": "Pasta kokosowa - 2 łyżeczka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Borówki amerykańskie",
+          "amountG": 100,
+          "displayText": "Borówki amerykańskie - 2 garść / 100g",
+          "category": "fruits"
+        }
+      ],
+      "instructions": [
+        "Zmiksować jajka z mleczkiem i mąką.",
+        "Na lekko natłuszczonej patelni usmażyć naleśniki.",
+        "Podawać z dodatkami."
+      ]
+    },
+    {
+      "name": "Keto naleśniki z jogurtem i musem jagodowym",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 598,
+      "proteinG": 27,
+      "fatG": 37,
+      "carbsG": 37,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Mleczko kokosowe",
+          "amountG": 40,
+          "displayText": "Mleczko kokosowe - 4 łyżka / 40g",
+          "category": "dairy"
+        },
+        {
+          "name": "Stewia",
+          "amountG": 1,
+          "displayText": "Stewia - 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 24,
+          "displayText": "Mąka kokosowa - 2 łyżka / 24g",
+          "category": "grains"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 2 łyżeczka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Jagody mrożone",
+          "amountG": 100,
+          "displayText": "Jagody mrożone - 100g",
+          "category": "fruits"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 100,
+          "displayText": "Jogurt naturalny 2% - ) 5 łyżka / 100g",
+          "category": "dairy"
+        }
+      ],
+      "instructions": [
+        "Zmiksować jajka z mleczkiem kokosowym, stewią i mąką.",
+        "Na lekko natłuszczonej patelni usmażyć naleśniki.",
+        "Jagody podgrzać w garnuszku z niewielką ilością wody na mus.",
+        "Naleśniki podawać z jogurtem i musem."
+      ]
+    },
+    {
+      "name": "Placuszki marchewkowe z borówkami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 605,
+      "proteinG": 30,
+      "fatG": 32,
+      "carbsG": 52,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr"
+      ],
+      "ingredients": [
+        {
+          "name": "Marchew",
+          "amountG": 90,
+          "displayText": "Marchew - 1.5 średnia sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 100,
+          "displayText": "Jogurt naturalny 2% - 5 łyżka / 100g",
+          "category": "dairy"
+        },
+        {
+          "name": "Proszek do pieczenia",
+          "amountG": 1,
+          "displayText": "Proszek do pieczenia - 0.5 łyżeczka / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Stewia",
+          "amountG": 1,
+          "displayText": "Stewia - 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 36,
+          "displayText": "Mąka kokosowa - 3 łyżka / 36g",
+          "category": "grains"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 2 łyżeczka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Borówki amerykańskie",
+          "amountG": 100,
+          "displayText": "Borówki amerykańskie - 2 garść / 100g",
+          "category": "fruits"
+        }
+      ],
+      "instructions": [
+        "Marchewkę pokroić w mniejsze kawałki i ugotować do miękkości.",
+        "Zblendować z jogurtem, proszkiem do pieczenia, stewią i żółtkami.",
+        "Dodać mąkę, wymieszać.",
+        "Białka ubić i delikatnie wmieszać w masę.",
+        "Na patelni rozgrzać olej i przygotować niewielkie placuszki.",
+        "Podawać z dodatkami."
+      ]
+    },
+    {
+      "name": "Puszyste placuszki z malinami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 603,
+      "proteinG": 31,
+      "fatG": 39,
+      "carbsG": 35,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 50,
+          "displayText": "Jogurt naturalny 2% - 50g",
+          "category": "dairy"
+        },
+        {
+          "name": "Proszek do pieczenia",
+          "amountG": 1,
+          "displayText": "Proszek do pieczenia - 0.5 łyżeczka / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Stewia",
+          "amountG": 1,
+          "displayText": "Stewia - 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 30,
+          "displayText": "Mąka kokosowa - 2.5 łyżka / 30g",
+          "category": "grains"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Maliny",
+          "amountG": 60,
+          "displayText": "Maliny - 1 garść / 60g",
+          "category": "fruits"
+        },
+        {
+          "name": "Masło migdałowe",
+          "amountG": 25,
+          "displayText": "Masło migdałowe - 2.5 tyzeczka / 25g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Oddzielić żółtka od białek.",
+        "Białka ubić na sztywną pianę.",
+        "Wymieszać jogurt, żółtka, proszek do pieczenia, stewię i mąkę. Połączyć z białkami.",
+        "Rozgrzać na patelni olej i przygotować niewielkie placuszki.",
+        "Podawać z dodatkami."
+      ]
+    },
+    {
+      "name": "Sałatka z halloumi",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 614,
+      "proteinG": 36,
+      "fatG": 49,
+      "carbsG": 11,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Ser halloumi",
+          "amountG": 120,
+          "displayText": "Ser halloumi - 120g",
+          "category": "dairy"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 1,
+          "displayText": "Oregano suszone - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia suszona",
+          "amountG": 1,
+          "displayText": "Bazylia suszona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 120,
+          "displayText": "Pomidor - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Oliwki zielone marynowane",
+          "amountG": 15,
+          "displayText": "Oliwki zielone marynowane - 1 łyżka / 15g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża - 1 garść / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany - 1 łyżka / 10g",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Plastry sera doprawić i zgrillować na suchej patelni.",
+        "Warzywa pokroić i ułożyć na roszponce. Dodać plastry sera i bazylię. Skropić olejem."
+      ]
+    },
+    {
+      "name": "Bakłażan zapiekany z mozzarellą i pomidorem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 648,
+      "proteinG": 30,
+      "fatG": 53,
+      "carbsG": 15,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Bakłażan",
+          "amountG": 125,
+          "displayText": "Bakłażan - 0.5 sztuka / 125g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Papryka słodka",
+          "amountG": 1,
+          "displayText": "Papryka słodka - 1 szczypta / 1g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Ser mozzarella",
+          "amountG": 125,
+          "displayText": "Ser mozzarella - 125g",
+          "category": "dairy"
+        },
+        {
+          "name": "Pomidor",
+          "amountG": 85,
+          "displayText": "Pomidor - 0.5 sztuka / 85g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 15,
+          "displayText": "Olej lniany - 1.5 łyżka / 15g",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 5,
+          "displayText": "Bazylia świeża - 0.5 garść / 5g",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Bakłażana przekroić na pół i naciąć miąższ w kratkę. Doprawić do smaku. Posmarować olejem i piec w 180 stopniach przez około 10 minut.",
+        "Wyjąć bakłażana, nałożyć plastry mozzarelli i pomidora. Ponownie piec przez około 10 minut. Skropić olejem wymieszanym z posiekaną bazylią."
+      ]
+    },
+    {
+      "name": "Twarożek po włosku",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 628,
+      "proteinG": 29,
+      "fatG": 50,
+      "carbsG": 21,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 30,
+          "displayText": "Orzechy włoskie - 1 garść / 30g",
+          "category": "nuts"
+        },
+        {
+          "name": "Szczypiorek",
+          "amountG": 5,
+          "displayText": "Szczypiorek - 1 łyżka / 5g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Twaróg półtłusty",
+          "amountG": 120,
+          "displayText": "Twaróg półtłusty - 120g",
+          "category": "dairy"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 50,
+          "displayText": "Jogurt naturalny 2% - 50g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Oliwki zielone marynowane",
+          "amountG": 30,
+          "displayText": "Oliwki zielone marynowane - 2 łyżka / 30g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pomidory koktajlowe",
+          "amountG": 150,
+          "displayText": "Pomidory koktajlowe - 1.5 garść / 150g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sałata lodowa",
+          "amountG": 40,
+          "displayText": "Sałata lodowa - 2 garść / 40g",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Orzechy i szczypiorek posiekać.",
+        "Twaróg rozgnieść widelcem z przyprawami, jogurtem i olejem.",
+        "Dodać pokrojone oliwki, pomidorki, szczypiorek i orzechy. Całość zjeść na liściach sałaty."
+      ]
+    },
+    {
+      "name": "Wrapy z sałaty z łososiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 575,
+      "proteinG": 31,
+      "fatG": 45,
+      "carbsG": 15,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Papryka czerwona",
+          "amountG": 120,
+          "displayText": "Papryka czerwona - 1 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ogórek świeży",
+          "amountG": 90,
+          "displayText": "Ogórek świeży - 0.5 sztuka / 90g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sałata lodowa",
+          "amountG": 40,
+          "displayText": "Sałata lodowa - 2 garść / 40g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Łosoś pieczony",
+          "amountG": 120,
+          "displayText": "Łosoś pieczony - 1.2 opakowanie / 120g",
+          "category": "protein"
+        },
+        {
+          "name": "Kiełki lucerny",
+          "amountG": 8,
+          "displayText": "Kiełki lucerny - 1 łyżka / 8g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 25,
+          "displayText": "Jogurt naturalny 2% - 25g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 25,
+          "displayText": "Olej lniany - 2.5 łyżka / 25g",
+          "category": "oils"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 5,
+          "displayText": "Bazylia świeża - 0.5 garść / 5g",
+          "category": "spices"
+        }
+      ],
+      "instructions": [
+        "Warzywa pokroić w cienkie słupki.",
+        "Na liściu sałaty ułożyć kawałki ryby, kiełki oraz warzywa.",
+        "Jogurt wymieszać z olejem, przyprawami i posiekaną bazylią. Polać warzywa.",
+        "Sałatę zawinąć w kształt rulonu. Wrapy można owinąć w papier śniadaniowy."
+      ]
+    },
+    {
+      "name": "Sałatka z indykiem, brokułem i marchewką",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 620,
+      "proteinG": 40,
+      "fatG": 45,
+      "carbsG": 20,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Pierś z indyka",
+          "amountG": 120,
+          "displayText": "Pierś z indyka - 1.2 porcja / 120g",
+          "category": "protein"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Oregano suszone",
+          "amountG": 1,
+          "displayText": "Oregano suszone - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Brokuł",
+          "amountG": 150,
+          "displayText": "Brokuł - 150g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Marchew",
+          "amountG": 60,
+          "displayText": "Marchew - 1 średnia sztuka / 60g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 50,
+          "displayText": "Jogurt naturalny 2% - 50g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 5,
+          "displayText": "Bazylia świeża - 0.5 garść / 5g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Mięso doprawić i zgrillować na oleju. Pokroić w plastry.",
+        "Brokuły i marchewkę ugotować. Ułożyć na roszponce.",
+        "Jogurt wymieszać z olejem lnianym i posiekaną bazylią.",
+        "Sałatkę posypać pestkami i polać dipem."
+      ]
+    },
+    {
+      "name": "Białkowa pasta z indyka i warzyw w liściach sałaty",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 616,
+      "proteinG": 44,
+      "fatG": 45,
+      "carbsG": 17,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr"
+      ],
+      "ingredients": [
+        {
+          "name": "Pierś z indyka",
+          "amountG": 120,
+          "displayText": "Pierś z indyka - 120g",
+          "category": "protein"
+        },
+        {
+          "name": "Cukinia",
+          "amountG": 100,
+          "displayText": "Cukinia - 100g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pietruszka korzeń",
+          "amountG": 80,
+          "displayText": "Pietruszka korzeń - 1 sztuka / 80g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 25,
+          "displayText": "Olej lniany - 2.5 łyżka / 25g",
+          "category": "oils"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 5,
+          "displayText": "Koper świeży - 1 łyżeczka / 5g",
+          "category": "spices"
+        },
+        {
+          "name": "Jogurt naturalny 2%",
+          "amountG": 50,
+          "displayText": "Jogurt naturalny 2% - 50g",
+          "category": "dairy"
+        },
+        {
+          "name": "Sałata lodowa",
+          "amountG": 40,
+          "displayText": "Sałata lodowa - 2 garść / 40g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 30,
+          "displayText": "Pestki dyni - 3 łyżka / 30g",
+          "category": "nuts"
+        },
+        {
+          "name": "Kiełki lucerny",
+          "amountG": 8,
+          "displayText": "Kiełki lucerny - 1 łyżka / 8g",
+          "category": "vegetables"
+        }
+      ],
+      "instructions": [
+        "Indyka, cukinie i korzeń pietruszki pokroić, a następnie ugotować.",
+        "Po ugotowaniu mięso i warzywa zmiksować lub drobno posiekać na pastę, dodając przyprawy, olej, posiekany koperek i jogurt.",
+        "Pastę nakładać na pojedyncze liście sałaty, a następnie posypać pestkami i kiełkami."
+      ]
+    },
+    {
+      "name": "Carpaccio z buraka z kozim serem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 620,
+      "proteinG": 34,
+      "fatG": 46,
+      "carbsG": 24,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Burak ugotowany",
+          "amountG": 180,
+          "displayText": "Burak ugotowany - 1.5 sztuka / 180g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 40,
+          "displayText": "Rukola - 2 garść / 40g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ser kozi miękki",
+          "amountG": 120,
+          "displayText": "Ser kozi miękki - 120g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Ugotowane buraki pokroić w cienkie plastry.",
+        "Na talerzu ułożyć pokrojonego buraka, rukolę i kawałki sera.",
+        "Sałatkę skropić olejem lnianym wymieszanym z przyprawami i posiekaną natką pietruszki. Posypać pestkami."
+      ]
+    },
+    {
+      "name": "Sałatka z indykiem i burakiem",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 609,
+      "proteinG": 38,
+      "fatG": 44,
+      "carbsG": 24,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Pierś z indyka",
+          "amountG": 120,
+          "displayText": "Pierś z indyka - 120g",
+          "category": "protein"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Bazylia suszona",
+          "amountG": 1,
+          "displayText": "Bazylia suszona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Burak ugotowany",
+          "amountG": 180,
+          "displayText": "Burak ugotowany - 1.5 sztuka / 180g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 40,
+          "displayText": "Rukola - 2 garść / 40g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 2 łyżka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 12,
+          "displayText": "Natka pietruszki - 1 łyżka / 12g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 20,
+          "displayText": "Pestki dyni - 2 łyżka / 20g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Mięso pokroić w paski, nasmarować olejem, doprawić i zgrillować na patelni grillowej lub poddusić na zwykłej patelni.",
+        "Ugotowane buraki pokroić w kostkę.",
+        "Na talerzu ułożyć pokrojonego buraka, rukolę i indyka.",
+        "Sałatkę skropić olejem lnianym wymieszanym z przyprawami i posiekaną natką pietruszki. Posypać pestkami."
+      ]
+    },
+    {
+      "name": "Sałatka z pieczonymi warzywami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 592,
+      "proteinG": 34,
+      "fatG": 45,
+      "carbsG": 19,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Marchew",
+          "amountG": 120,
+          "displayText": "Marchew - 2 średnia sztuka / 120g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Pietruszka korzeń",
+          "amountG": 80,
+          "displayText": "Pietruszka korzeń - 1 sztuka / 80g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Łosoś atlantycki",
+          "amountG": 120,
+          "displayText": "Łosoś atlantycki - 1.2 porcja / 120g",
+          "category": "protein"
+        },
+        {
+          "name": "Bazylia suszona",
+          "amountG": 1,
+          "displayText": "Bazylia suszona - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "amountG": 1,
+          "displayText": "Zioła prowansalskie - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Roszponka",
+          "amountG": 25,
+          "displayText": "Roszponka - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 10,
+          "displayText": "Olej lniany - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Koper świeży",
+          "amountG": 5,
+          "displayText": "Koper świeży - 1 łyżeczka / 5g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "displayText": "Pestki dyni - 1.5 łyżka / 15g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Warzywa pokroić w słupki.",
+        "Warzywa i rybę doprawić, polać olejem i ułożyć w naczyniu żaroodpornym. Piec w 180 stopniach przez około 20-25 minut.",
+        "Warzywa i kawałki ryby ułożyć na roszponce.",
+        "Sałatkę polać olejem wymieszanym z posiekanym koperkiem. Posypać pestkami."
+      ]
+    },
+    {
+      "name": "Sałatka caprese",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 642,
+      "proteinG": 33,
+      "fatG": 53,
+      "carbsG": 12,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Pomidor",
+          "amountG": 170,
+          "displayText": "Pomidor - 1 sztuka / 170g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Ser mozzarella",
+          "amountG": 125,
+          "displayText": "Ser mozzarella - 125g",
+          "category": "dairy"
+        },
+        {
+          "name": "Olej lniany",
+          "amountG": 20,
+          "displayText": "Olej lniany - 4 łyżeczka / 20g",
+          "category": "oils"
+        },
+        {
+          "name": "Bazylia świeża",
+          "amountG": 10,
+          "displayText": "Bazylia świeża - 1 garść / 10g",
+          "category": "spices"
+        },
+        {
+          "name": "Sól",
+          "amountG": 1,
+          "displayText": "Sól - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pieprz czarny",
+          "amountG": 1,
+          "displayText": "Pieprz czarny - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 10,
+          "displayText": "Pestki dyni - 1 łyżka / 10g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Pomidora pokroić w plastry.",
+        "Plastry pomidorów przekładać plastrami mozzarelli.",
+        "Wszystko skropić olejem, posypać poszarpanymi listkami bazylii i pestkami. Doprawić do smaku."
+      ]
+    },
+    {
+      "name": "Zielony koktajl białkowy",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 616,
+      "proteinG": 36,
+      "fatG": 34,
+      "carbsG": 50,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "na-szybko",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Napój kokosowy",
+          "amountG": 250,
+          "displayText": "Napój kokosowy - 1 szklanka / 250g",
+          "category": "dairy"
+        },
+        {
+          "name": "Odżywka białkowa",
+          "amountG": 30,
+          "displayText": "Odżywka białkowa - 30g",
+          "category": "protein"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "displayText": "Awokado - 0.5 sztuka / 70g",
+          "category": "fruits"
+        },
+        {
+          "name": "Banan",
+          "amountG": 120,
+          "displayText": "Banan - 1 średnia sztuka / 120g",
+          "category": "fruits"
+        },
+        {
+          "name": "Szpinak",
+          "amountG": 25,
+          "displayText": "Szpinak - 1 garść / 25g",
+          "category": "vegetables"
+        },
+        {
+          "name": "Siemię lniane",
+          "amountG": 20,
+          "displayText": "Siemię lniane - 2 łyżka / 20g",
+          "category": "nuts"
+        },
+        {
+          "name": "Pasta kokosowa",
+          "amountG": 20,
+          "displayText": "Pasta kokosowa - 1 łyżka / 20g",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Zblendować wszystkie składniki na koktajl. W razie potrzeby dodać odrobinę wody."
+      ]
+    },
+    {
+      "name": "Cynamonowe placuszki twarogowo-bananowe",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 591,
+      "proteinG": 24,
+      "fatG": 36,
+      "carbsG": 48,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Banan",
+          "amountG": 60,
+          "displayText": "Banan - 0.5 średnia sztuka / 60g",
+          "category": "fruits"
+        },
+        {
+          "name": "Twaróg półtłusty",
+          "amountG": 100,
+          "displayText": "Twaróg półtłusty - 100g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mleczko kokosowe",
+          "amountG": 30,
+          "displayText": "Mleczko kokosowe - 3 łyżka / 30g",
+          "category": "dairy"
+        },
+        {
+          "name": "Cynamon mielony",
+          "amountG": 1,
+          "displayText": "Cynamon mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 24,
+          "displayText": "Mąka kokosowa - 2 łyżka / 24g",
+          "category": "grains"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 10,
+          "displayText": "Olej z awokado - 1 łyżka / 10g",
+          "category": "oils"
+        },
+        {
+          "name": "Kiwi",
+          "amountG": 75,
+          "displayText": "Kiwi - 1 sztuka / 75g",
+          "category": "fruits"
+        },
+        {
+          "name": "Pasta kokosowa",
+          "amountG": 20,
+          "displayText": "Pasta kokosowa - 1 łyżka / 20g",
+          "category": "oils"
+        }
+      ],
+      "instructions": [
+        "Banana i twaróg dokładnie rozgnieść. Dodać mleczko, cynamon i mąkę. W razie potrzeby dodać odrobinę wody.",
+        "Na lekko natłuszczonej patelni usmażyć placuszki.",
+        "Podawać z dodatkami."
+      ]
+    },
+    {
+      "name": "Białkowy pudding chia z malinami",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 568,
+      "proteinG": 39,
+      "fatG": 34,
+      "carbsG": 33,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Napój kokosowy",
+          "amountG": 250,
+          "displayText": "Napój kokosowy - 1 szklanka / 250g",
+          "category": "dairy"
+        },
+        {
+          "name": "Nasiona chia",
+          "amountG": 36,
+          "displayText": "Nasiona chia - 3 łyżka / 36g",
+          "category": "nuts"
+        },
+        {
+          "name": "Odżywka białkowa",
+          "amountG": 30,
+          "displayText": "Odżywka białkowa - 30g",
+          "category": "protein"
+        },
+        {
+          "name": "Maliny",
+          "amountG": 60,
+          "displayText": "Maliny - 1 garść / 60g",
+          "category": "fruits"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 30,
+          "displayText": "Orzechy włoskie - 1 garść / 30g",
+          "category": "nuts"
+        }
+      ],
+      "instructions": [
+        "Wsłoiczku połączyć napój roślinny, nasiona chia i białko. Dokładnie wymieszać, aby białko i nasiona chia równomiernie się rozpuściły.",
+        "Odstawić na 15 minut i ponownie wymieszać.",
+        "Przykryć naczynie i odstawić do lodówki na co najmniej 3-4 godziny (najlepiej na całą noc).",
+        "Podawać z dodatkami."
+      ]
+    },
+    {
+      "name": "Korzenny omlet z musem wiśniowym i gorzką czekoladą",
+      "type": "breakfast",
+      "prepTimeMin": null,
+      "cookTimeMin": null,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 595,
+      "proteinG": 27,
+      "fatG": 33,
+      "carbsG": 49,
+      "fiberG": null,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "dietitian",
+      "nutritionVerified": true,
+      "sourceDiet": "Zestaw sniadan A",
+      "tags": [
+        "sniadania-ocr",
+        "łatwe"
+      ],
+      "ingredients": [
+        {
+          "name": "Jajko",
+          "amountG": 150,
+          "displayText": "Jajko - 3 średnia sztuka / 150g",
+          "category": "protein"
+        },
+        {
+          "name": "Mąka kokosowa",
+          "amountG": 36,
+          "displayText": "Mąka kokosowa - 3 łyżka / 36g",
+          "category": "grains"
+        },
+        {
+          "name": "Kardamon mielony",
+          "amountG": 1,
+          "displayText": "Kardamon mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Cynamon mielony",
+          "amountG": 1,
+          "displayText": "Cynamon mielony - 1 szczypta / 1g",
+          "category": "spices"
+        },
+        {
+          "name": "Olej z awokado",
+          "amountG": 5,
+          "displayText": "Olej z awokado - 1 łyżeczka / 5g",
+          "category": "oils"
+        },
+        {
+          "name": "Wiśnie mrożone",
+          "amountG": 160,
+          "displayText": "Wiśnie mrożone - ) 2 garść / 160g",
+          "category": "fruits"
+        },
+        {
+          "name": "Czekolada gorzka 70-85% kakao",
+          "amountG": 18,
+          "displayText": "Czekolada gorzka 70-85% kakao - 3 kostka / 18g",
+          "category": "other"
+        }
+      ],
+      "instructions": [
+        "Jajka wymieszać z mąką i przyprawami.",
+        "Omlet przygotować na patelni z rozgrzanym olejem.",
+        "Owoce podgrzać w garnuszku z niewielką ilością wody na mus.",
+        "Omlet polać musem i posypać startą czekoladą."
+      ]
+    }
+  ]
+}
