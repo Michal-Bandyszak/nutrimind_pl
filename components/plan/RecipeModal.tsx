@@ -37,11 +37,11 @@ export default function RecipeModal({ meal, color, batchDays = 1, onClose, onRep
 
   return createPortal(
     <div
-      className="modal-scrim fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-[2px]"
+      className="modal-scrim fixed inset-0 z-[200] flex items-end justify-center p-2 backdrop-blur-[2px] sm:items-center sm:p-4"
       onClick={onClose}
     >
       <div
-        className="modal-panel relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.75rem]"
+        className="modal-panel relative flex max-h-[92dvh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.5rem] sm:max-h-[88vh] sm:rounded-[1.75rem]"
         onClick={(e) => e.stopPropagation()}
       >
         {view === 'detail' ? (
