@@ -8,6 +8,10 @@ import fs from "fs";
 import path from "path";
 
 const prisma = new PrismaClient();
+const CURATED_RECIPE_FILES = [
+  "mediterranean-microbiome-recipes.json",
+  "breakfast-recipes.json",
+];
 
 // Known package sizes for waste-prevention feature
 // pieceWeightG: set for count-based items (e.g. egg=60g) → display in pieces, not grams
@@ -122,13 +126,15 @@ async function main() {
   }
 
   const combined = JSON.parse(fs.readFileSync(combinedPath, "utf-8"));
-  const curatedPath = path.join(__dirname, "../data/curated/mediterranean-microbiome-recipes.json");
-  const curated = fs.existsSync(curatedPath)
-    ? JSON.parse(fs.readFileSync(curatedPath, "utf-8"))
-    : { recipes: [] };
+  const curatedRecipes = CURATED_RECIPE_FILES.flatMap((filename) => {
+    const curatedPath = path.join(__dirname, "../data/curated", filename);
+    if (!fs.existsSync(curatedPath)) return [];
+    const curated = JSON.parse(fs.readFileSync(curatedPath, "utf-8"));
+    return (curated.recipes ?? []) as any[];
+  });
   const recipes = [
     ...(combined.recipes as any[]),
-    ...(curated.recipes as any[]),
+    ...curatedRecipes,
   ];
 
   console.log(`\n🌱 Seeding ${recipes.length} recipes into database...\n`);

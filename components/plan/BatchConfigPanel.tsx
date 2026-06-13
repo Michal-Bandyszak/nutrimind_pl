@@ -18,11 +18,10 @@ const GROUP_BG = [
 ];
 
 const PRESETS: { label: string; description: string; d: MealDividers }[] = [
-  { label: 'Cały tydzień',    description: 'Pon-Ndz',                  d: [false, false, false, false, false, false] },
-  { label: 'Dwa bloki',       description: 'Pon-Śr · Czw-Ndz',         d: [false, false, true,  false, false, false] },
-  { label: 'Trzy bloki',      description: 'Pon-Wt · Śr-Pt · Sob-Ndz', d: [false, true,  false, false, true,  false] },
-  { label: 'Weekend osobno',  description: 'Pon-Pt · Sob-Ndz',         d: [false, false, false, false, true,  false] },
-  { label: 'Codziennie inny', description: '7 osobnych dni',           d: [true,  true,  true,  true,  true,  true ] },
+  { label: 'Pary + Ndz',      description: 'Pon-Wt · Śr-Czw · Pt-Sob · Ndz', d: [false, true,  false, true,  false, true ] },
+  { label: 'Śr-Pt razem',     description: 'Pon-Wt · Śr-Pt · Sob-Ndz',       d: [false, true,  false, false, true,  false] },
+  { label: 'Pt osobno',       description: 'Pon-Wt · Śr-Czw · Pt · Sob-Ndz', d: [false, true,  false, true,  true,  false] },
+  { label: 'Codziennie inny', description: '7 osobnych dni',                 d: [true,  true,  true,  true,  true,  true ] },
 ];
 
 type Props = {
@@ -67,7 +66,7 @@ export default function BatchConfigPanel({ config, onChange }: Props) {
         <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-gray-500">
           Układ dni
         </p>
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
           {PRESETS.map((p) => {
             const active = MEAL_KEYS.every(
               (k) => JSON.stringify(config[k]) === JSON.stringify(p.d),

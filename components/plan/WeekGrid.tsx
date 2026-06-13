@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL, MEAL_TYPE_LABELS } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
+import { mealNutritionPerServing } from '@/lib/utils/planNutrition';
 import MealCard from './MealCard';
 import RecipeModal from './RecipeModal';
 
@@ -353,10 +354,11 @@ function DayMacroSummary({ day }: { day: DayMeals }) {
 
   const totals = meals.reduce(
     (acc, m) => {
-      acc.kcal += (m.recipe.kcalPerServing ?? 0) * m.servings;
-      acc.protein += (m.recipe.proteinG ?? 0) * m.servings;
-      acc.carbs += (m.recipe.carbsG ?? 0) * m.servings;
-      acc.fat += (m.recipe.fatG ?? 0) * m.servings;
+      const nutrition = mealNutritionPerServing(m);
+      acc.kcal += nutrition.kcal;
+      acc.protein += nutrition.protein;
+      acc.carbs += nutrition.carbs;
+      acc.fat += nutrition.fat;
       return acc;
     },
     { kcal: 0, protein: 0, carbs: 0, fat: 0 },
@@ -372,6 +374,9 @@ function DayMacroSummary({ day }: { day: DayMeals }) {
     <div className="rounded-[1.1rem] border border-border bg-white/70 px-3 py-2.5 space-y-1 shadow-sm">
       <p className="text-sm font-bold text-gray-700 text-center tabular-nums">
         {kcal.toLocaleString('pl-PL')} kcal
+      </p>
+      <p className="text-[10px] font-medium uppercase tracking-wide text-gray-300 text-center">
+        na osobę
       </p>
       <div className="flex justify-between text-xs text-gray-400 tabular-nums">
         <span title="Białko">B {protein}g</span>

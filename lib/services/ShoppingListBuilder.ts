@@ -18,8 +18,9 @@ const CATEGORY_CONFIG: Record<string, { label: string; emoji: string; order: num
   dairy:      { label: 'Nabiał i jaja',      emoji: '🧀', order: 4 },
   grains:     { label: 'Zboża i kasze',      emoji: '🌾', order: 5 },
   oils:       { label: 'Oleje i tłuszcze',   emoji: '🫒', order: 6 },
-  spices:     { label: 'Przyprawy i zioła',  emoji: '🌿', order: 7 },
-  other:      { label: 'Inne',               emoji: '🛒', order: 8 },
+  nuts:       { label: 'Orzechy i pestki',   emoji: '🥜', order: 7 },
+  spices:     { label: 'Przyprawy i zioła',  emoji: '🌿', order: 8 },
+  other:      { label: 'Inne',               emoji: '🛒', order: 9 },
 };
 
 function scaleAmount(amountG: number, servings: number, scalesLinearly: boolean): number {

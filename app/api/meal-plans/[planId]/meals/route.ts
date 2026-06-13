@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { PLAN_PEOPLE_COUNT } from '@/lib/utils/planNutrition';
 
 const CORE_MEAL_TYPES = new Set(['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail']);
 const ALLOWED_MEAL_TYPES = new Set([...CORE_MEAL_TYPES, 'snack', 'dessert', 'extra']);
@@ -39,9 +40,10 @@ export async function POST(
       servings?: number;
     };
     const mealType = typeof body.mealType === 'string' && body.mealType.trim() ? body.mealType.trim() : 'snack';
+    const defaultServings = CORE_MEAL_TYPES.has(mealType) ? PLAN_PEOPLE_COUNT : 1;
     const servings = Number.isFinite(Number(body.servings)) && Number(body.servings) > 0
       ? Number(body.servings)
-      : 1;
+      : defaultServings;
     const dayOfWeek = Number(body.dayOfWeek);
     const recipeId = body.recipeId;
 

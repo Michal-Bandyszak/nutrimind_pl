@@ -1,6 +1,7 @@
 import type { MealWithRecipe } from '@/lib/types';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_EMOJI } from '@/lib/utils/batchColors';
+import { mealNutritionPerServing } from '@/lib/utils/planNutrition';
 
 const MEAL_LABELS: Record<string, string> = {
   breakfast: 'Śniadanie',
@@ -22,9 +23,8 @@ type Props = {
 export default function MealCard({ meal, color, onClick }: Props) {
   const { recipe, batchDayNum, batchGroupId } = meal;
 
-  const kcal = recipe.kcalPerServing
-    ? Math.round(recipe.kcalPerServing * meal.servings)
-    : null;
+  const perServing = mealNutritionPerServing(meal);
+  const kcal = recipe.kcalPerServing ? Math.round(perServing.kcal) : null;
 
   return (
     <button
@@ -62,7 +62,9 @@ export default function MealCard({ meal, color, onClick }: Props) {
 
       {/* Macros */}
       {kcal && (
-        <p className="mt-1.5 text-xs text-gray-400">{kcal} kcal</p>
+        <p className="mt-1.5 text-xs text-gray-400">
+          {kcal} kcal / porcja
+        </p>
       )}
     </button>
   );

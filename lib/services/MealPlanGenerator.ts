@@ -1,6 +1,12 @@
 import { prisma } from '@/lib/db/prisma';
 import type { MealPlanWithMeals, BatchConfig, MealDividers } from '@/lib/types';
 import { dividersToGroups, DEFAULT_BATCH_CONFIG } from '@/lib/types';
+import {
+  buildMealTargets,
+  chooseRecipeForGroup,
+  DEFAULT_TARGET_KCAL_PER_PERSON,
+  type RecipeCandidate,
+} from '@/lib/utils/mealPlanScoring';
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -32,8 +38,9 @@ function buildMealRows(
   planId: string,
   mealType: string,
   dividers: MealDividers,
-  recipes: { id: string; maxStorageDays: number }[],
+  recipes: RecipeCandidate[],
   servings: number,
+  targetKcalPerServing: number,
 ): {
   mealPlanId: string;
   dayOfWeek: number;
@@ -59,10 +66,11 @@ function buildMealRows(
     // Keep the configured group intact. Prefer recipes whose storage time can
     // cover the whole block, but do not silently split a user-selected group.
     const requiredStorageDays = days.length;
-    const unusedFit = shuffled.find((r) => r.maxStorageDays >= requiredStorageDays && !usedIds.has(r.id));
-    const anyFit = shuffled.find((r) => r.maxStorageDays >= requiredStorageDays);
-    const unused = shuffled.find((r) => !usedIds.has(r.id));
-    const chosen = unusedFit ?? anyFit ?? unused ?? shuffled[i % shuffled.length];
+    const chosen = chooseRecipeForGroup(shuffled, {
+      usedIds,
+      requiredStorageDays,
+      targetKcalPerServing,
+    });
     usedIds.add(chosen.id);
 
     const batchGroupId = crypto.randomUUID();
@@ -107,15 +115,31 @@ function buildMealRows(
 export async function generateWeekPlan(
   config: BatchConfig = DEFAULT_BATCH_CONFIG,
   weekStart?: Date,
+  targetKcalPerPerson = DEFAULT_TARGET_KCAL_PER_PERSON,
 ): Promise<MealPlanWithMeals> {
   const start = weekStart ?? getMonday();
 
   const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails] = await Promise.all([
-    prisma.recipe.findMany({ where: { type: 'breakfast',        nutritionVerified: true } }),
-    prisma.recipe.findMany({ where: { type: 'second_breakfast', nutritionVerified: true } }),
-    prisma.recipe.findMany({ where: { type: 'lunch',            nutritionVerified: true, batchFriendly: true } }),
-    prisma.recipe.findMany({ where: { type: 'dinner',           nutritionVerified: true } }),
-    prisma.recipe.findMany({ where: { type: 'cocktail',         nutritionVerified: true } }),
+    prisma.recipe.findMany({
+      where: { type: 'breakfast', nutritionVerified: true },
+      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+    }),
+    prisma.recipe.findMany({
+      where: { type: 'second_breakfast', nutritionVerified: true },
+      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+    }),
+    prisma.recipe.findMany({
+      where: { type: 'lunch', nutritionVerified: true, batchFriendly: true },
+      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+    }),
+    prisma.recipe.findMany({
+      where: { type: 'dinner', nutritionVerified: true },
+      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+    }),
+    prisma.recipe.findMany({
+      where: { type: 'cocktail', nutritionVerified: true },
+      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+    }),
   ]);
 
   if (!allBreakfasts.length) throw new Error('Brak przepisów na śniadanie.');
@@ -143,15 +167,59 @@ export async function generateWeekPlan(
     batchDayNum: number | null;
   }[] = [];
 
+  const plannedMealTypes = [
+    'breakfast',
+    allSecondBreakfasts.length ? 'second_breakfast' : null,
+    'lunch',
+    'dinner',
+    allCocktails.length ? 'cocktail' : null,
+  ].filter((mealType): mealType is string => mealType !== null);
+  const mealTargets = buildMealTargets(plannedMealTypes, targetKcalPerPerson);
+
   // Breakfast, second_breakfast, lunch, dinner, cocktail with custom batch config
-  rows.push(...buildMealRows(plan.id, 'breakfast',        config.breakfast,        allBreakfasts,       SERVINGS));
+  rows.push(...buildMealRows(
+    plan.id,
+    'breakfast',
+    config.breakfast,
+    allBreakfasts,
+    SERVINGS,
+    mealTargets.breakfast,
+  ));
   if (allSecondBreakfasts.length) {
-    rows.push(...buildMealRows(plan.id, 'second_breakfast', config.second_breakfast, allSecondBreakfasts, SERVINGS));
+    rows.push(...buildMealRows(
+      plan.id,
+      'second_breakfast',
+      config.second_breakfast,
+      allSecondBreakfasts,
+      SERVINGS,
+      mealTargets.second_breakfast,
+    ));
   }
-  rows.push(...buildMealRows(plan.id, 'lunch',            config.lunch,            allLunches,          SERVINGS));
-  rows.push(...buildMealRows(plan.id, 'dinner',           config.dinner,           allDinners,          SERVINGS));
+  rows.push(...buildMealRows(
+    plan.id,
+    'lunch',
+    config.lunch,
+    allLunches,
+    SERVINGS,
+    mealTargets.lunch,
+  ));
+  rows.push(...buildMealRows(
+    plan.id,
+    'dinner',
+    config.dinner,
+    allDinners,
+    SERVINGS,
+    mealTargets.dinner,
+  ));
   if (allCocktails.length) {
-    rows.push(...buildMealRows(plan.id, 'cocktail',         config.cocktail,         allCocktails,        SERVINGS));
+    rows.push(...buildMealRows(
+      plan.id,
+      'cocktail',
+      config.cocktail,
+      allCocktails,
+      SERVINGS,
+      mealTargets.cocktail,
+    ));
   }
 
   await prisma.mealPlanMeal.createMany({ data: rows });
