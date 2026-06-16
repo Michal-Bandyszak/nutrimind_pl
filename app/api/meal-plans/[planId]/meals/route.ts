@@ -71,6 +71,12 @@ export async function POST(
     if (!recipe) {
       return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
     }
+    if (recipe.role === 'component') {
+      return NextResponse.json(
+        { error: 'Baza lub pasta nie może być dodana bezpośrednio do planu jako osobny posiłek.' },
+        { status: 400 },
+      );
+    }
 
     if (CORE_MEAL_TYPES.has(mealType)) {
       const existing = await prisma.mealPlanMeal.findFirst({

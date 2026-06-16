@@ -2,17 +2,29 @@ import type {
   Recipe,
   Ingredient,
   RecipeIngredient,
+  RecipeComponent,
   MealPlan,
   MealPlanMeal,
 } from '@prisma/client';
 
-export type { Recipe, Ingredient, RecipeIngredient, MealPlan, MealPlanMeal };
+export type { Recipe, Ingredient, RecipeIngredient, RecipeComponent, MealPlan, MealPlanMeal };
 
 // Extended types with relations
+export type RecipeComponentLink = RecipeComponent & {
+  componentRecipe: Recipe & {
+    ingredients: (RecipeIngredient & {
+      ingredient: Ingredient;
+    })[];
+  };
+};
+
 export type RecipeWithIngredients = Recipe & {
   ingredients: (RecipeIngredient & {
     ingredient: Ingredient;
   })[];
+  componentLinks?: RecipeComponentLink[];
+  variantOf?: Recipe | null;
+  variants?: Recipe[];
   _count?: { mealPlanMeals: number };
 };
 

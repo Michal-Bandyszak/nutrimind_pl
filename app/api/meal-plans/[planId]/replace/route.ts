@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { validateRecipeForMealSlot } from '@/lib/utils/mealPlanGuards';
 
 export async function PATCH(
   req: NextRequest,
@@ -18,11 +19,6 @@ export async function PATCH(
       return NextResponse.json({ error: 'Brakuje wymaganych pól.' }, { status: 400 });
     }
 
-    const recipeExists = await prisma.recipe.findUnique({ where: { id: newRecipeId }, select: { id: true } });
-    if (!recipeExists) {
-      return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
-    }
-
     const meal = await prisma.mealPlanMeal.findFirst({
       where: mealId
         ? { mealPlanId: planId, id: mealId }
@@ -31,6 +27,49 @@ export async function PATCH(
 
     if (!meal) {
       return NextResponse.json({ error: 'Posiłek nie znaleziony.' }, { status: 404 });
+    }
+
+    const batchDays = meal.batchGroupId
+      ? await prisma.mealPlanMeal.count({
+          where: {
+            mealPlanId: planId,
+            mealType: meal.mealType,
+            batchGroupId: meal.batchGroupId,
+          },
+        })
+      : 1;
+
+    const [newRecipe, currentRecipe] = await Promise.all([
+      prisma.recipe.findUnique({
+        where: { id: newRecipeId },
+        select: {
+          id: true,
+          role: true,
+          type: true,
+          nutritionVerified: true,
+          maxStorageDays: true,
+          kcalPerServing: true,
+          batchFriendly: true,
+        },
+      }),
+      prisma.recipe.findUnique({
+        where: { id: meal.recipeId },
+        select: { kcalPerServing: true },
+      }),
+    ]);
+
+    if (!newRecipe) {
+      return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
+    }
+
+    const validationError = validateRecipeForMealSlot({
+      recipe: newRecipe,
+      mealType: meal.mealType,
+      batchDays,
+      currentKcalPerServing: currentRecipe?.kcalPerServing ?? null,
+    });
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     // Replace across entire batch group (or single meal if no batch)

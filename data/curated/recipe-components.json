@@ -1,0 +1,89 @@
+{
+  "description": "Curated component mappings for obvious sandwich, tortilla, paste, and hummus bases that can be reused as separate recipes.",
+  "components": [
+    {
+      "parentRecipe": {
+        "name": "Kanapki z twarożkiem, łososiem i koperkiem",
+        "sourceDiet": "Curated Mediterranean Microbiome"
+      },
+      "componentRecipe": {
+        "name": "Twarożek po włosku",
+        "sourceDiet": "Zestaw sniadan A"
+      },
+      "usage": "1 porcja bazy twarogowej do 2-3 kanapek",
+      "note": "Użyj samej bazy twaróg + jogurt + olej jako smarowidła; oliwki, pomidory i sałata zostają dodatkami wierzchowymi."
+    },
+    {
+      "parentRecipe": {
+        "name": "Kanapka z twarożkiem, suszonymi pomidorami i oliwkami",
+        "sourceDiet": "Import OCR Lunch A"
+      },
+      "componentRecipe": {
+        "name": "Twarożek po włosku",
+        "sourceDiet": "Zestaw sniadan A"
+      },
+      "usage": "1 porcja bazy twarogowej do 2 kanapek",
+      "note": "To ta sama twarogowa baza; w tym wariancie tylko podbija kanapkę suszonym pomidorem i oliwkami."
+    },
+    {
+      "parentRecipe": {
+        "name": "Kanapka z domowym hummusem",
+        "sourceDiet": "Import OCR Lunch A"
+      },
+      "componentRecipe": {
+        "name": "Hummus bez czosnku z jajkiem i warzywami",
+        "sourceDiet": "Curated Mediterranean Microbiome"
+      },
+      "usage": "1 porcja hummusu do 2 kanapek",
+      "note": "To najbliższa gotowa baza hummusowa w curated data; do samej kanapki wykorzystaj sam hummus, a jajko i warzywa potraktuj jako dodatki."
+    },
+    {
+      "parentRecipe": {
+        "name": "Tortilla z indykiem, warzywami i dipem",
+        "sourceDiet": "Import OCR Lunch A"
+      },
+      "componentRecipe": {
+        "name": "Białkowa pasta z indyka i warzyw w liściach sałaty",
+        "sourceDiet": "Zestaw sniadan A"
+      },
+      "usage": "1 porcja farszu do 1 tortilli",
+      "note": "To dobry kandydat na osobny farsz: mięso + warzywa + zioła, bez konieczności wiązania go sałatą."
+    },
+    {
+      "parentRecipe": {
+        "name": "Tortilla z mozzarellą, pomidorkami i pesto",
+        "sourceDiet": "Import OCR Lunch A"
+      },
+      "componentRecipe": {
+        "name": "Tosty z pesto, mozzarellą i suszonymi pomidorami",
+        "sourceDiet": "Import OCR Lunch A"
+      },
+      "usage": "1 porcja nadzienia do 1 tortilli",
+      "note": "Skład nadzienia jest wystarczająco spójny, by traktować go jako osobny moduł pesto-mozzarella."
+    },
+    {
+      "parentRecipe": {
+        "name": "Tortilla z grillowanym łososiem i chrupiącymi warzywami",
+        "sourceDiet": "Import OCR Obiad A"
+      },
+      "componentRecipe": {
+        "name": "Wrapy z sałaty z łososiem",
+        "sourceDiet": "Zestaw sniadan A"
+      },
+      "usage": "1 porcja łososiowo-warzywnego nadzienia do 1 tortilli",
+      "note": "To najczytelniejszy gotowy komponent łososiowy w curated breakfast data."
+    },
+    {
+      "parentRecipe": {
+        "name": "Tortilla z łososiem i świeżymi warzywami",
+        "sourceDiet": "Import OCR Kolacja A"
+      },
+      "componentRecipe": {
+        "name": "Wrapy z sałaty z łososiem",
+        "sourceDiet": "Zestaw sniadan A"
+      },
+      "usage": "1 porcja łososiowo-warzywnego nadzienia do 1 tortilli",
+      "note": "Ta sama łososiowa baza nadaje się też do wersji kolacyjnej."
+    }
+  ]
+}

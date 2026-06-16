@@ -26,8 +26,11 @@ export default function RecipeDetailView({
   const kcal = recipe.kcalPerServing ? Math.round(recipe.kcalPerServing * displayServings) : null;
   const isPerWhole = recipe.ingredientBasis === 'per-whole';
   const baseServings = recipe.baseServings || 1;
-
   const instructions = safeJsonParse<string[]>(recipe.instructions, []);
+  const replacedIngredients = (recipe.componentLinks ?? []).map((link) => ({
+    ...link,
+    replaced: safeJsonParse<string[]>(link.replacedIngredients, []),
+  }));
 
   return (
     <>
@@ -39,6 +42,11 @@ export default function RecipeDetailView({
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white/70 px-2.5 py-1 text-[11px] font-medium text-gray-500 sm:px-3 sm:text-xs">
                 {MEAL_TYPE_EMOJI[meal.mealType] ?? '🍽'} {MEAL_TYPE_LABELS[meal.mealType] ?? meal.mealType}
               </span>
+              {recipe.variantKey !== 'base' && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-700 sm:px-3 sm:text-xs">
+                  {recipe.variantKey}
+                </span>
+              )}
               {color && batchDays > 1 && (
                 <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium sm:px-3 sm:text-xs ${color.bg} ${color.border} ${color.text}`}>
                   <span className={`h-1.5 w-1.5 rounded-full ${color.dot}`} />
@@ -104,6 +112,41 @@ export default function RecipeDetailView({
                   </li>
                 ))}
               </ul>
+            </section>
+          )}
+
+          {recipe.adjustmentNote && (
+            <section className="rounded-[1.25rem] border border-violet-100 bg-violet-50/80 p-3 sm:p-4">
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-500">
+                Notatka wariantu
+              </h3>
+              <p className="text-sm leading-relaxed text-violet-900/80">{recipe.adjustmentNote}</p>
+            </section>
+          )}
+
+          {replacedIngredients.length > 0 && (
+            <section className="rounded-[1.25rem] border border-amber-100 bg-amber-50/70 p-3 sm:p-4">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-amber-600">
+                Baza do przygotowania
+              </h3>
+              <div className="space-y-3">
+                {replacedIngredients.map((link) => (
+                  <div key={link.id} className="rounded-xl border border-amber-100 bg-white/70 px-3 py-2.5">
+                    <p className="text-sm font-medium text-gray-900">{link.componentRecipe.name}</p>
+                    {link.displayText && (
+                      <p className="mt-0.5 text-xs text-gray-500">{link.displayText}</p>
+                    )}
+                    {link.note && (
+                      <p className="mt-1 text-xs leading-relaxed text-gray-600">{link.note}</p>
+                    )}
+                    {link.replaced.length > 0 && (
+                      <p className="mt-1 text-[11px] text-gray-400">
+                        Zastępuje: {link.replaced.join(', ')}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </section>
           )}
 

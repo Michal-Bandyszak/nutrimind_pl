@@ -4,7 +4,15 @@ import { useState } from 'react';
 import { Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X, Star } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
 import type { SubstitutionResult } from '@/lib/services/SubstitutionEngine';
-import { TYPE_COLORS, MEAL_TYPE_LABELS } from '@/lib/utils/recipeConstants';
+import {
+  TYPE_COLORS,
+  MEAL_TYPE_LABELS,
+  getRecipeBrowserNote,
+  getRecipeBrowserRole,
+  getRecipeBrowserVariantLabel,
+  isRecipe2500Variant,
+  type RecipeBrowserMeta,
+} from '@/lib/utils/recipeConstants';
 import { formatIngredientAmount, scaleAmount, safeJsonParse } from '@/lib/utils/formatUnits';
 
 type Props = {
@@ -45,6 +53,11 @@ export default function RecipeCard({
 
   const instructions = safeJsonParse<string[]>(recipe.instructions, []);
   const recipeTags = safeJsonParse<string[]>(recipe.tags, []);
+  const recipeMeta = recipe as RecipeWithIngredients & RecipeBrowserMeta;
+  const recipeRole = getRecipeBrowserRole(recipeMeta);
+  const variantLabel = getRecipeBrowserVariantLabel(recipeMeta);
+  const adjustmentNote = getRecipeBrowserNote(recipeMeta);
+  const isVariant2500 = isRecipe2500Variant(recipeMeta);
 
   const macroScale = servings;
   const maxServings = isPerWhole ? Math.max(baseServings * 2, 8) : 8;
@@ -64,6 +77,25 @@ export default function RecipeCard({
               <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_COLORS[recipe.type] ?? 'bg-gray-100 text-gray-500'}`}>
                 {MEAL_TYPE_LABELS[recipe.type] ?? recipe.type}
               </span>
+              {recipeRole === 'component' && (
+                <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                  Komponent
+                </span>
+              )}
+              {recipeRole === 'base' && (
+                <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                  Baza
+                </span>
+              )}
+              {variantLabel && (
+                <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${
+                  isVariant2500
+                    ? 'bg-violet-100 text-violet-700'
+                    : 'bg-fuchsia-100 text-fuchsia-700'
+                }`}>
+                  {variantLabel}
+                </span>
+              )}
               {recipeTags.includes('zupa') && (
                 <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700">
                   Zupa
@@ -135,6 +167,21 @@ export default function RecipeCard({
       {/* Expanded detail */}
       {expanded && (
         <div className="border-t border-border">
+          {adjustmentNote && (
+            <div className={`px-4 py-2 border-b ${
+              isVariant2500
+                ? 'bg-violet-50 border-violet-100'
+                : 'bg-gray-50/80 border-border'
+            }`}>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {isVariant2500 ? 'Notatka wariantu 2500' : 'Notatka przepisu'}
+              </p>
+              <p className="mt-0.5 text-xs text-gray-600 leading-relaxed">
+                {adjustmentNote}
+              </p>
+            </div>
+          )}
+
           {/* Servings scaler */}
           <div className="px-4 py-3 bg-gray-50/80 flex items-center justify-between border-b border-border">
             <div className="flex items-center gap-2 text-sm text-gray-600">

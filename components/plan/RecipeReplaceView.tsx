@@ -30,6 +30,7 @@ export default function RecipeReplaceView({ meal, onBack, onClose, onReplace }: 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return allRecipes.filter((r) => {
+      if (r.role === 'component') return false;
       const matchesType = typeFilter === 'all' || r.type === typeFilter;
       const matchesQuery = !q || r.name.toLowerCase().includes(q);
       const notCurrent = r.id !== meal.recipe.id;
@@ -45,8 +46,8 @@ export default function RecipeReplaceView({ meal, onBack, onClose, onReplace }: 
     try {
       await onReplace(recipe);
       onClose();
-    } catch {
-      setReplaceError('Nie udało się zamienić przepisu. Spróbuj ponownie.');
+    } catch (err) {
+      setReplaceError(err instanceof Error ? err.message : 'Nie udało się zamienić przepisu. Spróbuj ponownie.');
     } finally {
       setSaving(null);
     }

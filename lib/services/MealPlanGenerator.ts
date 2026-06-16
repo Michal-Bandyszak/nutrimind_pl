@@ -2,9 +2,11 @@ import { prisma } from '@/lib/db/prisma';
 import type { MealPlanWithMeals, BatchConfig, MealDividers } from '@/lib/types';
 import { dividersToGroups, DEFAULT_BATCH_CONFIG } from '@/lib/types';
 import {
+  applyRecipeToDayContexts,
   buildMealTargets,
   chooseRecipeForGroup,
   DEFAULT_TARGET_KCAL_PER_PERSON,
+  type PlanDayContexts,
   type RecipeCandidate,
 } from '@/lib/utils/mealPlanScoring';
 
@@ -33,6 +35,28 @@ function formatWeekLabel(start: Date): string {
   return `${start.toLocaleDateString('pl-PL', opts)} – ${end.toLocaleDateString('pl-PL', opts)}`;
 }
 
+function normalizeCandidates(
+  recipes: Array<{
+    id: string;
+    name: string;
+    maxStorageDays: number;
+    kcalPerServing: number | null;
+    batchFriendly: boolean;
+    tags: string;
+    ingredients: { ingredient: { name: string } }[];
+  }>,
+): RecipeCandidate[] {
+  return recipes.map((recipe) => ({
+    id: recipe.id,
+    name: recipe.name,
+    maxStorageDays: recipe.maxStorageDays,
+    kcalPerServing: recipe.kcalPerServing,
+    batchFriendly: recipe.batchFriendly,
+    tags: recipe.tags,
+    ingredientNames: recipe.ingredients.map((item) => item.ingredient.name),
+  }));
+}
+
 /** Build meal rows for one meal type based on divider config */
 function buildMealRows(
   planId: string,
@@ -41,6 +65,7 @@ function buildMealRows(
   recipes: RecipeCandidate[],
   servings: number,
   targetKcalPerServing: number,
+  dayContexts: PlanDayContexts,
 ): {
   mealPlanId: string;
   dayOfWeek: number;
@@ -58,7 +83,7 @@ function buildMealRows(
 
   const dayAssignments = new Map<number, { recipeId: string; batchGroupId: string; batchDayNum: number }>();
 
-  uniqueGroups.forEach((group, i) => {
+  uniqueGroups.forEach((group) => {
     const days = groups
       .map((g, idx) => (g === group ? idx + 1 : null))
       .filter((d): d is number => d !== null);
@@ -70,8 +95,12 @@ function buildMealRows(
       usedIds,
       requiredStorageDays,
       targetKcalPerServing,
+      mealType,
+      daysInGroup: days,
+      dayContexts,
     });
     usedIds.add(chosen.id);
+    applyRecipeToDayContexts(dayContexts, chosen, mealType, days);
 
     const batchGroupId = crypto.randomUUID();
     days.forEach((dayOfWeek, idxInGroup) => {
@@ -121,30 +150,75 @@ export async function generateWeekPlan(
 
   const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails] = await Promise.all([
     prisma.recipe.findMany({
-      where: { type: 'breakfast', nutritionVerified: true },
-      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+      where: { type: 'breakfast', nutritionVerified: true, role: 'meal' },
+      select: {
+        id: true,
+        name: true,
+        maxStorageDays: true,
+        kcalPerServing: true,
+        batchFriendly: true,
+        tags: true,
+        ingredients: { select: { ingredient: { select: { name: true } } } },
+      },
     }),
     prisma.recipe.findMany({
-      where: { type: 'second_breakfast', nutritionVerified: true },
-      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+      where: { type: 'second_breakfast', nutritionVerified: true, role: 'meal' },
+      select: {
+        id: true,
+        name: true,
+        maxStorageDays: true,
+        kcalPerServing: true,
+        batchFriendly: true,
+        tags: true,
+        ingredients: { select: { ingredient: { select: { name: true } } } },
+      },
     }),
     prisma.recipe.findMany({
-      where: { type: 'lunch', nutritionVerified: true, batchFriendly: true },
-      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+      where: { type: 'lunch', nutritionVerified: true, batchFriendly: true, role: 'meal' },
+      select: {
+        id: true,
+        name: true,
+        maxStorageDays: true,
+        kcalPerServing: true,
+        batchFriendly: true,
+        tags: true,
+        ingredients: { select: { ingredient: { select: { name: true } } } },
+      },
     }),
     prisma.recipe.findMany({
-      where: { type: 'dinner', nutritionVerified: true },
-      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+      where: { type: 'dinner', nutritionVerified: true, role: 'meal' },
+      select: {
+        id: true,
+        name: true,
+        maxStorageDays: true,
+        kcalPerServing: true,
+        batchFriendly: true,
+        tags: true,
+        ingredients: { select: { ingredient: { select: { name: true } } } },
+      },
     }),
     prisma.recipe.findMany({
-      where: { type: 'cocktail', nutritionVerified: true },
-      select: { id: true, maxStorageDays: true, kcalPerServing: true },
+      where: { type: 'cocktail', nutritionVerified: true, role: 'meal' },
+      select: {
+        id: true,
+        name: true,
+        maxStorageDays: true,
+        kcalPerServing: true,
+        batchFriendly: true,
+        tags: true,
+        ingredients: { select: { ingredient: { select: { name: true } } } },
+      },
     }),
   ]);
+  const breakfasts = normalizeCandidates(allBreakfasts);
+  const secondBreakfasts = normalizeCandidates(allSecondBreakfasts);
+  const lunches = normalizeCandidates(allLunches);
+  const dinners = normalizeCandidates(allDinners);
+  const cocktails = normalizeCandidates(allCocktails);
 
-  if (!allBreakfasts.length) throw new Error('Brak przepisów na śniadanie.');
-  if (!allLunches.length)    throw new Error('Brak przepisów na obiad.');
-  if (!allDinners.length)    throw new Error('Brak przepisów na kolację.');
+  if (!breakfasts.length) throw new Error('Brak przepisów na śniadanie.');
+  if (!lunches.length)    throw new Error('Brak przepisów na obiad.');
+  if (!dinners.length)    throw new Error('Brak przepisów na kolację.');
 
   // Archive current active plan
   await prisma.mealPlan.updateMany({
@@ -166,13 +240,14 @@ export async function generateWeekPlan(
     batchGroupId: string | null;
     batchDayNum: number | null;
   }[] = [];
+  const dayContexts: PlanDayContexts = new Map();
 
   const plannedMealTypes = [
     'breakfast',
-    allSecondBreakfasts.length ? 'second_breakfast' : null,
+    secondBreakfasts.length ? 'second_breakfast' : null,
     'lunch',
     'dinner',
-    allCocktails.length ? 'cocktail' : null,
+    cocktails.length ? 'cocktail' : null,
   ].filter((mealType): mealType is string => mealType !== null);
   const mealTargets = buildMealTargets(plannedMealTypes, targetKcalPerPerson);
 
@@ -181,44 +256,49 @@ export async function generateWeekPlan(
     plan.id,
     'breakfast',
     config.breakfast,
-    allBreakfasts,
+    breakfasts,
     SERVINGS,
     mealTargets.breakfast,
+    dayContexts,
   ));
-  if (allSecondBreakfasts.length) {
+  if (secondBreakfasts.length) {
     rows.push(...buildMealRows(
       plan.id,
       'second_breakfast',
       config.second_breakfast,
-      allSecondBreakfasts,
+      secondBreakfasts,
       SERVINGS,
       mealTargets.second_breakfast,
+      dayContexts,
     ));
   }
   rows.push(...buildMealRows(
     plan.id,
     'lunch',
     config.lunch,
-    allLunches,
+    lunches,
     SERVINGS,
     mealTargets.lunch,
+    dayContexts,
   ));
   rows.push(...buildMealRows(
     plan.id,
     'dinner',
     config.dinner,
-    allDinners,
+    dinners,
     SERVINGS,
     mealTargets.dinner,
+    dayContexts,
   ));
-  if (allCocktails.length) {
+  if (cocktails.length) {
     rows.push(...buildMealRows(
       plan.id,
       'cocktail',
       config.cocktail,
-      allCocktails,
+      cocktails,
       SERVINGS,
       mealTargets.cocktail,
+      dayContexts,
     ));
   }
 
@@ -242,7 +322,18 @@ async function fetchPlanWithMeals(id: string): Promise<MealPlanWithMeals> {
       meals: {
         include: {
           recipe: {
-            include: { ingredients: { include: { ingredient: true } } },
+            include: {
+              variantOf: true,
+              variants: true,
+              componentLinks: {
+                include: {
+                  componentRecipe: {
+                    include: { ingredients: { include: { ingredient: true } } },
+                  },
+                },
+              },
+              ingredients: { include: { ingredient: true } },
+            },
           },
         },
         orderBy: [{ dayOfWeek: 'asc' }, { mealType: 'asc' }],
