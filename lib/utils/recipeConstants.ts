@@ -21,7 +21,6 @@ export const TYPE_FILTERS = [
   { value: 'second_breakfast', label: 'Drugie śniadanie' },
   { value: 'lunch',            label: 'Obiady' },
   { value: 'dinner',           label: 'Kolacje' },
-  { value: 'snack',            label: 'Przekąski' },
   { value: 'cocktail',         label: 'Koktajle' },
   { value: 'soup',             label: 'Zupy' },
   { value: 'dessert',          label: 'Ciasta i desery' },
@@ -34,9 +33,6 @@ export const TYPE_FILTERS_BASIC = TYPE_FILTERS.filter(
 
 export type RecipeBrowserKindFilter =
   | 'all'
-  | 'standard'
-  | 'component'
-  | 'base'
   | 'variant2500';
 
 export type RecipeBrowserMeta = {
@@ -47,9 +43,6 @@ export type RecipeBrowserMeta = {
 
 export const RECIPE_KIND_FILTERS: { value: RecipeBrowserKindFilter; label: string }[] = [
   { value: 'all', label: 'Wszystkie' },
-  { value: 'standard', label: 'Zwykłe' },
-  { value: 'component', label: 'Komponenty' },
-  { value: 'base', label: 'Bazy' },
   { value: 'variant2500', label: '2500 kcal' },
 ];
 
@@ -69,7 +62,7 @@ export function isRecipe2500Variant(recipe: RecipeBrowserMeta) {
 
 export function getRecipeBrowserVariantLabel(recipe: RecipeBrowserMeta) {
   if (isRecipe2500Variant(recipe)) return '2500 kcal';
-  return normalizeRecipeField(recipe.variantKey) ? 'Wariant' : null;
+  return null;
 }
 
 export function getRecipeBrowserNote(recipe: RecipeBrowserMeta) {

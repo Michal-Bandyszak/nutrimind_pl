@@ -3,10 +3,13 @@ import type { MealPlanWithMeals, BatchConfig, MealDividers } from '@/lib/types';
 import { dividersToGroups, DEFAULT_BATCH_CONFIG } from '@/lib/types';
 import {
   applyRecipeToDayContexts,
+  applyRecipeToDayKcalTotals,
+  buildCumulativeMealTargets,
   buildMealTargets,
   chooseRecipeForGroup,
   DEFAULT_TARGET_KCAL_PER_PERSON,
   type PlanDayContexts,
+  type PlanDayKcalTotals,
   type RecipeCandidate,
 } from '@/lib/utils/mealPlanScoring';
 
@@ -66,6 +69,8 @@ function buildMealRows(
   servings: number,
   targetKcalPerServing: number,
   dayContexts: PlanDayContexts,
+  dayKcalTotals: PlanDayKcalTotals,
+  cumulativeTargetKcal: number,
 ): {
   mealPlanId: string;
   dayOfWeek: number;
@@ -98,9 +103,12 @@ function buildMealRows(
       mealType,
       daysInGroup: days,
       dayContexts,
+      dayKcalTotals,
+      cumulativeTargetKcal,
     });
     usedIds.add(chosen.id);
     applyRecipeToDayContexts(dayContexts, chosen, mealType, days);
+    applyRecipeToDayKcalTotals(dayKcalTotals, chosen, days);
 
     const batchGroupId = crypto.randomUUID();
     days.forEach((dayOfWeek, idxInGroup) => {
@@ -241,6 +249,7 @@ export async function generateWeekPlan(
     batchDayNum: number | null;
   }[] = [];
   const dayContexts: PlanDayContexts = new Map();
+  const dayKcalTotals: PlanDayKcalTotals = new Map();
 
   const plannedMealTypes = [
     'breakfast',
@@ -250,6 +259,7 @@ export async function generateWeekPlan(
     cocktails.length ? 'cocktail' : null,
   ].filter((mealType): mealType is string => mealType !== null);
   const mealTargets = buildMealTargets(plannedMealTypes, targetKcalPerPerson);
+  const cumulativeMealTargets = buildCumulativeMealTargets(plannedMealTypes, targetKcalPerPerson);
 
   // Breakfast, second_breakfast, lunch, dinner, cocktail with custom batch config
   rows.push(...buildMealRows(
@@ -260,6 +270,8 @@ export async function generateWeekPlan(
     SERVINGS,
     mealTargets.breakfast,
     dayContexts,
+    dayKcalTotals,
+    cumulativeMealTargets.breakfast ?? targetKcalPerPerson,
   ));
   if (secondBreakfasts.length) {
     rows.push(...buildMealRows(
@@ -270,6 +282,8 @@ export async function generateWeekPlan(
       SERVINGS,
       mealTargets.second_breakfast,
       dayContexts,
+      dayKcalTotals,
+      cumulativeMealTargets.second_breakfast ?? targetKcalPerPerson,
     ));
   }
   rows.push(...buildMealRows(
@@ -280,6 +294,8 @@ export async function generateWeekPlan(
     SERVINGS,
     mealTargets.lunch,
     dayContexts,
+    dayKcalTotals,
+    cumulativeMealTargets.lunch ?? targetKcalPerPerson,
   ));
   rows.push(...buildMealRows(
     plan.id,
@@ -289,6 +305,8 @@ export async function generateWeekPlan(
     SERVINGS,
     mealTargets.dinner,
     dayContexts,
+    dayKcalTotals,
+    cumulativeMealTargets.dinner ?? targetKcalPerPerson,
   ));
   if (cocktails.length) {
     rows.push(...buildMealRows(
@@ -299,6 +317,8 @@ export async function generateWeekPlan(
       SERVINGS,
       mealTargets.cocktail,
       dayContexts,
+      dayKcalTotals,
+      cumulativeMealTargets.cocktail ?? targetKcalPerPerson,
     ));
   }
 

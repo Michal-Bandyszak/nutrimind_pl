@@ -5,10 +5,13 @@ import type { BatchConfig } from '@/lib/types';
 import { dividersToGroups } from '@/lib/types';
 import {
   applyRecipeToDayContexts,
+  applyRecipeToDayKcalTotals,
+  buildCumulativeMealTargets,
   buildMealTargets,
   chooseRecipeForGroup,
   DEFAULT_TARGET_KCAL_PER_PERSON,
   type PlanDayContexts,
+  type PlanDayKcalTotals,
   type RecipeCandidate,
 } from '@/lib/utils/mealPlanScoring';
 
@@ -83,7 +86,12 @@ export async function PATCH(
       plannedMealTypes.length ? plannedMealTypes : [...REBATCH_MEAL_TYPES],
       settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON,
     );
+    const cumulativeMealTargets = buildCumulativeMealTargets(
+      plannedMealTypes.length ? plannedMealTypes : [...REBATCH_MEAL_TYPES],
+      settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON,
+    );
     const dayContexts: PlanDayContexts = new Map();
+    const dayKcalTotals: PlanDayKcalTotals = new Map();
 
     for (const mealType of REBATCH_MEAL_TYPES) {
       const dividers = config[mealType];
@@ -122,10 +130,12 @@ export async function PATCH(
       const allRecipesOfType = normalizeCandidates(rawRecipesOfType);
       if (allRecipesOfType.length === 0) continue;
       dayContexts.clear();
+      dayKcalTotals.clear();
 
       for (const existingMeal of otherMeals) {
         const [existingRecipe] = normalizeCandidates([existingMeal.recipe]);
         applyRecipeToDayContexts(dayContexts, existingRecipe, existingMeal.mealType, [existingMeal.dayOfWeek]);
+        applyRecipeToDayKcalTotals(dayKcalTotals, existingRecipe, [existingMeal.dayOfWeek]);
       }
 
       const updates: ReturnType<typeof prisma.mealPlanMeal.update>[] = [];
@@ -148,10 +158,13 @@ export async function PATCH(
           mealType,
           daysInGroup,
           dayContexts,
+          dayKcalTotals,
+          cumulativeTargetKcal: cumulativeMealTargets[mealType] ?? (settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON),
         });
 
         usedRecipes.add(chosenRecipe.id);
         applyRecipeToDayContexts(dayContexts, chosenRecipe, mealType, daysInGroup);
+        applyRecipeToDayKcalTotals(dayKcalTotals, chosenRecipe, daysInGroup);
         for (const existingMeal of planMeals) {
           if (existingMeal.mealType !== mealType || !daysInGroup.includes(existingMeal.dayOfWeek)) continue;
           existingMeal.recipe = {

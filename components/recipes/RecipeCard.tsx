@@ -8,7 +8,6 @@ import {
   TYPE_COLORS,
   MEAL_TYPE_LABELS,
   getRecipeBrowserNote,
-  getRecipeBrowserRole,
   getRecipeBrowserVariantLabel,
   isRecipe2500Variant,
   type RecipeBrowserMeta,
@@ -54,7 +53,6 @@ export default function RecipeCard({
   const instructions = safeJsonParse<string[]>(recipe.instructions, []);
   const recipeTags = safeJsonParse<string[]>(recipe.tags, []);
   const recipeMeta = recipe as RecipeWithIngredients & RecipeBrowserMeta;
-  const recipeRole = getRecipeBrowserRole(recipeMeta);
   const variantLabel = getRecipeBrowserVariantLabel(recipeMeta);
   const adjustmentNote = getRecipeBrowserNote(recipeMeta);
   const isVariant2500 = isRecipe2500Variant(recipeMeta);
@@ -77,16 +75,6 @@ export default function RecipeCard({
               <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_COLORS[recipe.type] ?? 'bg-gray-100 text-gray-500'}`}>
                 {MEAL_TYPE_LABELS[recipe.type] ?? recipe.type}
               </span>
-              {recipeRole === 'component' && (
-                <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-                  Komponent
-                </span>
-              )}
-              {recipeRole === 'base' && (
-                <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                  Baza
-                </span>
-              )}
               {variantLabel && (
                 <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${
                   isVariant2500
