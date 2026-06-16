@@ -201,7 +201,28 @@ npm run db:seed
 
 a dopiero potem debuguj frontend.
 
-## 9. Dane z SQLite
+## 9. Tryb PWA
+
+NutriMind ma już podstawy PWA:
+
+- `public/manifest.json`
+- `public/sw.js`
+- rejestrację service workera w [RegisterSW.tsx](/Users/michalbandyszak/Documents/repos/nutrimind/components/RegisterSW.tsx)
+- ikony w `public/icons/`
+
+Żeby to sprawdzić:
+
+1. Uruchom aplikację lokalnie lub po deployu na Vercel.
+2. Otwórz ją w Chrome albo Safari na telefonie.
+3. Sprawdź opcję `Dodaj do ekranu głównego` / `Install app`.
+4. Jeśli zmieniasz `manifest.json` albo `sw.js`, zrób pełne odświeżenie i wyczyść stary cache service workera.
+
+W praktyce:
+
+- PWA najlepiej testować na produkcyjnym URL, bo service worker wtedy działa najczyściej.
+- Jeśli chcesz pełną apkę sklepową na iOS/Android, najkrótsza ścieżka to wrapper typu Capacitor na istniejącej bazie webowej.
+
+## 10. Dane z SQLite
 
 Ta konfiguracja zakłada Postgresa w Neon.
 
@@ -223,7 +244,7 @@ to nie przeniosą się automatycznie do Neon. Trzeba je:
   albo
 - włączyć do danych seedujących
 
-## 10. Minimalna sekwencja bezpiecznego deployu
+## 11. Minimalna sekwencja bezpiecznego deployu
 
 Jeżeli wszystko jest już podpięte i chcesz tylko wdrożyć nowe zmiany:
 

@@ -5,6 +5,7 @@ import { Check } from 'lucide-react';
 import { MORNING_ROUTINE, EVENING_ROUTINE } from '@/lib/data/healthData';
 import TodayTab, { type LogState } from './TodayTab';
 import TipsTab from './TipsTab';
+import HistoryTab from './HistoryTab';
 
 type Props = {
   date: string;
@@ -30,7 +31,7 @@ function emptyLog(): LogState {
 }
 
 export default function HealthClient({ date, initialLog }: Props) {
-  const [tab, setTab] = useState<'today' | 'tips'>('today');
+  const [tab, setTab] = useState<'today' | 'history' | 'tips'>('today');
   const [log, setLog] = useState<LogState>(initialLog ?? emptyLog());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -103,7 +104,7 @@ export default function HealthClient({ date, initialLog }: Props) {
 
         {/* Tab bar */}
         <div className="flex border-t border-border">
-          {(['today', 'tips'] as const).map((t) => (
+          {(['today', 'history', 'tips'] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -113,7 +114,7 @@ export default function HealthClient({ date, initialLog }: Props) {
                   : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              {t === 'today' ? 'Dziś' : 'Porady'}
+              {t === 'today' ? 'Dziś' : t === 'history' ? 'Historia' : 'Porady'}
             </button>
           ))}
         </div>
@@ -131,6 +132,8 @@ export default function HealthClient({ date, initialLog }: Props) {
             onMetricChange={(patch) => debouncedUpdate(patch)}
             onPointChange={(patch) => immediateUpdate(patch)}
           />
+        ) : tab === 'history' ? (
+          <HistoryTab />
         ) : (
           <TipsTab />
         )}
