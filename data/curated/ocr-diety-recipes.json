@@ -1688,7 +1688,10 @@
           "category": "other"
         }
       ],
-      "instructions": []
+      "instructions": [
+        "Jabłko umyj i pokrój na cząstki.",
+        "Podawaj z porcją orzechów jako szybką przekąskę."
+      ]
     },
     {
       "name": "Grillowany łosoś z tzatzykami i ziemniakami",
@@ -6708,7 +6711,11 @@
           "category": "other"
         }
       ],
-      "instructions": []
+      "instructions": [
+        "Mięso pokrój w kostkę, a warzywa obierz i pokrój na mniejsze kawałki.",
+        "Zalej mięso i warzywa bulionem, dopraw przyprawami i gotuj do miękkości.",
+        "Podawaj gorącą zupę gulaszową zaraz po przygotowaniu."
+      ]
     },
     {
       "name": "Kolacja: Pierś z indyka, Pomidor, Dynia",

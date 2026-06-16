@@ -74,6 +74,7 @@ export default function WeekGrid({
 
   const [selectedMeal, setSelectedMeal] = useState<{ meal: MealWithRecipe; color: BatchColor | null; batchDays: number } | null>(null);
   const days = buildDays(plan);
+  const hasAuxMeals = days.some((day) => day.snacks.length > 0);
 
   function getBatchDays(meal: MealWithRecipe): number {
     if (!meal.batchGroupId) return 1;
@@ -198,8 +199,7 @@ export default function WeekGrid({
             })
           )}
 
-          {/* Row 4: Snacks + add button */}
-          {days.map((day) => (
+          {hasAuxMeals && days.map((day) => (
             <div key={`snack-${day.dayOfWeek}`} className="flex flex-col gap-1">
               {day.snacks.map((s) => (
                 <MealCard
@@ -209,15 +209,6 @@ export default function WeekGrid({
                   onClick={() => setSelectedMeal({ meal: s, color: null, batchDays: 1 })}
                 />
               ))}
-              {onAddMeal && (
-                <button
-                  onClick={() => onAddMeal(day.dayOfWeek, 'snack')}
-                  className="w-full flex items-center justify-center gap-1 py-2 rounded-2xl border border-dashed border-border text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/70 transition-colors text-xs"
-                  title="Dodaj przepis do tego dnia"
-                >
-                  <Plus size={12} />
-                </button>
-              )}
             </div>
           ))}
 
@@ -298,15 +289,6 @@ export default function WeekGrid({
                   onClick={() => setSelectedMeal({ meal: s, color: null, batchDays: 1 })}
                 />
               ))}
-              {onAddMeal && (
-                <button
-                  onClick={() => onAddMeal(day.dayOfWeek, 'snack')}
-                  className="flex items-center gap-1.5 py-2 px-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-teal-300 hover:text-teal-600 hover:bg-teal-50/50 transition-colors text-xs"
-                >
-                  <Plus size={12} />
-                  Dodaj przepis
-                </button>
-              )}
 
               <DayMacroSummary day={day} targetKcalPerPerson={targetKcalPerPerson} />
             </div>

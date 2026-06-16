@@ -29,6 +29,7 @@ export type DayContextEntry = RecipeSemantics & {
 };
 
 export type PlanDayContexts = Map<number, DayContextEntry[]>;
+export type PlanDayKcalTotals = Map<number, number>;
 
 type RecipeSelectionOptions = {
   usedIds: Set<string>;
@@ -38,6 +39,8 @@ type RecipeSelectionOptions = {
   mealType?: string;
   daysInGroup?: number[];
   dayContexts?: PlanDayContexts;
+  dayKcalTotals?: PlanDayKcalTotals;
+  cumulativeTargetKcal?: number;
 };
 
 export function buildMealTargets(
@@ -57,6 +60,21 @@ export function buildMealTargets(
   );
 }
 
+export function buildCumulativeMealTargets(
+  mealTypes: string[],
+  targetKcalPerPerson: number,
+) {
+  const mealTargets = buildMealTargets(mealTypes, targetKcalPerPerson);
+  let running = 0;
+
+  return Object.fromEntries(
+    mealTypes.map((mealType) => {
+      running += mealTargets[mealType] ?? 0;
+      return [mealType, running];
+    }),
+  ) as Record<string, number>;
+}
+
 export function recipeSelectionScore(
   recipe: RecipeCandidate,
   {
@@ -67,6 +85,8 @@ export function recipeSelectionScore(
     mealType,
     daysInGroup = [],
     dayContexts,
+    dayKcalTotals,
+    cumulativeTargetKcal,
   }: RecipeSelectionOptions,
 ) {
   const kcal = recipe.kcalPerServing;
@@ -82,8 +102,11 @@ export function recipeSelectionScore(
   const diversityPenalty = mealType && dayContexts
     ? semanticPenaltyForGroup(recipe, mealType, daysInGroup, dayContexts)
     : 0;
+  const dayBalancePenalty = dayKcalTotals && cumulativeTargetKcal
+    ? dailyBalancePenaltyForGroup(recipe, daysInGroup, dayKcalTotals, cumulativeTargetKcal)
+    : 0;
 
-  return kcalPenalty + storagePenalty + reusePenalty + batchPenalty + preferredPenalty + diversityPenalty;
+  return kcalPenalty + storagePenalty + reusePenalty + batchPenalty + preferredPenalty + diversityPenalty + dayBalancePenalty;
 }
 
 export function chooseRecipeForGroup(
@@ -124,6 +147,17 @@ export function applyRecipeToDayContexts(
   }
 }
 
+export function applyRecipeToDayKcalTotals(
+  dayKcalTotals: PlanDayKcalTotals,
+  recipe: RecipeCandidate,
+  days: number[],
+) {
+  const kcal = recipe.kcalPerServing ?? 0;
+  for (const day of days) {
+    dayKcalTotals.set(day, (dayKcalTotals.get(day) ?? 0) + kcal);
+  }
+}
+
 function semanticPenaltyForGroup(
   recipe: RecipeCandidate,
   mealType: string,
@@ -152,4 +186,19 @@ function semanticPenaltyForGroup(
   }
 
   return penalty;
+}
+
+function dailyBalancePenaltyForGroup(
+  recipe: RecipeCandidate,
+  daysInGroup: number[],
+  dayKcalTotals: PlanDayKcalTotals,
+  cumulativeTargetKcal: number,
+) {
+  const kcal = recipe.kcalPerServing;
+  if (!kcal || kcal <= 0) return 0;
+
+  return daysInGroup.reduce((penalty, day) => {
+    const projectedTotal = (dayKcalTotals.get(day) ?? 0) + kcal;
+    return penalty + Math.abs(projectedTotal - cumulativeTargetKcal) * 2;
+  }, 0);
 }

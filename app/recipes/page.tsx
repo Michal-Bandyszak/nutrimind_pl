@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
 import {
-  getRecipeBrowserRole,
   isRecipe2500Variant,
   type RecipeBrowserMeta,
 } from '@/lib/utils/recipeConstants';
@@ -30,18 +29,13 @@ export default async function RecipesPage() {
   const recipeSummary = recipes.reduce(
     (acc, recipe) => {
       const recipeMeta = recipe as RecipeBrowserMeta;
-      const role = getRecipeBrowserRole(recipeMeta);
-      if (role === 'component') acc.components += 1;
-      if (role === 'base') acc.bases += 1;
       if (isRecipe2500Variant(recipeMeta)) acc.variants2500 += 1;
       return acc;
     },
-    { components: 0, bases: 0, variants2500: 0 },
+    { variants2500: 0 },
   );
 
   const summaryParts = [
-    recipeSummary.components > 0 ? pluralizePl(recipeSummary.components, 'komponent', 'komponenty', 'komponentów') : null,
-    recipeSummary.bases > 0 ? pluralizePl(recipeSummary.bases, 'baza', 'bazy', 'baz') : null,
     recipeSummary.variants2500 > 0 ? pluralizePl(recipeSummary.variants2500, 'wariant 2500', 'warianty 2500', 'wariantów 2500') : null,
   ].filter((part): part is string => Boolean(part));
 

@@ -70,9 +70,6 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
         r.type === typeFilter;
       const matchesKind =
         kindFilter === 'all' ? true :
-        kindFilter === 'standard' ? role === 'standard' && !isVariant2500 :
-        kindFilter === 'component' ? role === 'component' :
-        kindFilter === 'base' ? role === 'base' :
         isVariant2500;
       const matchesQuery = !q || searchText.includes(q);
       return matchesType && matchesKind && matchesQuery;
@@ -119,23 +116,25 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
         </button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 flex-1">
-          {RECIPE_KIND_FILTERS.map(({ value, label }) => (
-            <button
-              key={value}
-              onClick={() => setKindFilter(value)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                kindFilter === value
-                  ? 'bg-teal-800 text-white shadow-sm ring-1 ring-teal-600/20'
-                  : 'btn-secondary'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+      {RECIPE_KIND_FILTERS.length > 1 && (
+        <div className="flex items-center gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 flex-1">
+            {RECIPE_KIND_FILTERS.map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => setKindFilter(value)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  kindFilter === value
+                    ? 'bg-teal-800 text-white shadow-sm ring-1 ring-teal-600/20'
+                    : 'btn-secondary'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <p className="text-xs text-gray-400">{filtered.length} przepisów</p>
 

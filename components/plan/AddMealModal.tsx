@@ -15,7 +15,6 @@ import { PLAN_PEOPLE_COUNT } from '@/lib/utils/planNutrition';
 const RECIPE_TYPE_FILTERS = [
   { value: 'all',              label: 'Wszystkie' },
   { value: 'dessert',          label: 'Ciasta i desery' },
-  { value: 'snack',            label: 'Przekąski' },
   { value: 'breakfast',        label: 'Śniadania' },
   { value: 'second_breakfast', label: 'Drugie śniadanie' },
   { value: 'lunch',            label: 'Obiady' },
@@ -29,7 +28,6 @@ const MEAL_TYPE_OPTIONS = [
   { value: 'lunch',            label: 'Obiad' },
   { value: 'dinner',           label: 'Kolacja' },
   { value: 'cocktail',         label: 'Koktajl' },
-  { value: 'snack',            label: 'Przekąska' },
   { value: 'dessert',          label: 'Ciasto / deser' },
   { value: 'extra',            label: 'Dodatkowy' },
 ];
