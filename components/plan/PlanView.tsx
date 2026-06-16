@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { SlidersHorizontal, Check, X, Loader2 } from 'lucide-react';
 import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
+import { buildPlanNutritionDiagnostics, DAILY_KCAL_TOLERANCE } from '@/lib/utils/planNutrition';
 import { planToBatchConfig } from '@/lib/utils/planUtils';
 import BatchConfigPanel from './BatchConfigPanel';
 import WeekGrid from './WeekGrid';
@@ -11,9 +12,18 @@ import AddMealModal from './AddMealModal';
 type DragState = { dayOfWeek: number; mealType: string } | null;
 type AddMealTarget = { dayOfWeek: number; mealType: string } | null;
 
-type Props = { plan: MealPlanWithMeals };
+type Props = { plan: MealPlanWithMeals; targetKcalPerPerson: number };
 
-export default function PlanView({ plan: initialPlan }: Props) {
+async function readApiError(res: Response, fallback: string) {
+  try {
+    const json = await res.json();
+    return typeof json.error === 'string' ? json.error : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Props) {
   const [plan, setPlan] = useState<MealPlanWithMeals>(initialPlan);
   // Track last confirmed (server-synced) plan state for accurate reverts
   const confirmedPlan = useRef<MealPlanWithMeals>(initialPlan);
@@ -32,11 +42,17 @@ export default function PlanView({ plan: initialPlan }: Props) {
   );
   const [rebatchLoading, setRebatchLoading] = useState(false);
   const [rebatchError, setRebatchError] = useState<string | null>(null);
+  const [planActionError, setPlanActionError] = useState<string | null>(null);
+  const diagnostics = useMemo(
+    () => buildPlanNutritionDiagnostics(plan, targetKcalPerPerson, DAILY_KCAL_TOLERANCE),
+    [plan, targetKcalPerPerson],
+  );
 
   // Open rebatch panel: always re-sync config from current plan
   function openRebatch() {
     setRebatchConfig(planToBatchConfig(plan));
     setRebatchError(null);
+    setPlanActionError(null);
     setShowRebatch(true);
   }
 
@@ -49,11 +65,12 @@ export default function PlanView({ plan: initialPlan }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ config: rebatchConfig }),
       });
+      if (!res.ok) throw new Error(await readApiError(res, 'Błąd zmiany grupowania.'));
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? 'Błąd zmiany grupowania.');
       const updated = json.data as MealPlanWithMeals;
       setPlan(updated);
       confirmedPlan.current = updated;
+      setPlanActionError(null);
       setShowRebatch(false);
     } catch (e) {
       setRebatchError(e instanceof Error ? e.message : 'Spróbuj ponownie.');
@@ -65,6 +82,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
   // ── Replace handler ───────────────────────────────────────────────────────
   const handleReplace = useCallback(
     async (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => {
+      setPlanActionError(null);
       // Optimistic update across batch group (or single meal)
       setPlan((prev) => ({
         ...prev,
@@ -89,8 +107,12 @@ export default function PlanView({ plan: initialPlan }: Props) {
       });
 
       if (!res.ok) {
+        const message = await readApiError(res, 'Nie udało się zamienić przepisu.');
         setPlan(confirmedPlan.current);
+        setPlanActionError(message);
+        throw new Error(message);
       } else {
+        setPlanActionError(null);
         setPlan((cur) => { confirmedPlan.current = cur; return cur; });
       }
     },
@@ -148,6 +170,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
 
   const handleDrop = useCallback(
     async (targetDay: number, targetMealType: string) => {
+      setPlanActionError(null);
       if (!dragged) { setDragged(null); setDragOver(null); return; }
       // Prevent drop on itself (same day + same type)
       if (dragged.dayOfWeek === targetDay && dragged.mealType === targetMealType) {
@@ -208,8 +231,11 @@ export default function PlanView({ plan: initialPlan }: Props) {
       });
 
       if (!res.ok) {
+        const message = await readApiError(res, 'Nie udało się zamienić posiłków.');
         setPlan(confirmedPlan.current);
+        setPlanActionError(message);
       } else {
+        setPlanActionError(null);
         setPlan((cur) => { confirmedPlan.current = cur; return cur; });
       }
     },
@@ -222,7 +248,12 @@ export default function PlanView({ plan: initialPlan }: Props) {
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-between gap-3">
+        {planActionError ? (
+          <p className="text-xs font-medium text-red-500">{planActionError}</p>
+        ) : (
+          <PlanDiagnostics diagnostics={diagnostics} />
+        )}
         <button
           onClick={openRebatch}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border text-xs font-medium transition-all ${
@@ -274,6 +305,7 @@ export default function PlanView({ plan: initialPlan }: Props) {
       {/* Week grid */}
       <WeekGrid
         plan={plan}
+        targetKcalPerPerson={targetKcalPerPerson}
         dragged={dragged}
         dragOver={dragOver}
         onDragStart={handleDragStart}
@@ -296,6 +328,37 @@ export default function PlanView({ plan: initialPlan }: Props) {
           }
         />
       )}
+    </div>
+  );
+}
+
+function PlanDiagnostics({
+  diagnostics,
+}: {
+  diagnostics: ReturnType<typeof buildPlanNutritionDiagnostics>;
+}) {
+  const outsideText = diagnostics.daysOutsideTolerance === 0
+    ? 'dni w celu'
+    : `${diagnostics.daysOutsideTolerance} poza celem`;
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-gray-400">
+      <span className="rounded-full border border-border bg-white/70 px-2.5 py-1 font-medium text-gray-500">
+        Śr. {diagnostics.averageKcal.toLocaleString('pl-PL')} kcal
+      </span>
+      <span className="rounded-full border border-border bg-white/70 px-2.5 py-1">
+        {diagnostics.minKcal.toLocaleString('pl-PL')}–{diagnostics.maxKcal.toLocaleString('pl-PL')} kcal
+      </span>
+      <span className={`rounded-full border px-2.5 py-1 ${
+        diagnostics.daysOutsideTolerance
+          ? 'border-amber-200 bg-amber-50 text-amber-700'
+          : 'border-teal-200 bg-teal-50 text-teal-700'
+      }`}>
+        {outsideText}
+      </span>
+      <span className="rounded-full border border-border bg-white/70 px-2.5 py-1">
+        {diagnostics.batchCount} batchy
+      </span>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react';
 import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL, MEAL_TYPE_LABELS } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
-import { mealNutritionPerServing } from '@/lib/utils/planNutrition';
+import { DAILY_KCAL_TOLERANCE, summarizeMealsPerPerson } from '@/lib/utils/planNutrition';
 import MealCard from './MealCard';
 import RecipeModal from './RecipeModal';
 
@@ -15,6 +15,7 @@ const MULTI_MEAL_TYPES = ['snack', 'dessert', 'extra'] as const;
 
 type Props = {
   plan: MealPlanWithMeals;
+  targetKcalPerPerson: number;
   dragged: DragState;
   dragOver: DragState;
   onDragStart: (dayOfWeek: number, mealType: string) => void;
@@ -50,6 +51,7 @@ function buildDays(plan: MealPlanWithMeals): DayMeals[] {
 
 export default function WeekGrid({
   plan,
+  targetKcalPerPerson,
   dragged,
   dragOver,
   onDragStart,
@@ -85,8 +87,9 @@ export default function WeekGrid({
   }
 
   function isDropTarget(dayOfWeek: number, mealType: string) {
-    // Allow cross-type drops: any cell is a valid target except the exact source cell
-    return dragged !== null && !(dragged.dayOfWeek === dayOfWeek && dragged.mealType === mealType);
+    return dragged !== null &&
+      dragged.mealType === mealType &&
+      dragged.dayOfWeek !== dayOfWeek;
   }
 
   function isOver(dayOfWeek: number, mealType: string) {
@@ -220,7 +223,11 @@ export default function WeekGrid({
 
           {/* Row 5: Daily macro summary */}
           {days.map((day) => (
-            <DayMacroSummary key={`macro-${day.dayOfWeek}`} day={day} />
+            <DayMacroSummary
+              key={`macro-${day.dayOfWeek}`}
+              day={day}
+              targetKcalPerPerson={targetKcalPerPerson}
+            />
           ))}
         </div>
       </div>
@@ -301,7 +308,7 @@ export default function WeekGrid({
                 </button>
               )}
 
-              <DayMacroSummary day={day} />
+              <DayMacroSummary day={day} targetKcalPerPerson={targetKcalPerPerson} />
             </div>
           </section>
         ))}
@@ -310,7 +317,7 @@ export default function WeekGrid({
       {/* DnD hint */}
       {dragged && (
         <div className="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-black/70 text-white text-xs rounded-full pointer-events-none">
-          Upuść na dowolny slot żeby zamienić
+          Upuść na zgodny slot żeby zamienić
         </div>
       )}
 
@@ -342,7 +349,13 @@ export default function WeekGrid({
 
 // ── Daily macro summary ────────────────────────────────────────────────────
 
-function DayMacroSummary({ day }: { day: DayMeals }) {
+function DayMacroSummary({
+  day,
+  targetKcalPerPerson,
+}: {
+  day: DayMeals;
+  targetKcalPerPerson: number;
+}) {
   const meals = [
     day.breakfast,
     day.second_breakfast,
@@ -352,32 +365,33 @@ function DayMacroSummary({ day }: { day: DayMeals }) {
     ...day.snacks,
   ].filter((m): m is MealWithRecipe => m !== null);
 
-  const totals = meals.reduce(
-    (acc, m) => {
-      const nutrition = mealNutritionPerServing(m);
-      acc.kcal += nutrition.kcal;
-      acc.protein += nutrition.protein;
-      acc.carbs += nutrition.carbs;
-      acc.fat += nutrition.fat;
-      return acc;
-    },
-    { kcal: 0, protein: 0, carbs: 0, fat: 0 },
-  );
+  const totals = summarizeMealsPerPerson(meals);
   const kcal = Math.round(totals.kcal);
   const protein = Math.round(totals.protein);
   const carbs = Math.round(totals.carbs);
   const fat = Math.round(totals.fat);
+  const delta = kcal - targetKcalPerPerson;
+  const outsideTarget = Math.abs(delta) > DAILY_KCAL_TOLERANCE;
 
   if (!kcal) return <div className="h-14" />;
 
   return (
-    <div className="rounded-[1.1rem] border border-border bg-white/70 px-3 py-2.5 space-y-1 shadow-sm">
+    <div className={`rounded-[1.1rem] border px-3 py-2.5 space-y-1 shadow-sm ${
+      outsideTarget
+        ? 'border-amber-200 bg-amber-50/80'
+        : 'border-border bg-white/70'
+    }`}>
       <p className="text-sm font-bold text-gray-700 text-center tabular-nums">
         {kcal.toLocaleString('pl-PL')} kcal
       </p>
       <p className="text-[10px] font-medium uppercase tracking-wide text-gray-300 text-center">
-        na osobę
+        średnio / osobę
       </p>
+      {outsideTarget && (
+        <p className="text-[10px] font-medium text-amber-600 text-center tabular-nums">
+          {delta > 0 ? '+' : ''}{delta} kcal
+        </p>
+      )}
       <div className="flex justify-between text-xs text-gray-400 tabular-nums">
         <span title="Białko">B {protein}g</span>
         <span title="Węglowodany">W {carbs}g</span>

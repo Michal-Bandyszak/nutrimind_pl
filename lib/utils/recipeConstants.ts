@@ -32,6 +32,51 @@ export const TYPE_FILTERS_BASIC = TYPE_FILTERS.filter(
   (f) => f.value !== 'favorites' && f.value !== 'soup',
 );
 
+export type RecipeBrowserKindFilter =
+  | 'all'
+  | 'standard'
+  | 'component'
+  | 'base'
+  | 'variant2500';
+
+export type RecipeBrowserMeta = {
+  role?: string | null;
+  variantKey?: string | null;
+  adjustmentNote?: string | null;
+};
+
+export const RECIPE_KIND_FILTERS: { value: RecipeBrowserKindFilter; label: string }[] = [
+  { value: 'all', label: 'Wszystkie' },
+  { value: 'standard', label: 'Zwykłe' },
+  { value: 'component', label: 'Komponenty' },
+  { value: 'base', label: 'Bazy' },
+  { value: 'variant2500', label: '2500 kcal' },
+];
+
+function normalizeRecipeField(value?: string | null) {
+  return value?.trim().toLowerCase() ?? '';
+}
+
+export function getRecipeBrowserRole(recipe: RecipeBrowserMeta) {
+  const role = normalizeRecipeField(recipe.role);
+  if (role === 'component' || role === 'base') return role;
+  return 'standard';
+}
+
+export function isRecipe2500Variant(recipe: RecipeBrowserMeta) {
+  return normalizeRecipeField(recipe.variantKey).includes('2500');
+}
+
+export function getRecipeBrowserVariantLabel(recipe: RecipeBrowserMeta) {
+  if (isRecipe2500Variant(recipe)) return '2500 kcal';
+  return normalizeRecipeField(recipe.variantKey) ? 'Wariant' : null;
+}
+
+export function getRecipeBrowserNote(recipe: RecipeBrowserMeta) {
+  const note = recipe.adjustmentNote?.trim();
+  return note ? note : null;
+}
+
 export const CATEGORIES = [
   'vegetables', 'fruits', 'grains', 'protein',
   'dairy', 'oils', 'nuts', 'spices', 'other',

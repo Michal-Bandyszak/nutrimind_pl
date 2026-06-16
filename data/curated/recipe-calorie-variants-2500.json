@@ -1,0 +1,637 @@
+{
+  "description": "Curated higher-calorie variants for recipes sourced from Plan bazowy C. Each variant keeps the original dish structure and adds higher-quality portions or sides instead of generic fat bumps.",
+  "sourceDiet": "Plan bazowy C",
+  "variantKey": "kcal-2500",
+  "recipes": [
+    {
+      "parentRecipe": {
+        "name": "Gofry wytrawne z warzywami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 900,
+      "proteinG": 41,
+      "carbsG": 46,
+      "fatG": 66,
+      "fiberG": 10,
+      "additions": [
+        {
+          "name": "Łosoś wędzony",
+          "amountG": 40,
+          "note": "wytrawny, białkowy topping"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "kremowy dodatek do podania"
+        },
+        {
+          "name": "Jogurt grecki",
+          "amountG": 40,
+          "note": "lekki sos ziołowy"
+        }
+      ],
+      "note": "Zostaw bazę gofrów bez zmian; dodatki mają podnieść sytość i jakość, nie zmieniać charakteru dania."
+    },
+    {
+      "parentRecipe": {
+        "name": "Curry z kurczakiem",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 830,
+      "proteinG": 58,
+      "carbsG": 43,
+      "fatG": 43,
+      "fiberG": 7,
+      "additions": [
+        {
+          "name": "Ryż basmati",
+          "amountG": 60,
+          "note": "porcja węglowodanowa do podania"
+        },
+        {
+          "name": "Jogurt naturalny",
+          "amountG": 60,
+          "note": "łagodne wykończenie sosu"
+        },
+        {
+          "name": "Kolendra świeża",
+          "amountG": 5,
+          "note": "świeże zioła na koniec"
+        }
+      ],
+      "note": "Dopnij danie ryżem i lekkim jogurtem, żeby wariant był bardziej pełny, a nie tylko tłustszy."
+    },
+    {
+      "parentRecipe": {
+        "name": "Kaszotto z warzywami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 620,
+      "proteinG": 21,
+      "carbsG": 62,
+      "fatG": 32,
+      "fiberG": 14,
+      "additions": [
+        {
+          "name": "Ser feta",
+          "amountG": 40,
+          "note": "słony akcent do kaszotto"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 15,
+          "note": "dodatkowa chrupkość"
+        },
+        {
+          "name": "Cukinia",
+          "amountG": 100,
+          "note": "więcej warzyw bez zmiany profilu dania"
+        }
+      ],
+      "note": "Dorzucam ser i pestki, żeby podbić sytość jakościowo, a nie rozjechać smaku samym tłuszczem."
+    },
+    {
+      "parentRecipe": {
+        "name": "Jajka po benedyktyńsku z sosem chrzanowym i pieczywem",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 960,
+      "proteinG": 41,
+      "carbsG": 74,
+      "fatG": 53,
+      "fiberG": 10,
+      "additions": [
+        {
+          "name": "Awokado",
+          "amountG": 70,
+          "note": "kremowy dodatek pod jajka"
+        },
+        {
+          "name": "Łosoś wędzony",
+          "amountG": 50,
+          "note": "białkowa warstwa podania"
+        },
+        {
+          "name": "Chleb żytni",
+          "amountG": 40,
+          "note": "dodatkowa baza do sosu"
+        }
+      ],
+      "note": "To ma zostać eleganckie śniadanie, tylko z większą bazą i lepszym białkiem."
+    },
+    {
+      "parentRecipe": {
+        "name": "Zapiekany kurczak z warzywami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 770,
+      "proteinG": 63,
+      "carbsG": 36,
+      "fatG": 34,
+      "fiberG": 8,
+      "additions": [
+        {
+          "name": "Bataty pieczone",
+          "amountG": 150,
+          "note": "ciepły dodatek skrobiowy"
+        },
+        {
+          "name": "Kasza gryczana",
+          "amountG": 40,
+          "note": "druga warstwa węglowodanowa"
+        },
+        {
+          "name": "Natka pietruszki",
+          "amountG": 8,
+          "note": "świeże wykończenie"
+        }
+      ],
+      "note": "Bazę kurczaka zostawiam bez zmian, a wariant buduję na pieczonych batatach i kaszy."
+    },
+    {
+      "parentRecipe": {
+        "name": "Owsianka z malinami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 675,
+      "proteinG": 27,
+      "carbsG": 79,
+      "fatG": 31,
+      "fiberG": 12,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "białkowe domknięcie porcji"
+        },
+        {
+          "name": "Banan",
+          "amountG": 60,
+          "note": "owocowa słodycz"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 15,
+          "note": "chrupiący dodatek"
+        }
+      ],
+      "note": "Owsianka zostaje owsianką, tylko dostaje bardziej kompletne, wysokobiałkowe wykończenie."
+    },
+    {
+      "parentRecipe": {
+        "name": "Omlet zawijany z warzywami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 650,
+      "proteinG": 27,
+      "carbsG": 32,
+      "fatG": 42,
+      "fiberG": 8,
+      "additions": [
+        {
+          "name": "Tortilla pełnoziarnista",
+          "amountG": 60,
+          "note": "druga warstwa do zawinięcia"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "kremowy dodatek"
+        },
+        {
+          "name": "Ser feta",
+          "amountG": 30,
+          "note": "słony, białkowy akcent"
+        }
+      ],
+      "note": "To nadal wrap na omlecie, tylko z pełniejszym środkiem i wyraźniejszą bazą do zawijania."
+    },
+    {
+      "parentRecipe": {
+        "name": "Koktajl leśny",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 500,
+      "proteinG": 18,
+      "carbsG": 54,
+      "fatG": 25,
+      "fiberG": 10,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "białkowe zagęszczenie"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 25,
+          "note": "bardziej sycąca baza"
+        },
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 50,
+          "note": "więcej owoców"
+        }
+      ],
+      "note": "Dajemy więcej owoców i białka, żeby koktajl był realnym posiłkiem, a nie tylko płynną przekąską."
+    },
+    {
+      "parentRecipe": {
+        "name": "Wrap z warzywami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 650,
+      "proteinG": 38,
+      "carbsG": 55,
+      "fatG": 36,
+      "fiberG": 12,
+      "additions": [
+        {
+          "name": "Pierś z kurczaka grillowana",
+          "amountG": 80,
+          "note": "białkowy wkład do środka"
+        },
+        {
+          "name": "Hummus",
+          "amountG": 40,
+          "note": "kremowe spoiwo"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "lepsza sytość i tekstura"
+        }
+      ],
+      "note": "Zostaje warzywny wrap, ale z pełniejszym środkiem i bardziej jakościową bazą białkową."
+    },
+    {
+      "parentRecipe": {
+        "name": "Smoothie zielone",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 520,
+      "proteinG": 20,
+      "carbsG": 50,
+      "fatG": 28,
+      "fiberG": 12,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "białkowa baza"
+        },
+        {
+          "name": "Banan",
+          "amountG": 60,
+          "note": "łagodniejszy smak i więcej energii"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 20,
+          "note": "zagęszczenie smoothie"
+        }
+      ],
+      "note": "Płynna baza zostaje, ale dostaje białko i owies, żeby trzymała sytość dłużej."
+    },
+    {
+      "parentRecipe": {
+        "name": "Sałatka z komosą ryżową",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 620,
+      "proteinG": 24,
+      "carbsG": 52,
+      "fatG": 34,
+      "fiberG": 14,
+      "additions": [
+        {
+          "name": "Ser feta",
+          "amountG": 50,
+          "note": "słony, wytrawny akcent"
+        },
+        {
+          "name": "Ciecierzyca ugotowana",
+          "amountG": 60,
+          "note": "dodatkowe białko i błonnik"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "bardziej kremowa struktura"
+        }
+      ],
+      "note": "To wciąż lekka sałatka, ale z wyraźniejszą bazą sycącą i lepszym balansem makr."
+    },
+    {
+      "parentRecipe": {
+        "name": "Frittata ze szpinakiem",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 590,
+      "proteinG": 28,
+      "carbsG": 33,
+      "fatG": 39,
+      "fiberG": 10,
+      "additions": [
+        {
+          "name": "Chleb żytni",
+          "amountG": 70,
+          "note": "baza do podania"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "kremowe dopełnienie"
+        },
+        {
+          "name": "Ser feta",
+          "amountG": 30,
+          "note": "słony akcent"
+        }
+      ],
+      "note": "Frittata sama w sobie zostaje lekka, ale dostaje sensowny chleb i warzywny tłuszcz zamiast pustego podbijania kalorii."
+    },
+    {
+      "parentRecipe": {
+        "name": "Koktajl bananowy z awokado",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 570,
+      "proteinG": 19,
+      "carbsG": 43,
+      "fatG": 40,
+      "fiberG": 11,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "podnosi białko bez zmiany smaku"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 30,
+          "note": "gęstsza, bardziej sycąca konsystencja"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 10,
+          "note": "delikatna chrupkość"
+        }
+      ],
+      "note": "Zostaje bananowo-awokadowy profil, ale koktajl staje się pełniejszym posiłkiem."
+    },
+    {
+      "parentRecipe": {
+        "name": "Leczo z wołowiną",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 690,
+      "proteinG": 47,
+      "carbsG": 34,
+      "fatG": 40,
+      "fiberG": 10,
+      "additions": [
+        {
+          "name": "Ryż brązowy",
+          "amountG": 60,
+          "note": "dodatkowa baza węglowodanowa"
+        },
+        {
+          "name": "Papryka czerwona",
+          "amountG": 100,
+          "note": "więcej warzyw"
+        },
+        {
+          "name": "Jogurt naturalny",
+          "amountG": 60,
+          "note": "łagodne wykończenie"
+        }
+      ],
+      "note": "Podbijam danie ryżem i warzywami, żeby nadal było gulaszowe, ale wyraźnie bardziej obiadowe."
+    },
+    {
+      "parentRecipe": {
+        "name": "Kasza gryczana z bakłażanem",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 630,
+      "proteinG": 18,
+      "carbsG": 60,
+      "fatG": 35,
+      "fiberG": 15,
+      "additions": [
+        {
+          "name": "Ser feta",
+          "amountG": 40,
+          "note": "słony kontrapunkt"
+        },
+        {
+          "name": "Rukola",
+          "amountG": 30,
+          "note": "świeży akcent na talerzu"
+        },
+        {
+          "name": "Pestki dyni",
+          "amountG": 10,
+          "note": "chrupiące wykończenie"
+        }
+      ],
+      "note": "Wariant ma zostać warzywno-zbożowy, tylko z lepszym balansem białka i tekstur."
+    },
+    {
+      "parentRecipe": {
+        "name": "Sałatka z brokułem i jajkami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 620,
+      "proteinG": 35,
+      "carbsG": 36,
+      "fatG": 42,
+      "fiberG": 12,
+      "additions": [
+        {
+          "name": "Chleb żytni",
+          "amountG": 70,
+          "note": "baza do podania"
+        },
+        {
+          "name": "Łosoś wędzony",
+          "amountG": 60,
+          "note": "białkowe uzupełnienie"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "kremowa warstwa"
+        }
+      ],
+      "note": "To dalej sałatka, ale już z wyraźnym śniadaniowym wsparciem z pieczywa i ryby."
+    },
+    {
+      "parentRecipe": {
+        "name": "Pudding chia z owocami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 560,
+      "proteinG": 23,
+      "carbsG": 56,
+      "fatG": 33,
+      "fiberG": 14,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "białkowa baza"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 25,
+          "note": "więcej struktury i sytości"
+        },
+        {
+          "name": "Borówka amerykańska",
+          "amountG": 80,
+          "note": "dodatkowy owocowy element"
+        }
+      ],
+      "note": "Dorzucam białko i owies, żeby pudding był bliżej pełnego posiłku niż deseru."
+    },
+    {
+      "parentRecipe": {
+        "name": "Warzywa gotowane na parze",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 770,
+      "proteinG": 56,
+      "carbsG": 43,
+      "fatG": 35,
+      "fiberG": 14,
+      "additions": [
+        {
+          "name": "Łosoś pieczony",
+          "amountG": 120,
+          "note": "główne białko do warzyw"
+        },
+        {
+          "name": "Ziemniaki",
+          "amountG": 150,
+          "note": "pełniejsza baza skrobiowa"
+        },
+        {
+          "name": "Oliwa z oliwek",
+          "amountG": 10,
+          "note": "klasyczne wykończenie"
+        }
+      ],
+      "note": "To już nie tylko warzywa, ale pełny talerz z rybą i skrobią w roli głównej."
+    },
+    {
+      "parentRecipe": {
+        "name": "Omlet bananowy z masłem migdałowym i borówkami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 920,
+      "proteinG": 33,
+      "carbsG": 84,
+      "fatG": 55,
+      "fiberG": 12,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "dodatkowe białko"
+        },
+        {
+          "name": "Płatki owsiane",
+          "amountG": 30,
+          "note": "bardziej treściwa masa"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 15,
+          "note": "chrupiące wykończenie"
+        }
+      ],
+      "note": "Wariant ma zostać słodki i energetyczny, ale z białkiem, żeby nie był tylko kalorycznym deserem."
+    },
+    {
+      "parentRecipe": {
+        "name": "Łosoś z warzywami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 740,
+      "proteinG": 49,
+      "carbsG": 38,
+      "fatG": 43,
+      "fiberG": 11,
+      "additions": [
+        {
+          "name": "Komosa ryżowa",
+          "amountG": 50,
+          "note": "dodatkowa baza zbożowa"
+        },
+        {
+          "name": "Awokado",
+          "amountG": 50,
+          "note": "kremowy akcent"
+        },
+        {
+          "name": "Jogurt naturalny",
+          "amountG": 80,
+          "note": "sos koperkowy do podania"
+        }
+      ],
+      "note": "Łosoś zostaje centralny, a talerz dostaje jeszcze zboże i lekki sos, żeby był pełniejszy."
+    },
+    {
+      "parentRecipe": {
+        "name": "Jesienna owsianka z borówkami",
+        "sourceDiet": "Plan bazowy C"
+      },
+      "variantKey": "kcal-2500",
+      "kcalPerServing": 600,
+      "proteinG": 24,
+      "carbsG": 85,
+      "fatG": 28,
+      "fiberG": 13,
+      "additions": [
+        {
+          "name": "Skyr naturalny",
+          "amountG": 150,
+          "note": "białkowa baza"
+        },
+        {
+          "name": "Jabłko",
+          "amountG": 120,
+          "note": "bardziej jesienny owocowy akcent"
+        },
+        {
+          "name": "Orzechy włoskie",
+          "amountG": 15,
+          "note": "chrupkość i sytość"
+        }
+      ],
+      "note": "Zostawiam jesienny charakter, ale dokładam białko i większą porcję owoców."
+    }
+  ]
+}

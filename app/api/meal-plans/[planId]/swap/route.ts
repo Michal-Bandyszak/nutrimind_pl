@@ -1,5 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { validateRecipeForMealSlot } from '@/lib/utils/mealPlanGuards';
+
+async function countBatchDays(
+  planId: string,
+  meal: { mealType: string; batchGroupId: string | null },
+) {
+  if (!meal.batchGroupId) return 1;
+  return prisma.mealPlanMeal.count({
+    where: {
+      mealPlanId: planId,
+      mealType: meal.mealType,
+      batchGroupId: meal.batchGroupId,
+    },
+  });
+}
 
 export async function PATCH(
   req: NextRequest,
@@ -25,8 +40,36 @@ export async function PATCH(
     }
 
     const [sourceMeal, targetMeal] = await Promise.all([
-      prisma.mealPlanMeal.findFirst({ where: { mealPlanId: planId, dayOfWeek: sourceDayOfWeek, mealType: srcMealType } }),
-      prisma.mealPlanMeal.findFirst({ where: { mealPlanId: planId, dayOfWeek: targetDayOfWeek, mealType: tgtMealType } }),
+      prisma.mealPlanMeal.findFirst({
+        where: { mealPlanId: planId, dayOfWeek: sourceDayOfWeek, mealType: srcMealType },
+        include: {
+          recipe: {
+            select: {
+              role: true,
+              type: true,
+              nutritionVerified: true,
+              maxStorageDays: true,
+              kcalPerServing: true,
+              batchFriendly: true,
+            },
+          },
+        },
+      }),
+      prisma.mealPlanMeal.findFirst({
+        where: { mealPlanId: planId, dayOfWeek: targetDayOfWeek, mealType: tgtMealType },
+        include: {
+          recipe: {
+            select: {
+              role: true,
+              type: true,
+              nutritionVerified: true,
+              maxStorageDays: true,
+              kcalPerServing: true,
+              batchFriendly: true,
+            },
+          },
+        },
+      }),
     ]);
 
     if (!sourceMeal || !targetMeal) {
@@ -49,6 +92,31 @@ export async function PATCH(
     // No actual change needed when both groups already share the same recipe
     if (sourceRecipeId === targetRecipeId) {
       return NextResponse.json({ data: { ok: true } });
+    }
+
+    const [sourceBatchDays, targetBatchDays] = await Promise.all([
+      countBatchDays(planId, sourceMeal),
+      countBatchDays(planId, targetMeal),
+    ]);
+
+    const targetSlotError = validateRecipeForMealSlot({
+      recipe: sourceMeal.recipe,
+      mealType: targetMeal.mealType,
+      batchDays: targetBatchDays,
+      currentKcalPerServing: targetMeal.recipe.kcalPerServing,
+    });
+    if (targetSlotError) {
+      return NextResponse.json({ error: targetSlotError }, { status: 400 });
+    }
+
+    const sourceSlotError = validateRecipeForMealSlot({
+      recipe: targetMeal.recipe,
+      mealType: sourceMeal.mealType,
+      batchDays: sourceBatchDays,
+      currentKcalPerServing: sourceMeal.recipe.kcalPerServing,
+    });
+    if (sourceSlotError) {
+      return NextResponse.json({ error: sourceSlotError }, { status: 400 });
     }
 
     // Swap recipes across entire batch groups (or single meals if no batch group).

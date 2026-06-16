@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getSettings } from '@/lib/services/SettingsService';
 import type { BatchConfig } from '@/lib/types';
 import { dividersToGroups } from '@/lib/types';
+import {
+  applyRecipeToDayContexts,
+  buildMealTargets,
+  chooseRecipeForGroup,
+  DEFAULT_TARGET_KCAL_PER_PERSON,
+  type PlanDayContexts,
+  type RecipeCandidate,
+} from '@/lib/utils/mealPlanScoring';
 
 const REBATCH_MEAL_TYPES = [
   'breakfast',
@@ -11,6 +20,28 @@ const REBATCH_MEAL_TYPES = [
   'cocktail',
 ] as const;
 
+function normalizeCandidates(
+  recipes: Array<{
+    id: string;
+    name: string;
+    maxStorageDays: number;
+    kcalPerServing: number | null;
+    batchFriendly: boolean;
+    tags: string;
+    ingredients: { ingredient: { name: string } }[];
+  }>,
+): RecipeCandidate[] {
+  return recipes.map((recipe) => ({
+    id: recipe.id,
+    name: recipe.name,
+    maxStorageDays: recipe.maxStorageDays,
+    kcalPerServing: recipe.kcalPerServing,
+    batchFriendly: recipe.batchFriendly,
+    tags: recipe.tags,
+    ingredientNames: recipe.ingredients.map((item) => item.ingredient.name),
+  }));
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ planId: string }> },
@@ -18,6 +49,41 @@ export async function PATCH(
   try {
     const { planId } = await params;
     const { config } = (await req.json()) as { config: BatchConfig };
+    const [settings, planMealTypes, planMeals] = await Promise.all([
+      getSettings(),
+      prisma.mealPlanMeal.findMany({
+        where: { mealPlanId: planId, mealType: { in: [...REBATCH_MEAL_TYPES] } },
+        select: { mealType: true },
+        distinct: ['mealType'],
+      }),
+      prisma.mealPlanMeal.findMany({
+        where: { mealPlanId: planId, mealType: { in: [...REBATCH_MEAL_TYPES] } },
+        select: {
+          dayOfWeek: true,
+          mealType: true,
+          recipeId: true,
+          recipe: {
+            select: {
+              id: true,
+              name: true,
+              maxStorageDays: true,
+              kcalPerServing: true,
+              batchFriendly: true,
+              tags: true,
+              ingredients: { select: { ingredient: { select: { name: true } } } },
+            },
+          },
+        },
+      }),
+    ]);
+    const plannedMealTypes = REBATCH_MEAL_TYPES.filter((mealType) =>
+      planMealTypes.some((meal) => meal.mealType === mealType),
+    );
+    const mealTargets = buildMealTargets(
+      plannedMealTypes.length ? plannedMealTypes : [...REBATCH_MEAL_TYPES],
+      settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON,
+    );
+    const dayContexts: PlanDayContexts = new Map();
 
     for (const mealType of REBATCH_MEAL_TYPES) {
       const dividers = config[mealType];
@@ -32,18 +98,35 @@ export async function PATCH(
 
       const mealsByDay = new Map(meals.map((m) => [m.dayOfWeek, m]));
       const usedRecipes = new Set<string>();
+      const otherMeals = planMeals.filter((meal) => meal.mealType !== mealType);
 
       // Fetch all recipes of this type once (for fallback on splits)
-      const allRecipesOfType = await prisma.recipe.findMany({
+      const rawRecipesOfType = await prisma.recipe.findMany({
         where: {
           type: mealType,
           nutritionVerified: true,
+          role: 'meal',
           ...(mealType === 'lunch' ? { batchFriendly: true } : {}),
         },
-        select: { id: true, maxStorageDays: true },
+        select: {
+          id: true,
+          name: true,
+          maxStorageDays: true,
+          kcalPerServing: true,
+          batchFriendly: true,
+          tags: true,
+          ingredients: { select: { ingredient: { select: { name: true } } } },
+        },
         orderBy: [{ maxStorageDays: 'desc' }, { name: 'asc' }],
       });
+      const allRecipesOfType = normalizeCandidates(rawRecipesOfType);
       if (allRecipesOfType.length === 0) continue;
+      dayContexts.clear();
+
+      for (const existingMeal of otherMeals) {
+        const [existingRecipe] = normalizeCandidates([existingMeal.recipe]);
+        applyRecipeToDayContexts(dayContexts, existingRecipe, existingMeal.mealType, [existingMeal.dayOfWeek]);
+      }
 
       const updates: ReturnType<typeof prisma.mealPlanMeal.update>[] = [];
 
@@ -57,22 +140,32 @@ export async function PATCH(
         const preferredRecipeId = firstMeal?.recipeId ?? meals[0].recipeId;
         const requiredStorageDays = daysInGroup.length;
 
-        // Prefer current recipe from the first day in group.
-        // Keep the user's selected grouping intact; prefer recipes that can cover
-        // the whole block instead of silently splitting it by maxStorageDays.
-        const preferredRecipe = allRecipesOfType.find((r) => r.id === preferredRecipeId);
-        const chosenRecipe =
-          (preferredRecipe && preferredRecipe.maxStorageDays >= requiredStorageDays && !usedRecipes.has(preferredRecipe.id)
-            ? preferredRecipe
-            : null) ??
-          allRecipesOfType.find((r) => r.maxStorageDays >= requiredStorageDays && !usedRecipes.has(r.id)) ??
-          allRecipesOfType.find((r) => r.maxStorageDays >= requiredStorageDays) ??
-          (preferredRecipe && !usedRecipes.has(preferredRecipe.id) ? preferredRecipe : null) ??
-          allRecipesOfType.find((r) => !usedRecipes.has(r.id)) ??
-          preferredRecipe ??
-          allRecipesOfType[0];
+        const chosenRecipe = chooseRecipeForGroup(allRecipesOfType, {
+          usedIds: usedRecipes,
+          requiredStorageDays,
+          targetKcalPerServing: mealTargets[mealType] ?? DEFAULT_TARGET_KCAL_PER_PERSON,
+          preferredRecipeId,
+          mealType,
+          daysInGroup,
+          dayContexts,
+        });
 
         usedRecipes.add(chosenRecipe.id);
+        applyRecipeToDayContexts(dayContexts, chosenRecipe, mealType, daysInGroup);
+        for (const existingMeal of planMeals) {
+          if (existingMeal.mealType !== mealType || !daysInGroup.includes(existingMeal.dayOfWeek)) continue;
+          existingMeal.recipe = {
+            id: chosenRecipe.id,
+            name: chosenRecipe.name,
+            maxStorageDays: chosenRecipe.maxStorageDays,
+            kcalPerServing: chosenRecipe.kcalPerServing,
+            batchFriendly: chosenRecipe.batchFriendly ?? false,
+            tags: chosenRecipe.tags ?? '[]',
+            ingredients: (chosenRecipe.ingredientNames ?? []).map((name) => ({
+              ingredient: { name },
+            })),
+          };
+        }
 
         const batchGroupId = crypto.randomUUID();
         daysInGroup.forEach((dayOfWeek, idxInGroup) => {
@@ -103,7 +196,18 @@ export async function PATCH(
         meals: {
           include: {
             recipe: {
-              include: { ingredients: { include: { ingredient: true } } },
+              include: {
+                variantOf: true,
+                variants: true,
+                componentLinks: {
+                  include: {
+                    componentRecipe: {
+                      include: { ingredients: { include: { ingredient: true } } },
+                    },
+                  },
+                },
+                ingredients: { include: { ingredient: true } },
+              },
             },
           },
           orderBy: [{ dayOfWeek: 'asc' }, { mealType: 'asc' }],

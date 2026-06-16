@@ -15,6 +15,7 @@
     "db:reset": "prisma migrate reset --force && npm run db:seed",
     "parse:diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-diets.ts",
     "parse:breakfasts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-breakfasts.ts",
+    "parse:ocr-diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-ocr-diets.ts",
     "gen:icons": "node scripts/generate-icons.mjs"
   },
   "keywords": [],

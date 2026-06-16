@@ -99,6 +99,7 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return allRecipes.filter((r) => {
+      if (r.role === 'component') return false;
       const matchesType = typeFilter === 'all' || r.type === typeFilter;
       const matchesQuery = !q || r.name.toLowerCase().includes(q);
       return matchesType && matchesQuery;

@@ -6,6 +6,7 @@ const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 
 
 const VALID_INGREDIENT_BASIS = ['per-serving', 'per-whole'];
 const VALID_SOURCES = ['dietitian', 'user'];
+const VALID_ROLES = ['meal', 'component'];
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest) {
       kcalPerServing, proteinG, carbsG, fatG, fiberG,
       prepTimeMin, cookTimeMin, batchFriendly, maxStorageDays, instructions,
       // new fields
-      baseServings, ingredientBasis, source, nutritionVerified,
+      baseServings, ingredientBasis, source, nutritionVerified, role, variantKey, adjustmentNote,
     } = body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -39,15 +40,20 @@ export async function POST(req: NextRequest) {
     if (source && !VALID_SOURCES.includes(source)) {
       return NextResponse.json({ error: 'Nieprawidłowa wartość source.' }, { status: 400 });
     }
+    if (role && !VALID_ROLES.includes(role)) {
+      return NextResponse.json({ error: 'Nieprawidłowa wartość role.' }, { status: 400 });
+    }
 
     const resolvedSource: string = source ?? 'user';
     const resolvedBasis: string = ingredientBasis ?? 'per-serving';
     const resolvedBaseServings: number = typeof baseServings === 'number' && baseServings > 0 ? baseServings : 1;
+    const resolvedRole: string = role ?? 'meal';
+    const resolvedVariantKey: string = typeof variantKey === 'string' && variantKey.trim() ? variantKey.trim() : 'base';
     // Only mark as verified if explicitly passed as true; user-submitted recipes default to unverified
     const resolvedVerified: boolean = nutritionVerified === true;
 
     const existing = await prisma.recipe.findFirst({
-      where: { name: name.trim(), source: resolvedSource },
+      where: { name: name.trim(), source: resolvedSource, variantKey: resolvedVariantKey },
     });
     if (existing) {
       return NextResponse.json({ error: 'Przepis o tej nazwie już istnieje.' }, { status: 409 });
@@ -87,6 +93,11 @@ export async function POST(req: NextRequest) {
           instructions: JSON.stringify(Array.isArray(instructions) ? instructions : []),
           sourceDiet: null,
           source: resolvedSource,
+          role: resolvedRole,
+          variantKey: resolvedVariantKey,
+          adjustmentNote: typeof adjustmentNote === 'string' && adjustmentNote.trim()
+            ? adjustmentNote.trim()
+            : null,
           ingredientBasis: resolvedBasis,
           baseServings: resolvedBaseServings,
           nutritionVerified: resolvedVerified,
@@ -137,6 +148,15 @@ export async function GET(req: NextRequest) {
         ...(sourceParam && VALID_SOURCES.includes(sourceParam) ? { source: sourceParam } : {}),
       },
       include: {
+        variantOf: true,
+        variants: true,
+        componentLinks: {
+          include: {
+            componentRecipe: {
+              include: { ingredients: { include: { ingredient: true } } },
+            },
+          },
+        },
         ingredients: { include: { ingredient: true } },
       },
       orderBy: { name: 'asc' },

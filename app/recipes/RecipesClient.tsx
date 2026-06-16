@@ -3,7 +3,16 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
-import { TYPE_FILTERS } from '@/lib/utils/recipeConstants';
+import {
+  TYPE_FILTERS,
+  RECIPE_KIND_FILTERS,
+  getRecipeBrowserRole,
+  getRecipeBrowserVariantLabel,
+  getRecipeBrowserNote,
+  isRecipe2500Variant,
+  type RecipeBrowserKindFilter,
+  type RecipeBrowserMeta,
+} from '@/lib/utils/recipeConstants';
 import { safeJsonParse } from '@/lib/utils/formatUnits';
 import AddRecipeModal from '@/components/recipes/AddRecipeModal';
 import RecipeCard from '@/components/recipes/RecipeCard';
@@ -16,6 +25,7 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
   const [recipes, setRecipes] = useState(initialRecipes);
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [kindFilter, setKindFilter] = useState<RecipeBrowserKindFilter>('all');
   const [expanded, setExpanded] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -37,19 +47,37 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
   }
 
   const filtered = useMemo(() => {
-    const q = query.toLowerCase();
+    const q = query.trim().toLowerCase();
     return recipes.filter((r) => {
+      const recipeMeta = r as RecipeWithIngredients & RecipeBrowserMeta;
       const tags = safeJsonParse<string[]>(r.tags, []);
+      const role = getRecipeBrowserRole(recipeMeta);
+      const isVariant2500 = isRecipe2500Variant(recipeMeta);
+      const searchText = [
+        r.name,
+        r.type,
+        role,
+        recipeMeta.variantKey,
+        getRecipeBrowserVariantLabel(recipeMeta),
+        getRecipeBrowserNote(recipeMeta),
+        tags.join(' '),
+      ].filter(Boolean).join(' ').toLowerCase();
       const matchesType =
         typeFilter === 'all' ? true :
         typeFilter === 'favorites' ? favorites.has(r.id) :
         typeFilter === 'soup' ? tags.includes('zupa') || r.name.toLowerCase().includes('zupa') :
         typeFilter === 'cocktail' ? tags.includes('cocktail') :
         r.type === typeFilter;
-      const matchesQuery = !q || r.name.toLowerCase().includes(q);
-      return matchesType && matchesQuery;
+      const matchesKind =
+        kindFilter === 'all' ? true :
+        kindFilter === 'standard' ? role === 'standard' && !isVariant2500 :
+        kindFilter === 'component' ? role === 'component' :
+        kindFilter === 'base' ? role === 'base' :
+        isVariant2500;
+      const matchesQuery = !q || searchText.includes(q);
+      return matchesType && matchesKind && matchesQuery;
     });
-  }, [recipes, query, typeFilter, favorites]);
+  }, [recipes, query, typeFilter, kindFilter, favorites]);
 
   return (
     <>
@@ -89,6 +117,24 @@ export default function RecipesClient({ recipes: initialRecipes }: Props) {
         >
           <Plus size={13} /> Dodaj przepis
         </button>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 flex-1">
+          {RECIPE_KIND_FILTERS.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setKindFilter(value)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                kindFilter === value
+                  ? 'bg-teal-800 text-white shadow-sm ring-1 ring-teal-600/20'
+                  : 'btn-secondary'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <p className="text-xs text-gray-400">{filtered.length} przepisów</p>

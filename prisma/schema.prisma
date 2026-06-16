@@ -34,6 +34,9 @@ model Recipe {
   name           String
   // breakfast | lunch | dinner | snack | cocktail
   type           String
+  role           String   @default("meal") // meal | component
+  variantKey     String   @default("base") // base | kcal-2500 | future variants
+  adjustmentNote String?
   prepTimeMin    Int?
   cookTimeMin    Int?
   batchFriendly  Boolean  @default(false)
@@ -52,11 +55,16 @@ model Recipe {
   ingredientBasis   String  @default("per-serving") // "per-serving" | "per-whole"
   source            String  @default("dietitian")   // "dietitian" | "user"
   nutritionVerified Boolean @default(false)          // true = macros are reliable
+  variantOfId       String?
+  variantOf         Recipe?  @relation("RecipeVariants", fields: [variantOfId], references: [id], onDelete: SetNull)
+  variants          Recipe[] @relation("RecipeVariants")
   ingredients    RecipeIngredient[]
+  componentLinks RecipeComponent[] @relation("RecipeComponentParent")
+  usedAsComponent RecipeComponent[] @relation("RecipeComponentChild")
   mealPlanMeals  MealPlanMeal[]
   createdAt      DateTime @default(now())
 
-  @@unique([name, sourceDiet])
+  @@unique([name, sourceDiet, variantKey])
 }
 
 model RecipeIngredient {
@@ -68,6 +76,20 @@ model RecipeIngredient {
   amountG        Float      // total grams for 1 serving
   displayText    String?    // original text e.g. "3 łyżki oliwy (30g)"
   scalesLinearly Boolean    @default(true) // false for oils, spices
+}
+
+model RecipeComponent {
+  id                 String  @id @default(cuid())
+  parentRecipeId     String
+  parentRecipe       Recipe  @relation("RecipeComponentParent", fields: [parentRecipeId], references: [id], onDelete: Cascade)
+  componentRecipeId  String
+  componentRecipe    Recipe  @relation("RecipeComponentChild", fields: [componentRecipeId], references: [id], onDelete: Cascade)
+  servingsUsed       Float   @default(1.0)
+  displayText        String?
+  note               String?
+  replacedIngredients String @default("[]") // JSON array of parent ingredient names replaced by the component
+
+  @@unique([parentRecipeId, componentRecipeId])
 }
 
 model MealPlan {
