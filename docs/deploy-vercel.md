@@ -1,45 +1,80 @@
 # Deploy NutriMind na Vercel + Neon Postgres
 
-Ten branch przygotowuje aplikację pod prosty deploy na Vercel:
+Ten dokument opisuje bezpieczny deploy NutriMind z naciskiem na security first:
 
-- aplikacja: Vercel,
-- baza danych: Neon Postgres,
-- ORM: Prisma,
-- migracje produkcyjne: `prisma migrate deploy`.
+- aplikacja działa na Vercel,
+- baza danych działa na Neon Postgres,
+- Prisma obsługuje migracje i seed,
+- sekrety nie trafiają do Git,
+- `.env` zostaje wyłącznie lokalny i nie jest pushowany.
+
+## Zasady bezpieczeństwa
+
+1. Nigdy nie commituj:
+   - `.env`
+   - `.env.local`
+   - tokenów Vercel
+   - connection stringów do Neon
+   - dumpów bazy
+2. Prawdziwe sekrety ustawiaj tylko:
+   - lokalnie w nieśledzonym `.env`
+   - w panelu Vercel
+   - w panelu Neon
+3. Przed każdym pushem sprawdź:
+
+```bash
+git status --short
+git diff -- .env .env.local
+```
+
+4. Jeśli sekret trafił do śledzonego pliku, zatrzymaj deploy i usuń go przed commitem.
+5. Nie wklejaj sekretów do:
+   - README
+   - docsów
+   - opisów commitów
+   - screenshotów
+   - ticketów
 
 ## 1. Utwórz bazę w Neon
 
-1. Wejdź na https://console.neon.tech.
-2. Utwórz nowy projekt, np. `nutrimind`.
-3. Wybierz region europejski, najlepiej możliwie blisko użytkowników.
+1. Wejdź na [Neon Console](https://console.neon.tech).
+2. Utwórz projekt, np. `nutrimind`.
+3. Wybierz region europejski.
 4. Skopiuj dwa connection stringi:
-   - pooled connection string do aplikacji,
-   - direct connection string do migracji.
+   - pooled URL do runtime aplikacji
+   - direct URL do migracji Prisma
 
-W Neon host pooled zwykle zawiera `-pooler`. Direct URL powinien prowadzić do zwykłego hosta bazy. Oba URL-e powinny mieć `sslmode=require`.
+W praktyce:
+
+- `DATABASE_URL` powinien wskazywać pooled host, zwykle z `-pooler`
+- `DIRECT_URL` powinien wskazywać bezpośredni host bazy
+- oba URL-e powinny mieć `sslmode=require`
 
 ## 2. Ustaw zmienne środowiskowe
 
-W Vercel dodaj dla Production, Preview i Development:
+W Vercel ustaw dla `Production`, `Preview` i `Development`:
 
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require&pgbouncer=true"
 DIRECT_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require"
 ```
 
-`DATABASE_URL` ma być pooled i będzie używany przez aplikację w runtime. `DIRECT_URL` ma być direct i będzie używany przez Prisma do migracji.
+Znaczenie:
 
-Nie commituj prawdziwych sekretów. Lokalny wzór jest w `.env.example`.
+- `DATABASE_URL` jest używany przez aplikację w runtime
+- `DIRECT_URL` jest używany przez Prisma do migracji
 
-## 3. Przetestuj bazę lokalnie
+Lokalny wzór trzymaj w `.env.example`. Prawdziwe wartości wpisuj tylko do lokalnego `.env`.
 
-Skopiuj przykład envów:
+## 3. Przygotowanie lokalne
+
+Skopiuj wzór:
 
 ```bash
 cp .env.example .env
 ```
 
-Wklej prawdziwe URL-e z Neon do `.env`, a potem uruchom:
+Wklej prawdziwe URL-e z Neon do lokalnego `.env`, a następnie uruchom:
 
 ```bash
 npm install
@@ -49,39 +84,88 @@ npm run build
 npm run dev
 ```
 
-Po tym aplikacja lokalna będzie działać na tej samej bazie Postgres, którą można podłączyć do Vercel.
+To potwierdza, że:
 
-## 4. Deploy przez dashboard Vercel
+- migracje działają,
+- seed działa,
+- build przechodzi,
+- aplikacja łączy się z Postgres.
 
-1. Wypchnij branch do GitHuba.
-2. Wejdź na https://vercel.com/new.
-3. Zaimportuj repo `nutrimind`.
-4. Framework preset: `Next.js`.
-5. Build command zostaw jako:
+## 4. Checklista przed deployem
+
+Wykonaj dokładnie tę kolejność:
 
 ```bash
+git checkout main
+git pull origin main
+git status --short
 npm run build
 ```
 
-6. Dodaj env vars z kroku 2.
-7. Kliknij `Deploy`.
-
-## 5. Migracja i seed produkcji
-
-Najbezpieczniej uruchamiać migracje z lokalnego terminala, używając produkcyjnych URL-i Neon w `.env`:
+Jeśli wdrażasz zmiany w schemacie lub danych:
 
 ```bash
 npm run db:deploy
 npm run db:seed
 ```
 
-Nie uruchamiaj `prisma migrate dev` na produkcji. `migrate dev` służy do tworzenia nowych migracji lokalnie, a `migrate deploy` do stosowania gotowych migracji na produkcyjnej bazie.
+Następnie sprawdź, co naprawdę będzie wypchnięte:
 
-Seed jest idempotentny: aktualizuje przepisy i składniki, więc można go odpalać ponownie po zmianach w danych. Nie podpinaj seeda automatycznie pod każdy build Vercel, żeby deployment nie modyfikował danych przy każdym redeployu.
+```bash
+git log --oneline origin/main..main
+```
 
-## 6. Kolejne zmiany schematu
+To jest ważne szczególnie wtedy, gdy lokalny `main` jest kilka commitów przed `origin/main`.
 
-Gdy zmieniasz `prisma/schema.prisma`:
+## 5. Deploy na Vercel
+
+Są dwie poprawne ścieżki.
+
+### Opcja A: repo jest już podpięte do Vercel
+
+Wystarczy:
+
+```bash
+git push origin main
+```
+
+Vercel automatycznie rozpocznie deployment z `main`.
+
+### Opcja B: repo nie jest jeszcze podpięte
+
+1. Wypchnij repo do GitHuba.
+2. Wejdź na [Vercel New Project](https://vercel.com/new).
+3. Zaimportuj repo `nutrimind`.
+4. Wybierz preset `Next.js`.
+5. Zostaw build command:
+
+```bash
+npm run build
+```
+
+6. Ustaw env vars z kroku 2.
+7. Kliknij `Deploy`.
+
+## 6. Migracja i seed produkcji
+
+Najbezpieczniej uruchamiać je lokalnie, z produkcyjnymi URL-ami Neon wpisanymi do lokalnego `.env`:
+
+```bash
+npm run db:deploy
+npm run db:seed
+```
+
+Ważne:
+
+- nie używaj `prisma migrate dev` na produkcji
+- na produkcji używaj tylko `prisma migrate deploy`
+- seed jest idempotentny, więc można go uruchamiać wielokrotnie
+
+Nie podpinaj seeda automatycznie pod każdy deploy Vercela. Deployment nie powinien zmieniać danych przy każdym redeployu.
+
+## 7. Kolejne zmiany schematu
+
+Jeśli zmieniasz `prisma/schema.prisma`, lokalnie wykonaj:
 
 ```bash
 npm run db:migrate -- --name nazwa_zmiany
@@ -89,14 +173,69 @@ npm run db:generate
 npm run build
 ```
 
-Następnie commitujesz nowy folder w `prisma/migrations/`. Po deployu branch/main:
+Potem:
+
+1. commitujesz nowy folder w `prisma/migrations/`
+2. pushujesz zmiany
+3. po deployu odpalasz:
 
 ```bash
 npm run db:deploy
 ```
 
-## Ważna uwaga o danych z SQLite
+## 8. Smoke test po deployu
 
-Ten branch przygotowuje świeżą bazę Postgres pod deploy. Dane bazowe aplikacji, czyli przepisy i składniki, są odtwarzane przez `npm run db:seed`.
+Po udanym deployu sprawdź ręcznie:
 
-Jeżeli w lokalnym `prisma/dev.db` masz ręcznie dodane przepisy, plany tygodnia albo ustawienia, one nie przeniosą się automatycznie. Trzeba je osobno wyeksportować z SQLite i zaimportować do Postgresa albo dodać do danych seedujących.
+1. czy strona główna się otwiera
+2. czy `/recipes` ładuje dane
+3. czy generowanie planu działa
+4. czy `/api/recipes` nie zwraca błędu 500
+5. czy nowe warianty kalorii i komponenty przepisów są widoczne
+
+Jeśli UI wstało, ale dane są niepełne lub dziwne, najpierw uruchom:
+
+```bash
+npm run db:seed
+```
+
+a dopiero potem debuguj frontend.
+
+## 9. Dane z SQLite
+
+Ta konfiguracja zakłada Postgresa w Neon.
+
+Przepisy i składniki są odtwarzane przez:
+
+```bash
+npm run db:seed
+```
+
+Jeśli w lokalnym `prisma/dev.db` masz ręcznie dodane:
+
+- przepisy
+- plany tygodnia
+- ustawienia
+
+to nie przeniosą się automatycznie do Neon. Trzeba je:
+
+- osobno wyeksportować i zaimportować
+  albo
+- włączyć do danych seedujących
+
+## 10. Minimalna sekwencja bezpiecznego deployu
+
+Jeżeli wszystko jest już podpięte i chcesz tylko wdrożyć nowe zmiany:
+
+```bash
+git checkout main
+git pull origin main
+git status --short
+npm run build
+npm run db:deploy
+npm run db:seed
+git log --oneline origin/main..main
+git push origin main
+```
+
+To jest preferowana ścieżka deployu dla tego repo.
