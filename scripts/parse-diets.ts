@@ -7,6 +7,7 @@
 
 import fs from "fs";
 import path from "path";
+import { getDietFiles, getLocalImportSetupHint } from "./localImportConfig";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -548,23 +549,20 @@ function mergeRecipes(diets: ParsedDiet[]): ParsedRecipe[] {
 
 // ─── Entry point ──────────────────────────────────────────────────────────────
 
-const DIET_FILES = [
-  "Plan bazowy A.md",
-  "Plan bazowy B.md",
-  "Plan bazowy C.md",
-  "Plan bazowy D.md",
-];
-
 const ROOT = path.join(__dirname, "..");
 const OUTPUT_DIR = path.join(ROOT, "data", "parsed");
 
 function main() {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  const dietFiles = getDietFiles();
+  if (dietFiles.length === 0) {
+    throw new Error(`No local diet files found. ${getLocalImportSetupHint()}`);
+  }
 
   const parsedDiets: ParsedDiet[] = [];
 
-  for (const dietFile of DIET_FILES) {
-    const filePath = path.join(ROOT, dietFile);
+  for (const filePath of dietFiles) {
+    const dietFile = path.relative(ROOT, filePath);
     if (!fs.existsSync(filePath)) {
       console.warn(`⚠️  Not found: ${dietFile}`);
       continue;

@@ -1,0 +1,14 @@
+{
+  "dietFiles": [
+    "private/imports/diets/plan-a.md",
+    "private/imports/diets/plan-b.md"
+  ],
+  "breakfastSource": "private/imports/sniadania.md",
+  "breakfastLabel": "Zestaw sniadan lokalny",
+  "ocrRoot": "private/imports/ocr",
+  "ocrLabels": {
+    "lunch": "Import OCR Lunch lokalny",
+    "obiad": "Import OCR Obiad lokalny",
+    "kolacja": "Import OCR Kolacja lokalny"
+  }
+}

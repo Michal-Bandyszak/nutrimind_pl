@@ -394,11 +394,12 @@ function buildVariantRecipes(
 
 async function main() {
   const combinedPath = path.join(__dirname, '../data/parsed/combined.json');
+  const combined = fs.existsSync(combinedPath)
+    ? (JSON.parse(fs.readFileSync(combinedPath, 'utf-8')) as { recipes: SeedRecipe[] })
+    : { recipes: [] };
   if (!fs.existsSync(combinedPath)) {
-    throw new Error(`combined.json not found. Run 'npm run parse:diets' first.`);
+    console.warn('⚠️ combined.json not found. Seeding only curated recipes.');
   }
-
-  const combined = JSON.parse(fs.readFileSync(combinedPath, 'utf-8')) as { recipes: SeedRecipe[] };
   const curatedRecipes = CURATED_RECIPE_FILES.flatMap((filename) => {
     const curated = loadJson<{ recipes?: SeedRecipe[] }>(filename);
     return curated?.recipes ?? [];
