@@ -12,6 +12,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { getLocalImportSetupHint, getOcrConfig } from './localImportConfig';
 
 type ParsedIngredient = {
   name: string;
@@ -43,26 +44,26 @@ type ParsedRecipe = {
 };
 
 const ROOT = path.join(__dirname, '..');
-const OCR_ROOT = '/Users/michalbandyszak/Documents/repos/OCR Import/output';
 const OUTPUT_PATH = path.join(ROOT, 'data', 'curated', 'ocr-diety-recipes.json');
+const { ocrRoot: OCR_ROOT, labels: OCR_LABELS } = getOcrConfig();
 
 const INPUTS = [
   {
     inputPath: path.join(OCR_ROOT, 'lunch.md'),
     type: 'second_breakfast' as const,
-    sourceDiet: 'Import OCR Lunch A',
+    sourceDiet: OCR_LABELS.lunch,
     tag: 'ocr-lunch',
   },
   {
     inputPath: path.join(OCR_ROOT, 'Obiad.md'),
     type: 'lunch' as const,
-    sourceDiet: 'Import OCR Obiad A',
+    sourceDiet: OCR_LABELS.obiad,
     tag: 'ocr-obiad',
   },
   {
     inputPath: path.join(OCR_ROOT, 'Kolacja.md'),
     type: 'dinner' as const,
-    sourceDiet: 'Import OCR Kolacja A',
+    sourceDiet: OCR_LABELS.kolacja,
     tag: 'ocr-kolacja',
   },
 ];
@@ -519,11 +520,16 @@ function ensureUniqueRecipeNames(recipes: ParsedRecipe[]) {
 }
 
 function main() {
+  const missingInputs = INPUTS.map((entry) => entry.inputPath).filter((inputPath) => !fs.existsSync(inputPath));
+  if (missingInputs.length > 0) {
+    throw new Error(`OCR sources not found: ${missingInputs.join(', ')}. ${getLocalImportSetupHint()}`);
+  }
+
   const recipes = ensureUniqueRecipeNames(INPUTS.flatMap(parseMarkdownFile));
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(
     OUTPUT_PATH,
-    `${JSON.stringify({ sourceDiet: 'Import OCR A', recipes }, null, 2)}\n`,
+    `${JSON.stringify({ sourceDiet: 'Import OCR lokalny', recipes }, null, 2)}\n`,
   );
 
   console.log(`Parsed ${recipes.length} OCR recipes to ${path.relative(ROOT, OUTPUT_PATH)}`);

@@ -7,6 +7,7 @@
 
 import fs from "fs";
 import path from "path";
+import { getBreakfastSource, getLocalImportSetupHint } from "./localImportConfig";
 
 type ParsedIngredient = {
   name: string;
@@ -38,9 +39,8 @@ type ParsedRecipe = {
 };
 
 const ROOT = path.join(__dirname, "..");
-const INPUT_PATH = path.join(ROOT, "sniadania.md");
 const OUTPUT_PATH = path.join(ROOT, "data", "curated", "breakfast-recipes.json");
-const SOURCE_DIET = "Zestaw sniadan A";
+const { inputPath: INPUT_PATH, sourceDiet: SOURCE_DIET } = getBreakfastSource();
 
 const TITLE_OVERRIDES: Record<string, string> = {
   "Screenshot_20260613_120546.jpg": "Jajecznica z wiosenną sałatką z rzodkiewką i ogórkiem",
@@ -307,6 +307,10 @@ function parseRecipeBlock(block: string): ParsedRecipe {
 }
 
 function main() {
+  if (!fs.existsSync(INPUT_PATH)) {
+    throw new Error(`Breakfast source not found at ${INPUT_PATH}. ${getLocalImportSetupHint()}`);
+  }
+
   const markdown = fs.readFileSync(INPUT_PATH, "utf-8");
   const blocks = markdown
     .split(/\n(?=###\s+)/)

@@ -23,9 +23,12 @@ cp .env.example .env
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require&pgbouncer=true"
 DIRECT_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require"
+BASIC_AUTH_USERNAME="admin"
+BASIC_AUTH_PASSWORD="change-me"
 ```
 
 `DATABASE_URL` powinien wskazywać pooled connection string, a `DIRECT_URL` direct connection string do migracji.
+Na Vercelu ustaw też `BASIC_AUTH_USERNAME` i `BASIC_AUTH_PASSWORD`, bo produkcja bez tych zmiennych zwróci `503` zamiast wystawić aplikację publicznie.
 
 ### 3. Przygotuj bazę
 
@@ -141,23 +144,18 @@ Lista generuje się automatycznie z aktywnego planu tygodnia.
 
 ## Dodawanie nowej diety
 
-Gdy masz nowy plik diety (format `.md` od dietetyka):
+Prywatne diety nie są już trzymane w repo. Lokalny import działa z ignorowanego katalogu `private/` albo z lokalnej konfiguracji `config/local-imports.json`.
 
-1. Wrzuć plik do głównego katalogu projektu
-2. Dodaj nazwę pliku do `scripts/parse-diets.ts`:
-
-```typescript
-const DIET_FILES = [
-  "Plan bazowy A.md",
-  "Plan bazowy B.md",
-  "nowa-dieta.md",   // ← dodaj tutaj
-];
-```
-
-3. Uruchom:
+1. Skopiuj `config/local-imports.example.json` do `config/local-imports.json`
+2. Wskaż swoje lokalne pliki `.md` i ewentualne źródła OCR
+3. Albo po prostu wrzuć pliki do:
+   `private/imports/diets/*.md`
+   `private/imports/sniadania.md`
+   `private/imports/ocr/lunch.md`, `Obiad.md`, `Kolacja.md`
+4. Uruchom:
 
 ```bash
-npm run parse:diets   # wyciąga przepisy → data/parsed/
+npm run parse:diets   # wyciąga przepisy → lokalne data/parsed/
 npm run db:seed       # upsertuje do bazy (bezpieczne, można wielokrotnie)
 ```
 
@@ -169,7 +167,7 @@ npm run db:seed       # upsertuje do bazy (bezpieczne, można wielokrotnie)
 |---|---|
 | `npm run dev` | Serwer developerski na :3000 |
 | `npm run build` | Build produkcyjny |
-| `npm run parse:diets` | Parsuje pliki diet .md → `data/parsed/combined.json` |
+| `npm run parse:diets` | Parsuje lokalne prywatne pliki diet → `data/parsed/combined.json` |
 | `npm run db:seed` | Seeduje bazę z parsed diet (idempotent) |
 | `npm run db:reset` | Pełny reset + migracja + seed |
 | `npm run db:deploy` | Uruchamia gotowe migracje na bazie Postgres |
@@ -202,10 +200,13 @@ nutrimind/
 │   ├── schema.prisma       # Schemat bazy
 │   ├── seed.ts             # Seeder (z PACKAGE_SIZES)
 │   └── migrations/         # Historia migracji
+├── private/                # Lokalne, ignorowane źródła diet i OCR
 ├── scripts/
 │   └── parse-diets.ts      # Parser diet .md → JSON
+├── config/
+│   └── local-imports.example.json # Przykład lokalnej konfiguracji importu
 └── data/
-    └── parsed/             # Sparsowane pliki JSON
+    └── curated/            # Publiczne dane seedujące
 ```
 
 ---
