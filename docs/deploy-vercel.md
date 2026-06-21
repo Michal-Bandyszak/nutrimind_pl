@@ -57,12 +57,16 @@ W Vercel ustaw dla `Production`, `Preview` i `Development`:
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require&pgbouncer=true"
 DIRECT_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require"
+BETTER_AUTH_SECRET="minimum-32-character-random-secret"
+BETTER_AUTH_URL="https://twoja-domena.example"
 ```
 
 Znaczenie:
 
 - `DATABASE_URL` jest używany przez aplikację w runtime
 - `DIRECT_URL` jest używany przez Prisma do migracji
+- `BETTER_AUTH_SECRET` podpisuje sesje i musi być losowym sekretem
+- `BETTER_AUTH_URL` musi wskazywać produkcyjny adres aplikacji
 
 Lokalny wzór trzymaj w `.env.example`. Prawdziwe wartości wpisuj tylko do lokalnego `.env`.
 
@@ -182,6 +186,20 @@ Potem:
 ```bash
 npm run db:deploy
 ```
+
+Przed migracją wieloużytkownikową utwórz branch/backup bazy w Neon. Następnie:
+
+```bash
+npm run db:deploy
+OWNER_EMAIL="..." \
+OWNER_INITIAL_PASSWORD="..." \
+MOM_EMAIL="..." \
+MOM_INITIAL_PASSWORD="..." \
+npm run bootstrap:accounts
+```
+
+Nie zapisuj tych haseł w `.env.example`, repozytorium ani historii poleceń
+udostępnianej innym osobom. Skrypt jest idempotentny i nie nadpisuje istniejących kont.
 
 ## 8. Smoke test po deployu
 

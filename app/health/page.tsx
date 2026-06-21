@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { safeJsonParse } from '@/lib/utils/formatUnits';
 import HealthClient from './HealthClient';
+import { requireAuthContext } from '@/lib/auth-context';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,9 +12,17 @@ function todayDate(): string {
 }
 
 export default async function HealthPage() {
+  const context = await requireAuthContext();
   const date = todayDate();
 
-  const raw = await prisma.healthLog.findUnique({ where: { date } });
+  const raw = await prisma.healthLog.findUnique({
+    where: {
+      personProfileId_date: {
+        personProfileId: context.primaryProfileId,
+        date,
+      },
+    },
+  });
 
   // Parse JSON fields before passing to client component
   const initialLog = raw

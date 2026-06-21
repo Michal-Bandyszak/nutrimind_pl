@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { validateRecipeForMealSlot } from '@/lib/utils/mealPlanGuards';
+import { apiError, requireApiContext } from '@/lib/auth-context';
+import { requireOwnedPlan } from '@/lib/access';
 
 async function countBatchDays(
   planId: string,
@@ -21,7 +23,9 @@ export async function PATCH(
   { params }: { params: Promise<{ planId: string }> },
 ) {
   try {
+    const context = await requireApiContext();
     const { planId } = await params;
+    await requireOwnedPlan(planId, context.householdId);
     const body = await req.json() as {
       sourceDayOfWeek: number;
       targetDayOfWeek: number;
@@ -149,7 +153,7 @@ export async function PATCH(
 
     return NextResponse.json({ data: { ok: true } });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

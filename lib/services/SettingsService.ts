@@ -2,10 +2,14 @@ import { prisma } from '@/lib/db/prisma';
 import { DEFAULT_BATCH_CONFIG, type BatchConfig } from '@/lib/types';
 
 export type AppSettingsData = {
-  personAName: string;
-  personAKcal: number;
-  personBName: string;
-  personBKcal: number;
+  profiles: {
+    id: string;
+    name: string;
+    targetKcal: number;
+    isPrimary: boolean;
+    activeForPlanning: boolean;
+  }[];
+  planMode: 'shared' | 'solo';
   defaultBatchConfig: BatchConfig;
 };
 
@@ -24,34 +28,58 @@ function parseBatchConfig(raw: string): BatchConfig {
   return DEFAULT_BATCH_CONFIG;
 }
 
-export async function getSettings(): Promise<AppSettingsData> {
+export async function getSettings(householdId: string): Promise<AppSettingsData> {
   const row = await prisma.appSettings.upsert({
-    where: { id: 'default' },
-    create: {},
+    where: { householdId },
+    create: { householdId },
     update: {},
   });
+  const profiles = await prisma.personProfile.findMany({
+    where: { householdId },
+    orderBy: [{ isPrimary: 'desc' }, { createdAt: 'asc' }],
+  });
   return {
-    personAName: row.personAName,
-    personAKcal: row.personAKcal,
-    personBName: row.personBName,
-    personBKcal: row.personBKcal,
+    profiles: profiles.map((profile) => ({
+      id: profile.id,
+      name: profile.name,
+      targetKcal: profile.targetKcal,
+      isPrimary: profile.isPrimary,
+      activeForPlanning: profile.activeForPlanning,
+    })),
+    planMode: row.planMode === 'solo' ? 'solo' : 'shared',
     defaultBatchConfig: parseBatchConfig(row.defaultBatchConfig),
   };
 }
 
-export async function updateSettings(data: Partial<AppSettingsData>): Promise<AppSettingsData> {
+export async function updateSettings(
+  householdId: string,
+  data: Partial<AppSettingsData>,
+): Promise<AppSettingsData> {
   const updateData: Record<string, unknown> = {};
-  if (data.personAName !== undefined) updateData.personAName = data.personAName;
-  if (data.personAKcal !== undefined) updateData.personAKcal = data.personAKcal;
-  if (data.personBName !== undefined) updateData.personBName = data.personBName;
-  if (data.personBKcal !== undefined) updateData.personBKcal = data.personBKcal;
+  if (data.planMode !== undefined) updateData.planMode = data.planMode === 'solo' ? 'solo' : 'shared';
   if (data.defaultBatchConfig !== undefined)
     updateData.defaultBatchConfig = JSON.stringify(data.defaultBatchConfig);
 
   await prisma.appSettings.upsert({
-    where: { id: 'default' },
-    create: updateData,
+    where: { householdId },
+    create: { householdId, ...updateData },
     update: updateData,
   });
-  return getSettings();
+
+  if (Array.isArray(data.profiles)) {
+    await prisma.$transaction(
+      data.profiles.map((profile) =>
+        prisma.personProfile.updateMany({
+          where: { id: profile.id, householdId },
+          data: {
+            name: profile.name.trim().slice(0, 30) || 'Osoba',
+            targetKcal: Math.max(800, Math.min(6000, Math.round(profile.targetKcal))),
+            activeForPlanning: profile.activeForPlanning,
+          },
+        }),
+      ),
+    );
+  }
+
+  return getSettings(householdId);
 }

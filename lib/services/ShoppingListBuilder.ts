@@ -87,9 +87,9 @@ function addIngredient(
   }
 }
 
-export async function buildShoppingList(planId: string): Promise<ShoppingList> {
-  const plan = await prisma.mealPlan.findUniqueOrThrow({
-    where: { id: planId },
+export async function buildShoppingList(planId: string, householdId: string): Promise<ShoppingList> {
+  const plan = await prisma.mealPlan.findFirstOrThrow({
+    where: { id: planId, householdId },
     include: {
       meals: {
         include: {

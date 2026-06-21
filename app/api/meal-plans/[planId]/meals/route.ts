@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { PLAN_PEOPLE_COUNT } from '@/lib/utils/planNutrition';
+import { apiError, requireApiContext } from '@/lib/auth-context';
+import { requireOwnedPlan, requireVisibleRecipe } from '@/lib/access';
 
 const CORE_MEAL_TYPES = new Set(['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail']);
 const ALLOWED_MEAL_TYPES = new Set([...CORE_MEAL_TYPES, 'snack', 'dessert', 'extra']);
@@ -32,6 +33,7 @@ export async function POST(
   { params }: { params: Promise<{ planId: string }> },
 ) {
   try {
+    const context = await requireApiContext();
     const { planId } = await params;
     const body = await req.json() as {
       dayOfWeek: number;
@@ -40,7 +42,10 @@ export async function POST(
       servings?: number;
     };
     const mealType = typeof body.mealType === 'string' && body.mealType.trim() ? body.mealType.trim() : 'snack';
-    const defaultServings = CORE_MEAL_TYPES.has(mealType) ? PLAN_PEOPLE_COUNT : 1;
+    const participants = await prisma.mealPlanParticipant.findMany({
+      where: { mealPlanId: planId },
+    });
+    const defaultServings = CORE_MEAL_TYPES.has(mealType) ? participants.length : 1;
     const servings = Number.isFinite(Number(body.servings)) && Number(body.servings) > 0
       ? Number(body.servings)
       : defaultServings;
@@ -61,8 +66,8 @@ export async function POST(
     }
 
     const [plan, recipe] = await Promise.all([
-      prisma.mealPlan.findUnique({ where: { id: planId } }),
-      prisma.recipe.findUnique({ where: { id: recipeId } }),
+      requireOwnedPlan(planId, context.householdId),
+      requireVisibleRecipe(recipeId, context.householdId),
     ]);
 
     if (!plan) {
@@ -92,6 +97,12 @@ export async function POST(
       }
     }
 
+    const maxTarget = Math.max(...participants.map((participant) => participant.targetKcalSnapshot), 1);
+    const weights = participants.map((participant) => ({
+      participant,
+      weight: participant.targetKcalSnapshot / maxTarget,
+    }));
+    const totalWeight = weights.reduce((sum, item) => sum + item.weight, 0) || 1;
     const created = await prisma.mealPlanMeal.create({
       data: {
         mealPlanId: planId,
@@ -101,8 +112,16 @@ export async function POST(
         servings,
         batchGroupId: null,
         batchDayNum: null,
+        portions: {
+          create: weights.map(({ participant, weight }) => ({
+            participantId: participant.id,
+            personProfileId: participant.personProfileId,
+            servings: Math.max(0.25, Math.round(((servings * weight) / totalWeight) * 4) / 4),
+          })),
+        },
       },
       include: {
+        portions: true,
         recipe: {
           include: { ingredients: { include: { ingredient: true } } },
         },
@@ -111,7 +130,7 @@ export async function POST(
 
     return NextResponse.json({ data: created }, { status: 201 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

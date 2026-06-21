@@ -16,13 +16,15 @@
     "parse:diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-diets.ts",
     "parse:breakfasts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-breakfasts.ts",
     "parse:ocr-diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-ocr-diets.ts",
-    "gen:icons": "node scripts/generate-icons.mjs"
+    "gen:icons": "node scripts/generate-icons.mjs",
+    "bootstrap:accounts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/bootstrap-accounts.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "better-auth": "^1.6.20",
     "lucide-react": "^0.575.0",
     "next": "^16.1.6",
     "prisma": "^5.22.0",

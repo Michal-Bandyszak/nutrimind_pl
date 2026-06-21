@@ -1,13 +1,15 @@
 import { getActivePlan } from '@/lib/services/MealPlanGenerator';
-import { getSettings } from '@/lib/services/SettingsService';
 import PlanView from '@/components/plan/PlanView';
 import GenerateButton from '@/components/plan/GenerateButton';
 import { CalendarDays } from 'lucide-react';
+import { requireAuthContext } from '@/lib/auth-context';
 
 export const dynamic = 'force-dynamic';
 
 export default async function PlanPage() {
-  const [plan, settings] = await Promise.all([getActivePlan(), getSettings()]);
+  const context = await requireAuthContext();
+  const plan = await getActivePlan(context.householdId);
+  const primary = plan?.participants.find((participant) => participant.isPrimarySnapshot);
 
   return (
     <div className="max-w-[1400px] mx-auto">
@@ -25,7 +27,7 @@ export default async function PlanPage() {
       {/* Content */}
       <div className="px-4 lg:px-6 py-5">
         {plan ? (
-          <PlanView key={plan.id} plan={plan} targetKcalPerPerson={settings.personAKcal} />
+          <PlanView key={plan.id} plan={plan} targetKcalPerPerson={primary?.targetKcalSnapshot ?? 2500} />
         ) : (
           <EmptyState />
         )}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { apiError, requireApiContext } from '@/lib/auth-context';
 
 function isValidDate(s: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s));
@@ -14,10 +15,19 @@ export async function GET(
     return NextResponse.json({ error: 'Nieprawidłowy format daty.' }, { status: 400 });
   }
   try {
-    const log = await prisma.healthLog.findUnique({ where: { date } });
+    const context = await requireApiContext();
+    const log = await prisma.healthLog.findUnique({
+      where: {
+        personProfileId_date: {
+          personProfileId: context.primaryProfileId,
+          date,
+        },
+      },
+    });
     return NextResponse.json({ data: log });
-  } catch {
-    return NextResponse.json({ error: 'Błąd serwera.' }, { status: 500 });
+  } catch (error) {
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
@@ -30,6 +40,7 @@ export async function PUT(
     return NextResponse.json({ error: 'Nieprawidłowy format daty.' }, { status: 400 });
   }
   try {
+    const context = await requireApiContext();
     const body = await req.json();
     const {
       morningDone, eveningDone,
@@ -58,12 +69,18 @@ export async function PUT(
     );
 
     const log = await prisma.healthLog.upsert({
-      where: { date },
-      create: { date, ...cleanData },
+      where: {
+        personProfileId_date: {
+          personProfileId: context.primaryProfileId,
+          date,
+        },
+      },
+      create: { personProfileId: context.primaryProfileId, date, ...cleanData },
       update: cleanData,
     });
     return NextResponse.json({ data: log });
-  } catch {
-    return NextResponse.json({ error: 'Błąd serwera.' }, { status: 500 });
+  } catch (error) {
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

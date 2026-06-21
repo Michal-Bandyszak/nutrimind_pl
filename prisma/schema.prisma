@@ -54,6 +54,8 @@ model Recipe {
   baseServings      Int     @default(1)            // portions this recipe yields
   ingredientBasis   String  @default("per-serving") // "per-serving" | "per-whole"
   source            String  @default("dietitian")   // "dietitian" | "user"
+  householdId       String?
+  household         Household? @relation(fields: [householdId], references: [id], onDelete: Cascade)
   nutritionVerified Boolean @default(false)          // true = macros are reliable
   variantOfId       String?
   variantOf         Recipe?  @relation("RecipeVariants", fields: [variantOfId], references: [id], onDelete: SetNull)
@@ -65,6 +67,7 @@ model Recipe {
   createdAt      DateTime @default(now())
 
   @@unique([name, sourceDiet, variantKey])
+  @@index([householdId])
 }
 
 model RecipeIngredient {
@@ -94,11 +97,16 @@ model RecipeComponent {
 
 model MealPlan {
   id        String   @id @default(cuid())
+  householdId String
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
   name      String   @default("Tydzień")
   weekStart DateTime
   status    String   @default("draft") // draft | active | archived
   meals     MealPlanMeal[]
+  participants MealPlanParticipant[]
   createdAt DateTime @default(now())
+
+  @@index([householdId, status])
 }
 
 model MealPlanMeal {
@@ -111,6 +119,7 @@ model MealPlanMeal {
   recipeId     String
   recipe       Recipe    @relation(fields: [recipeId], references: [id])
   servings     Float     @default(1.0)
+  portions     MealPlanMealPortion[]
   // Batch cooking — meals with same batchGroupId are cooked together once
   batchGroupId String?
   batchDayNum  Int?      // 1, 2, 3 — freshness day within the batch
@@ -118,7 +127,9 @@ model MealPlanMeal {
 
 model HealthLog {
   id            String   @id @default(cuid())
-  date          String   @unique // YYYY-MM-DD — no timezone issues
+  personProfileId String
+  personProfile PersonProfile @relation(fields: [personProfileId], references: [id], onDelete: Cascade)
+  date          String   // YYYY-MM-DD — no timezone issues
   // Routine checklists — JSON arrays of completed item IDs
   morningDone   String   @default("[]")
   eveningDone   String   @default("[]")
@@ -137,14 +148,151 @@ model HealthLog {
   pointsMindset Int?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@unique([personProfileId, date])
+  @@index([personProfileId, date])
 }
 
 model AppSettings {
-  id                 String   @id @default("default")
+  id                 String   @id @default(cuid())
+  householdId        String   @unique
+  household          Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
   personAName        String   @default("Michał")
   personAKcal        Int      @default(2500)
   personBName        String   @default("Osoba B")
   personBKcal        Int      @default(1800)
+  planMode           String   @default("shared") // shared | solo
   defaultBatchConfig String   @default("") // JSON-encoded BatchConfig, empty = use app default
   updatedAt          DateTime @updatedAt
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  households    HouseholdMember[]
+  personProfile PersonProfile?
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([identifier])
+}
+
+model Household {
+  id          String   @id @default(cuid())
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  members     HouseholdMember[]
+  profiles    PersonProfile[]
+  settings    AppSettings?
+  mealPlans   MealPlan[]
+  recipes     Recipe[]
+}
+
+model HouseholdMember {
+  id          String    @id @default(cuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String    @default("owner")
+  createdAt   DateTime  @default(now())
+
+  @@unique([householdId, userId])
+  @@index([userId])
+}
+
+model PersonProfile {
+  id               String    @id @default(cuid())
+  householdId      String
+  household        Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  userId           String?   @unique
+  user             User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name             String
+  targetKcal       Int
+  isPrimary        Boolean   @default(false)
+  activeForPlanning Boolean  @default(true)
+  healthLogs       HealthLog[]
+  planParticipants MealPlanParticipant[]
+  mealPortions     MealPlanMealPortion[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([householdId])
+}
+
+model MealPlanParticipant {
+  id              String        @id @default(cuid())
+  mealPlanId      String
+  mealPlan        MealPlan      @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  personProfileId String?
+  personProfile   PersonProfile? @relation(fields: [personProfileId], references: [id], onDelete: SetNull)
+  nameSnapshot    String
+  targetKcalSnapshot Int
+  isPrimarySnapshot Boolean     @default(false)
+  portions        MealPlanMealPortion[]
+
+  @@unique([mealPlanId, personProfileId])
+  @@index([mealPlanId])
+}
+
+model MealPlanMealPortion {
+  id                 String              @id @default(cuid())
+  mealPlanMealId     String
+  mealPlanMeal       MealPlanMeal        @relation(fields: [mealPlanMealId], references: [id], onDelete: Cascade)
+  participantId      String
+  participant        MealPlanParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  personProfileId    String?
+  personProfile      PersonProfile?      @relation(fields: [personProfileId], references: [id], onDelete: SetNull)
+  servings           Float               @default(1.0)
+
+  @@unique([mealPlanMealId, participantId])
+  @@index([mealPlanMealId])
 }

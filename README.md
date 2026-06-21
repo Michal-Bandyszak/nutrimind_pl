@@ -23,12 +23,14 @@ cp .env.example .env
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require&pgbouncer=true"
 DIRECT_URL="postgresql://USER:PASSWORD@HOST/neondb?sslmode=require"
-BASIC_AUTH_USERNAME="admin"
-BASIC_AUTH_PASSWORD="change-me"
+BETTER_AUTH_SECRET="minimum-32-character-random-secret"
+BETTER_AUTH_URL="http://localhost:3000"
 ```
 
 `DATABASE_URL` powinien wskazywać pooled connection string, a `DIRECT_URL` direct connection string do migracji.
-Na Vercelu ustaw też `BASIC_AUTH_USERNAME` i `BASIC_AUTH_PASSWORD`, bo produkcja bez tych zmiennych zwróci `503` zamiast wystawić aplikację publicznie.
+Na Vercelu ustaw również `BETTER_AUTH_SECRET` i produkcyjny `BETTER_AUTH_URL`.
+Rejestracja publiczna jest wyłączona; konta startowe tworzy jednorazowy skrypt
+`npm run bootstrap:accounts` z danymi przekazanymi przez zmienne środowiskowe.
 
 ### 3. Przygotuj bazę
 
@@ -249,4 +251,4 @@ Instrukcja krok po kroku jest w [docs/deploy-vercel.md](docs/deploy-vercel.md).
 - Chat z asystentem AI
 - Dziennik zdrowia (nastrój, energia, sen, woda, waga)
 - Dashboard z wykresami makr i Mediterranean Score
-- Multi-user (Supabase PostgreSQL + Auth)
+- Zaproszenia e-mail i samodzielna rejestracja nowych gospodarstw

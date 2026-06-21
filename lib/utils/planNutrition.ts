@@ -1,7 +1,6 @@
 import type { MealPlanWithMeals, MealWithRecipe } from '@/lib/types';
 import { DEFAULT_TARGET_KCAL_PER_PERSON } from '@/lib/utils/mealPlanScoring';
 
-export const PLAN_PEOPLE_COUNT = 2;
 export const DAILY_KCAL_TOLERANCE = 150;
 
 const CORE_MEAL_TYPES = new Set([
@@ -21,14 +20,17 @@ export function mealNutritionPerServing(meal: MealWithRecipe) {
   };
 }
 
-export function mealServingSharePerPerson(meal: MealWithRecipe) {
-  if (CORE_MEAL_TYPES.has(meal.mealType)) return 1;
-  return meal.servings / PLAN_PEOPLE_COUNT;
+export function mealServingSharePerPerson(meal: MealWithRecipe, participantId?: string) {
+  if (participantId) {
+    return meal.portions.find((portion) => portion.participantId === participantId)?.servings ?? 0;
+  }
+  if (CORE_MEAL_TYPES.has(meal.mealType)) return meal.portions[0]?.servings ?? 1;
+  return meal.portions[0]?.servings ?? meal.servings;
 }
 
-export function mealNutritionPerPerson(meal: MealWithRecipe) {
+export function mealNutritionPerPerson(meal: MealWithRecipe, participantId?: string) {
   const perServing = mealNutritionPerServing(meal);
-  const share = mealServingSharePerPerson(meal);
+  const share = mealServingSharePerPerson(meal, participantId);
 
   return {
     kcal: perServing.kcal * share,
@@ -38,10 +40,10 @@ export function mealNutritionPerPerson(meal: MealWithRecipe) {
   };
 }
 
-export function summarizeMealsPerPerson(meals: MealWithRecipe[]) {
+export function summarizeMealsPerPerson(meals: MealWithRecipe[], participantId?: string) {
   return meals.reduce(
     (acc, meal) => {
-      const nutrition = mealNutritionPerPerson(meal);
+      const nutrition = mealNutritionPerPerson(meal, participantId);
       acc.kcal += nutrition.kcal;
       acc.protein += nutrition.protein;
       acc.carbs += nutrition.carbs;
@@ -57,10 +59,13 @@ export function buildPlanNutritionDiagnostics(
   targetKcalPerPerson = DEFAULT_TARGET_KCAL_PER_PERSON,
   tolerance = DAILY_KCAL_TOLERANCE,
 ) {
+  const primary = plan.participants.find((participant) => participant.isPrimarySnapshot)
+    ?? plan.participants[0];
+  const participantId = primary?.id;
   const daily = Array.from({ length: 7 }, (_, idx) => {
     const dayOfWeek = idx + 1;
     const meals = plan.meals.filter((meal) => meal.dayOfWeek === dayOfWeek);
-    const totals = summarizeMealsPerPerson(meals);
+    const totals = summarizeMealsPerPerson(meals, participantId);
     const kcal = Math.round(totals.kcal);
     const delta = kcal - targetKcalPerPerson;
 
@@ -89,5 +94,19 @@ export function buildPlanNutritionDiagnostics(
     maxKcal: Math.max(...kcalValues),
     batchCount,
     daysOutsideTolerance: daily.filter((day) => day.outsideTolerance).length,
+    participants: plan.participants.map((participant) => {
+      const participantDaily = Array.from({ length: 7 }, (_, idx) => {
+        const meals = plan.meals.filter((meal) => meal.dayOfWeek === idx + 1);
+        return Math.round(summarizeMealsPerPerson(meals, participant.id).kcal);
+      });
+      return {
+        id: participant.id,
+        name: participant.nameSnapshot,
+        targetKcal: participant.targetKcalSnapshot,
+        averageKcal: Math.round(
+          participantDaily.reduce((sum, kcal) => sum + kcal, 0) / participantDaily.length,
+        ),
+      };
+    }),
   };
 }

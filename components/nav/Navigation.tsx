@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  if (pathname === '/login') return null;
 
   return (
     <>
