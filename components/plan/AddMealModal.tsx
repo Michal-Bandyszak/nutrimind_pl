@@ -6,7 +6,6 @@ import { X, Search, Check, Loader2, ChevronDown, Minus, Plus } from 'lucide-reac
 import type { RecipeWithIngredients } from '@/lib/types';
 import { DAY_NAMES_FULL } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_LABELS } from '@/lib/utils/recipeConstants';
-import { PLAN_PEOPLE_COUNT } from '@/lib/utils/planNutrition';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -54,17 +53,18 @@ type Props = {
   mealType: string;
   onClose: () => void;
   onAdd: (recipe: RecipeWithIngredients, mealType: string, servings: number) => Promise<void>;
+  participantCount: number;
 };
 
 function mealTypeToRecipeFilter(mealType: string) {
   return mealType === 'extra' ? 'all' : mealType;
 }
 
-function defaultServingsForMealType(mealType: string) {
-  return SHARED_MEAL_TYPES.has(mealType) ? PLAN_PEOPLE_COUNT : 1;
+function defaultServingsForMealType(mealType: string, participantCount: number) {
+  return SHARED_MEAL_TYPES.has(mealType) ? participantCount : 1;
 }
 
-export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onClose, onAdd }: Props) {
+export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onClose, onAdd, participantCount }: Props) {
   const [allRecipes, setAllRecipes] = useState<RecipeWithIngredients[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
   const [query, setQuery] = useState('');
   const [mealType, setMealType] = useState(initialMealType);
   const [typeFilter, setTypeFilter] = useState(mealTypeToRecipeFilter(initialMealType));
-  const [servings, setServings] = useState(() => defaultServingsForMealType(initialMealType));
+  const [servings, setServings] = useState(() => defaultServingsForMealType(initialMealType, participantCount));
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -120,7 +120,7 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
   function handleMealTypeChange(nextMealType: string) {
     setMealType(nextMealType);
     setTypeFilter(mealTypeToRecipeFilter(nextMealType));
-    setServings(defaultServingsForMealType(nextMealType));
+    setServings(defaultServingsForMealType(nextMealType, participantCount));
   }
 
   const dayLabel = DAY_NAMES_FULL[dayOfWeek - 1] ?? `Dzień ${dayOfWeek}`;

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { apiError, requireApiContext } from '@/lib/auth-context';
+import { visibleRecipeWhere } from '@/lib/access';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
@@ -10,6 +12,7 @@ const VALID_ROLES = ['meal', 'component'];
 
 export async function POST(req: NextRequest) {
   try {
+    const context = await requireApiContext();
     const body = await req.json();
     const {
       name, type, ingredients,
@@ -44,7 +47,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Nieprawidłowa wartość role.' }, { status: 400 });
     }
 
-    const resolvedSource: string = source ?? 'user';
+    const resolvedSource = 'user';
     const resolvedBasis: string = ingredientBasis ?? 'per-serving';
     const resolvedBaseServings: number = typeof baseServings === 'number' && baseServings > 0 ? baseServings : 1;
     const resolvedRole: string = role ?? 'meal';
@@ -53,7 +56,12 @@ export async function POST(req: NextRequest) {
     const resolvedVerified: boolean = nutritionVerified === true;
 
     const existing = await prisma.recipe.findFirst({
-      where: { name: name.trim(), source: resolvedSource, variantKey: resolvedVariantKey },
+      where: {
+        name: name.trim(),
+        source: resolvedSource,
+        variantKey: resolvedVariantKey,
+        householdId: context.householdId,
+      },
     });
     if (existing) {
       return NextResponse.json({ error: 'Przepis o tej nazwie już istnieje.' }, { status: 409 });
@@ -93,6 +101,7 @@ export async function POST(req: NextRequest) {
           instructions: JSON.stringify(Array.isArray(instructions) ? instructions : []),
           sourceDiet: null,
           source: resolvedSource,
+          householdId: context.householdId,
           role: resolvedRole,
           variantKey: resolvedVariantKey,
           adjustmentNote: typeof adjustmentNote === 'string' && adjustmentNote.trim()
@@ -126,13 +135,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ data: result }, { status: 201 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
 export async function GET(req: NextRequest) {
   try {
+    const context = await requireApiContext();
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
     const q = searchParams.get('q');
@@ -141,6 +151,7 @@ export async function GET(req: NextRequest) {
 
     const recipes = await prisma.recipe.findMany({
       where: {
+        ...visibleRecipeWhere(context.householdId),
         ...(type && type !== 'all' ? { type } : {}),
         ...(q ? { name: { contains: q } } : {}),
         ...(verifiedParam === 'true'  ? { nutritionVerified: true }  : {}),
@@ -164,7 +175,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data: recipes });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

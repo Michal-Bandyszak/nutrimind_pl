@@ -25,6 +25,7 @@ type Props = {
   onReplace?: (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => Promise<void>;
   onAddMeal?: (dayOfWeek: number, mealType: string) => void;
   onDeleteMeal?: (meal: MealWithRecipe) => Promise<void>;
+  onPortionChange?: (meal: MealWithRecipe, participantId: string, servings: number) => Promise<void>;
 };
 
 function buildDays(plan: MealPlanWithMeals): DayMeals[] {
@@ -61,7 +62,10 @@ export default function WeekGrid({
   onReplace,
   onAddMeal,
   onDeleteMeal,
+  onPortionChange,
 }: Props) {
+  const primaryParticipant = plan.participants.find((participant) => participant.isPrimarySnapshot)
+    ?? plan.participants[0];
   const colorMaps = useMemo(() => {
     const grouped: Record<string, (string | null)[]> = {};
     for (const m of plan.meals) {
@@ -218,6 +222,7 @@ export default function WeekGrid({
               key={`macro-${day.dayOfWeek}`}
               day={day}
               targetKcalPerPerson={targetKcalPerPerson}
+              participantId={primaryParticipant?.id}
             />
           ))}
         </div>
@@ -290,7 +295,7 @@ export default function WeekGrid({
                 />
               ))}
 
-              <DayMacroSummary day={day} targetKcalPerPerson={targetKcalPerPerson} />
+              <DayMacroSummary day={day} targetKcalPerPerson={targetKcalPerPerson} participantId={primaryParticipant?.id} />
             </div>
           </section>
         ))}
@@ -323,6 +328,15 @@ export default function WeekGrid({
                 }
               : undefined
           }
+          participants={plan.participants}
+          onPortionChange={
+            onPortionChange
+              ? async (participantId, servings) => {
+                  await onPortionChange(selectedMeal.meal, participantId, servings);
+                  setSelectedMeal(null);
+                }
+              : undefined
+          }
         />
       )}
     </>
@@ -334,9 +348,11 @@ export default function WeekGrid({
 function DayMacroSummary({
   day,
   targetKcalPerPerson,
+  participantId,
 }: {
   day: DayMeals;
   targetKcalPerPerson: number;
+  participantId?: string;
 }) {
   const meals = [
     day.breakfast,
@@ -347,7 +363,7 @@ function DayMacroSummary({
     ...day.snacks,
   ].filter((m): m is MealWithRecipe => m !== null);
 
-  const totals = summarizeMealsPerPerson(meals);
+  const totals = summarizeMealsPerPerson(meals, participantId);
   const kcal = Math.round(totals.kcal);
   const protein = Math.round(totals.protein);
   const carbs = Math.round(totals.carbs);
@@ -367,7 +383,7 @@ function DayMacroSummary({
         {kcal.toLocaleString('pl-PL')} kcal
       </p>
       <p className="text-[10px] font-medium uppercase tracking-wide text-gray-300 text-center">
-        średnio / osobę
+        {participantId ? 'profil główny' : 'na osobę'}
       </p>
       {outsideTarget && (
         <p className="text-[10px] font-medium text-amber-600 text-center tabular-nums">

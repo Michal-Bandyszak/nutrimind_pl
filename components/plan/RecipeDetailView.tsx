@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Loader2, Trash2 } from 'lucide-react';
-import type { MealWithRecipe } from '@/lib/types';
+import type { MealPlanParticipant, MealWithRecipe } from '@/lib/types';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_EMOJI } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_LABELS } from '@/lib/utils/recipeConstants';
@@ -13,13 +13,16 @@ type Props = {
   onClose: () => void;
   onOpenReplace?: () => void;
   onDelete?: () => Promise<void>;
+  participants: MealPlanParticipant[];
+  onPortionChange?: (participantId: string, servings: number) => Promise<void>;
 };
 
 export default function RecipeDetailView({
-  meal, color, batchDays, onClose, onOpenReplace, onDelete,
+  meal, color, batchDays, onClose, onOpenReplace, onDelete, participants, onPortionChange,
 }: Props) {
   const [deleting, setDeleting] = useState(false);
   const [showTotal, setShowTotal] = useState(true);
+  const [portionLoading, setPortionLoading] = useState<string | null>(null);
   const { recipe } = meal;
   const totalServings = meal.servings * batchDays;
   const displayServings = showTotal ? totalServings : meal.servings;
@@ -81,6 +84,40 @@ export default function RecipeDetailView({
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
         <div className="space-y-4 sm:space-y-5">
+          {participants.length > 0 && (
+            <section className="rounded-[1.25rem] border border-border bg-white/55 p-3 sm:p-4">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">Porcje na osobę</h3>
+              <div className="space-y-2">
+                {participants.map((participant) => {
+                  const portion = meal.portions.find((item) => item.participantId === participant.id);
+                  const servings = portion?.servings ?? 0;
+                  return (
+                    <div key={participant.id} className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">{participant.nameSnapshot}</p>
+                        <p className="text-xs text-gray-400">
+                          {recipe.kcalPerServing ? `${Math.round(recipe.kcalPerServing * servings)} kcal` : `${servings} porcji`}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button disabled={!onPortionChange || servings <= 0.25 || portionLoading !== null} onClick={async () => {
+                          setPortionLoading(participant.id);
+                          try { await onPortionChange?.(participant.id, servings - 0.25); }
+                          finally { setPortionLoading(null); }
+                        }} className="h-8 w-8 rounded-xl bg-gray-100 text-gray-600 disabled:opacity-40">−</button>
+                        <span className="w-10 text-center text-sm font-semibold tabular-nums">{servings}</span>
+                        <button disabled={!onPortionChange || servings >= 4 || portionLoading !== null} onClick={async () => {
+                          setPortionLoading(participant.id);
+                          try { await onPortionChange?.(participant.id, servings + 0.25); }
+                          finally { setPortionLoading(null); }
+                        }} className="h-8 w-8 rounded-xl bg-teal-50 text-teal-700 disabled:opacity-40">+</button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
           {/* Ingredients */}
           {recipe.ingredients.length > 0 && (
             <section className="rounded-[1.25rem] border border-border bg-white/55 p-3 sm:p-4">

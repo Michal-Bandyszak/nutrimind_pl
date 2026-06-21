@@ -1,64 +1,21 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-
-function unauthorized(realm = 'NutriMind') {
-  return new NextResponse('Authentication required.', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': `Basic realm="${realm}", charset="UTF-8"`,
-      'Cache-Control': 'no-store',
-    },
-  });
-}
-
-function misconfigured() {
-  return new NextResponse('Basic auth is not configured for production.', {
-    status: 503,
-    headers: {
-      'Cache-Control': 'no-store',
-    },
-  });
-}
-
-function readCredentials(req: NextRequest) {
-  const header = req.headers.get('authorization');
-  if (!header?.startsWith('Basic ')) return null;
-
-  try {
-    const decoded = atob(header.slice(6));
-    const separatorIndex = decoded.indexOf(':');
-    if (separatorIndex === -1) return null;
-
-    return {
-      username: decoded.slice(0, separatorIndex),
-      password: decoded.slice(separatorIndex + 1),
-    };
-  } catch {
-    return null;
-  }
-}
+import { getSessionCookie } from 'better-auth/cookies';
 
 export function proxy(req: NextRequest) {
-  const username = process.env.BASIC_AUTH_USERNAME;
-  const password = process.env.BASIC_AUTH_PASSWORD;
-  const isProduction = process.env.NODE_ENV === 'production';
+  const pathname = req.nextUrl.pathname;
+  const isPublic = pathname === '/login' || pathname.startsWith('/api/auth/');
+  if (isPublic) return NextResponse.next();
 
-  if (!username || !password) {
-    return isProduction ? misconfigured() : NextResponse.next();
+  if (!getSessionCookie(req)) {
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json({ error: 'Brak autoryzacji.' }, { status: 401 });
+    }
+    return NextResponse.redirect(new URL('/login', req.url));
   }
-
-  const credentials = readCredentials(req);
-  if (!credentials) return unauthorized();
-
-  if (credentials.username !== username || credentials.password !== password) {
-    return unauthorized();
-  }
-
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icons/|manifest.json|sw.js).*)'],
 };

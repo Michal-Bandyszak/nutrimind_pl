@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { getSettings } from '@/lib/services/SettingsService';
 import type { BatchConfig } from '@/lib/types';
 import { dividersToGroups } from '@/lib/types';
 import {
@@ -14,6 +13,8 @@ import {
   type PlanDayKcalTotals,
   type RecipeCandidate,
 } from '@/lib/utils/mealPlanScoring';
+import { apiError, requireApiContext } from '@/lib/auth-context';
+import { requireOwnedPlan } from '@/lib/access';
 
 const REBATCH_MEAL_TYPES = [
   'breakfast',
@@ -50,10 +51,15 @@ export async function PATCH(
   { params }: { params: Promise<{ planId: string }> },
 ) {
   try {
+    const context = await requireApiContext();
     const { planId } = await params;
+    await requireOwnedPlan(planId, context.householdId);
     const { config } = (await req.json()) as { config: BatchConfig };
-    const [settings, planMealTypes, planMeals] = await Promise.all([
-      getSettings(),
+    const [planParticipants, planMealTypes, planMeals] = await Promise.all([
+      prisma.mealPlanParticipant.findMany({
+        where: { mealPlanId: planId },
+        select: { targetKcalSnapshot: true },
+      }),
       prisma.mealPlanMeal.findMany({
         where: { mealPlanId: planId, mealType: { in: [...REBATCH_MEAL_TYPES] } },
         select: { mealType: true },
@@ -82,13 +88,16 @@ export async function PATCH(
     const plannedMealTypes = REBATCH_MEAL_TYPES.filter((mealType) =>
       planMealTypes.some((meal) => meal.mealType === mealType),
     );
+    const primaryTarget = planParticipants.length
+      ? Math.max(...planParticipants.map((participant) => participant.targetKcalSnapshot))
+      : DEFAULT_TARGET_KCAL_PER_PERSON;
     const mealTargets = buildMealTargets(
       plannedMealTypes.length ? plannedMealTypes : [...REBATCH_MEAL_TYPES],
-      settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON,
+      primaryTarget,
     );
     const cumulativeMealTargets = buildCumulativeMealTargets(
       plannedMealTypes.length ? plannedMealTypes : [...REBATCH_MEAL_TYPES],
-      settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON,
+      primaryTarget,
     );
     const dayContexts: PlanDayContexts = new Map();
     const dayKcalTotals: PlanDayKcalTotals = new Map();
@@ -115,6 +124,7 @@ export async function PATCH(
           nutritionVerified: true,
           role: 'meal',
           ...(mealType === 'lunch' ? { batchFriendly: true } : {}),
+          OR: [{ householdId: null }, { householdId: context.householdId }],
         },
         select: {
           id: true,
@@ -159,7 +169,7 @@ export async function PATCH(
           daysInGroup,
           dayContexts,
           dayKcalTotals,
-          cumulativeTargetKcal: cumulativeMealTargets[mealType] ?? (settings.personAKcal || DEFAULT_TARGET_KCAL_PER_PERSON),
+          cumulativeTargetKcal: cumulativeMealTargets[mealType] ?? primaryTarget,
         });
 
         usedRecipes.add(chosenRecipe.id);
@@ -203,11 +213,13 @@ export async function PATCH(
     }
 
     // Return the updated full plan
-    const updated = await prisma.mealPlan.findUniqueOrThrow({
-      where: { id: planId },
+    const updated = await prisma.mealPlan.findFirstOrThrow({
+      where: { id: planId, householdId: context.householdId },
       include: {
+        participants: true,
         meals: {
           include: {
+            portions: true,
             recipe: {
               include: {
                 variantOf: true,
@@ -230,7 +242,7 @@ export async function PATCH(
 
     return NextResponse.json({ data: updated });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

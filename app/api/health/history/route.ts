@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { safeJsonParse } from '@/lib/utils/formatUnits';
+import { apiError, requireApiContext } from '@/lib/auth-context';
 
 const DEFAULT_LIMIT = 30;
 const MAX_LIMIT = 90;
@@ -15,7 +16,9 @@ export async function GET(req: NextRequest) {
   const limit = parseLimit(req.nextUrl.searchParams.get('limit'));
 
   try {
+    const context = await requireApiContext();
     const logs = await prisma.healthLog.findMany({
+      where: { personProfileId: context.primaryProfileId },
       orderBy: { date: 'desc' },
       take: limit,
     });
@@ -41,7 +44,8 @@ export async function GET(req: NextRequest) {
         updatedAt: log.updatedAt,
       })),
     });
-  } catch {
-    return NextResponse.json({ error: 'Błąd serwera.' }, { status: 500 });
+  } catch (error) {
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

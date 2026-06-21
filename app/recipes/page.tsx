@@ -4,6 +4,8 @@ import {
   type RecipeBrowserMeta,
 } from '@/lib/utils/recipeConstants';
 import RecipesClient from './RecipesClient';
+import { requireAuthContext } from '@/lib/auth-context';
+import { visibleRecipeWhere } from '@/lib/access';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +20,9 @@ function pluralizePl(count: number, one: string, few: string, many: string) {
 }
 
 export default async function RecipesPage() {
+  const context = await requireAuthContext();
   const recipes = await prisma.recipe.findMany({
+    where: visibleRecipeWhere(context.householdId),
     include: {
       ingredients: { include: { ingredient: true } },
       _count: { select: { mealPlanMeals: true } },

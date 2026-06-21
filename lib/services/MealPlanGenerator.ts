@@ -150,15 +150,19 @@ function buildMealRows(
 }
 
 export async function generateWeekPlan(
+  householdId: string,
+  profiles: { id: string; name: string; targetKcal: number; isPrimary: boolean }[],
   config: BatchConfig = DEFAULT_BATCH_CONFIG,
   weekStart?: Date,
-  targetKcalPerPerson = DEFAULT_TARGET_KCAL_PER_PERSON,
 ): Promise<MealPlanWithMeals> {
+  if (!profiles.length) throw new Error('Brak aktywnych profili żywieniowych.');
   const start = weekStart ?? getMonday();
+  const targetKcalPerPerson = Math.max(...profiles.map((profile) => profile.targetKcal));
+  const recipeScope = { OR: [{ householdId: null }, { householdId }] };
 
   const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails] = await Promise.all([
     prisma.recipe.findMany({
-      where: { type: 'breakfast', nutritionVerified: true, role: 'meal' },
+      where: { type: 'breakfast', nutritionVerified: true, role: 'meal', ...recipeScope },
       select: {
         id: true,
         name: true,
@@ -170,7 +174,7 @@ export async function generateWeekPlan(
       },
     }),
     prisma.recipe.findMany({
-      where: { type: 'second_breakfast', nutritionVerified: true, role: 'meal' },
+      where: { type: 'second_breakfast', nutritionVerified: true, role: 'meal', ...recipeScope },
       select: {
         id: true,
         name: true,
@@ -182,7 +186,7 @@ export async function generateWeekPlan(
       },
     }),
     prisma.recipe.findMany({
-      where: { type: 'lunch', nutritionVerified: true, batchFriendly: true, role: 'meal' },
+      where: { type: 'lunch', nutritionVerified: true, batchFriendly: true, role: 'meal', ...recipeScope },
       select: {
         id: true,
         name: true,
@@ -194,7 +198,7 @@ export async function generateWeekPlan(
       },
     }),
     prisma.recipe.findMany({
-      where: { type: 'dinner', nutritionVerified: true, role: 'meal' },
+      where: { type: 'dinner', nutritionVerified: true, role: 'meal', ...recipeScope },
       select: {
         id: true,
         name: true,
@@ -206,7 +210,7 @@ export async function generateWeekPlan(
       },
     }),
     prisma.recipe.findMany({
-      where: { type: 'cocktail', nutritionVerified: true, role: 'meal' },
+      where: { type: 'cocktail', nutritionVerified: true, role: 'meal', ...recipeScope },
       select: {
         id: true,
         name: true,
@@ -230,15 +234,33 @@ export async function generateWeekPlan(
 
   // Archive current active plan
   await prisma.mealPlan.updateMany({
-    where: { status: 'active' },
+    where: { householdId, status: 'active' },
     data: { status: 'archived' },
   });
 
   const plan = await prisma.mealPlan.create({
-    data: { name: formatWeekLabel(start), weekStart: start, status: 'active' },
+    data: {
+      householdId,
+      name: formatWeekLabel(start),
+      weekStart: start,
+      status: 'active',
+      participants: {
+        create: profiles.map((profile) => ({
+          personProfileId: profile.id,
+          nameSnapshot: profile.name,
+          targetKcalSnapshot: profile.targetKcal,
+          isPrimarySnapshot: profile.isPrimary,
+        })),
+      },
+    },
+    include: { participants: true },
   });
 
-  const SERVINGS = 2;
+  const servingsByProfile = profiles.map((profile) => ({
+    profile,
+    servings: Math.max(0.25, Math.round((profile.targetKcal / targetKcalPerPerson) * 4) / 4),
+  }));
+  const SERVINGS = servingsByProfile.reduce((sum, item) => sum + item.servings, 0);
   const rows: {
     mealPlanId: string;
     dayOfWeek: number;
@@ -323,24 +345,40 @@ export async function generateWeekPlan(
   }
 
   await prisma.mealPlanMeal.createMany({ data: rows });
-  return fetchPlanWithMeals(plan.id);
+  const meals = await prisma.mealPlanMeal.findMany({ where: { mealPlanId: plan.id } });
+  const participantByProfile = new Map(
+    plan.participants.map((participant) => [participant.personProfileId, participant]),
+  );
+  await prisma.mealPlanMealPortion.createMany({
+    data: meals.flatMap((meal) =>
+      servingsByProfile.map(({ profile, servings }) => ({
+        mealPlanMealId: meal.id,
+        participantId: participantByProfile.get(profile.id)!.id,
+        personProfileId: profile.id,
+        servings,
+      })),
+    ),
+  });
+  return fetchPlanWithMeals(plan.id, householdId);
 }
 
-export async function getActivePlan(): Promise<MealPlanWithMeals | null> {
+export async function getActivePlan(householdId: string): Promise<MealPlanWithMeals | null> {
   const plan = await prisma.mealPlan.findFirst({
-    where: { status: 'active' },
+    where: { householdId, status: 'active' },
     orderBy: { createdAt: 'desc' },
   });
   if (!plan) return null;
-  return fetchPlanWithMeals(plan.id);
+  return fetchPlanWithMeals(plan.id, householdId);
 }
 
-async function fetchPlanWithMeals(id: string): Promise<MealPlanWithMeals> {
-  const plan = await prisma.mealPlan.findUniqueOrThrow({
-    where: { id },
+export async function fetchPlanWithMeals(id: string, householdId: string): Promise<MealPlanWithMeals> {
+  const plan = await prisma.mealPlan.findFirstOrThrow({
+    where: { id, householdId },
     include: {
+      participants: { orderBy: [{ isPrimarySnapshot: 'desc' }, { nameSnapshot: 'asc' }] },
       meals: {
         include: {
+          portions: true,
           recipe: {
             include: {
               variantOf: true,

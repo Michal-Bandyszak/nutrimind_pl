@@ -1,8 +1,6 @@
 // NutriMind Service Worker
-// Strategy:
-//   - _next/static/** → cache-first (immutable hashed chunks)
-//   - /api/**         → network-only (live data from SQLite)
-//   - pages           → network-first, fall back to cache
+// Cache only immutable public assets. Authenticated HTML and API responses
+// must never survive logout or leak between accounts on a shared device.
 
 const CACHE = 'nutrimind-v2';
 
@@ -26,8 +24,7 @@ self.addEventListener('fetch', (e) => {
   // Only handle same-origin GET requests
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  // API routes — always go to network, no caching
-  if (url.pathname.startsWith('/api/')) return;
+  if (url.pathname.startsWith('/api/') || !url.pathname.startsWith('/_next/static/')) return;
 
   // Next.js static chunks — cache-first (they're content-hashed, safe to cache forever)
   if (url.pathname.startsWith('/_next/static/')) {
@@ -46,16 +43,4 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Pages — network-first, serve stale on offline
-  e.respondWith(
-    fetch(request)
-      .then((res) => {
-        if (res.ok) {
-          const clone = res.clone();
-          caches.open(CACHE).then((c) => c.put(request, clone));
-        }
-        return res;
-      })
-      .catch(() => caches.match(request)),
-  );
 });

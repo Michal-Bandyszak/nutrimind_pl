@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
+import type { MealPlanParticipant, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import RecipeDetailView from './RecipeDetailView';
 import RecipeReplaceView from './RecipeReplaceView';
@@ -14,9 +14,11 @@ type Props = {
   onClose: () => void;
   onReplace?: (newRecipe: RecipeWithIngredients) => Promise<void>;
   onDelete?: () => Promise<void>;
+  participants?: MealPlanParticipant[];
+  onPortionChange?: (participantId: string, servings: number) => Promise<void>;
 };
 
-export default function RecipeModal({ meal, color, batchDays = 1, onClose, onReplace, onDelete }: Props) {
+export default function RecipeModal({ meal, color, batchDays = 1, onClose, onReplace, onDelete, participants = [], onPortionChange }: Props) {
   const [view, setView] = useState<'detail' | 'replace'>('detail');
 
   useEffect(() => {
@@ -52,6 +54,8 @@ export default function RecipeModal({ meal, color, batchDays = 1, onClose, onRep
             onClose={onClose}
             onOpenReplace={onReplace ? () => setView('replace') : undefined}
             onDelete={onDelete}
+            participants={participants}
+            onPortionChange={onPortionChange}
           />
         ) : (
           <RecipeReplaceView

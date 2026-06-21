@@ -1,10 +1,12 @@
 import { getSettings } from '@/lib/services/SettingsService';
 import SettingsClient from './SettingsClient';
+import { requireAuthContext } from '@/lib/auth-context';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SettingsPage() {
-  const settings = await getSettings();
+  const context = await requireAuthContext();
+  const settings = await getSettings(context.householdId);
 
   return (
     <div className="max-w-2xl mx-auto">

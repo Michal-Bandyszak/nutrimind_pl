@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { apiError, requireApiContext } from '@/lib/auth-context';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
@@ -11,6 +12,7 @@ export async function PATCH(
 ) {
   const { id } = await params;
   try {
+    const context = await requireApiContext();
     const body = await req.json();
     const {
       name, type, ingredients,
@@ -32,7 +34,9 @@ export async function PATCH(
       return NextResponse.json({ error: 'Makroskładniki (kcal, białko, węgle, tłuszcze) są wymagane.' }, { status: 400 });
     }
 
-    const existing = await prisma.recipe.findUnique({ where: { id } });
+    const existing = await prisma.recipe.findFirst({
+      where: { id, householdId: context.householdId, source: 'user' },
+    });
     if (!existing) {
       return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
     }
@@ -95,8 +99,8 @@ export async function PATCH(
 
     return NextResponse.json({ data: result });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
@@ -107,13 +111,19 @@ export async function DELETE(
 ) {
   const { id } = await params;
   try {
-    const existing = await prisma.recipe.findUnique({ where: { id } });
+    const context = await requireApiContext();
+    const existing = await prisma.recipe.findFirst({
+      where: { id, householdId: context.householdId, source: 'user' },
+    });
     if (!existing) {
       return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
     }
 
     const usedInPlan = await prisma.mealPlanMeal.findFirst({
-      where: { recipeId: id, mealPlan: { status: 'active' } },
+      where: {
+        recipeId: id,
+        mealPlan: { householdId: context.householdId, status: 'active' },
+      },
     });
     if (usedInPlan) {
       return NextResponse.json(
@@ -130,7 +140,7 @@ export async function DELETE(
 
     return NextResponse.json({ data: { id } });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

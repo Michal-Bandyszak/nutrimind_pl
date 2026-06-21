@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { apiError, requireApiContext } from '@/lib/auth-context';
+import { requireOwnedPlan } from '@/lib/access';
 
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ planId: string; mealId: string }> },
 ) {
   try {
+    const context = await requireApiContext();
     const { planId, mealId } = await params;
+    await requireOwnedPlan(planId, context.householdId);
 
     const meal = await prisma.mealPlanMeal.findFirst({
       where: { id: mealId, mealPlanId: planId },
@@ -27,7 +31,7 @@ export async function DELETE(
 
     return NextResponse.json({ data: { ok: true } });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

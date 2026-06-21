@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { validateRecipeForMealSlot } from '@/lib/utils/mealPlanGuards';
+import { apiError, requireApiContext } from '@/lib/auth-context';
+import { requireOwnedPlan } from '@/lib/access';
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ planId: string }> },
 ) {
   try {
+    const context = await requireApiContext();
     const { planId } = await params;
+    await requireOwnedPlan(planId, context.householdId);
     const { mealId, dayOfWeek, mealType, newRecipeId } = await req.json() as {
       mealId?: string;
       dayOfWeek: number;
@@ -61,6 +65,14 @@ export async function PATCH(
     if (!newRecipe) {
       return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
     }
+    const visibleRecipe = await prisma.recipe.findFirst({
+      where: {
+        id: newRecipeId,
+        OR: [{ householdId: null }, { householdId: context.householdId }],
+      },
+      select: { id: true },
+    });
+    if (!visibleRecipe) throw new Error('FORBIDDEN');
 
     const validationError = validateRecipeForMealSlot({
       recipe: newRecipe,
@@ -86,7 +98,7 @@ export async function PATCH(
 
     return NextResponse.json({ data: { ok: true, batchGroupId: meal.batchGroupId } });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Błąd serwera.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
   }
 }

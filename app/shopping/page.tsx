@@ -2,11 +2,13 @@ import { getActivePlan } from '@/lib/services/MealPlanGenerator';
 import { buildShoppingList } from '@/lib/services/ShoppingListBuilder';
 import ShoppingClient from './ShoppingClient';
 import { ShoppingCart } from 'lucide-react';
+import { requireAuthContext } from '@/lib/auth-context';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ShoppingPage() {
-  const plan = await getActivePlan();
+  const context = await requireAuthContext();
+  const plan = await getActivePlan(context.householdId);
 
   if (!plan) {
     return (
@@ -29,7 +31,7 @@ export default async function ShoppingPage() {
     );
   }
 
-  const shoppingList = await buildShoppingList(plan.id);
+  const shoppingList = await buildShoppingList(plan.id, context.householdId);
 
   return (
     <div className="max-w-2xl mx-auto">

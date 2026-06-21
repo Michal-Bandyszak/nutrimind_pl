@@ -154,6 +154,22 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
     [plan.id],
   );
 
+  const handlePortionChange = useCallback(
+    async (meal: MealWithRecipe, participantId: string, servings: number) => {
+      const res = await fetch(`/api/meal-plans/${plan.id}/meals/${meal.id}/portions`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ participantId, servings }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Nie udało się zmienić porcji.');
+      const updated = json.data as MealPlanWithMeals;
+      setPlan(updated);
+      confirmedPlan.current = updated;
+    },
+    [plan.id],
+  );
+
   // ── Drag handlers ─────────────────────────────────────────────────────────
   const handleDragStart = useCallback((dayOfWeek: number, mealType: string) => {
     setDragged({ dayOfWeek, mealType });
@@ -315,6 +331,7 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
         onReplace={handleReplace}
         onAddMeal={(dayOfWeek, mealType) => setAddMealTarget({ dayOfWeek, mealType })}
         onDeleteMeal={handleDeleteMeal}
+        onPortionChange={handlePortionChange}
       />
 
       {/* Add meal modal */}
@@ -322,6 +339,7 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
         <AddMealModal
           dayOfWeek={currentAddMealTarget.dayOfWeek}
           mealType={currentAddMealTarget.mealType}
+          participantCount={plan.participants.length}
           onClose={() => setAddMealTarget(null)}
           onAdd={(recipe, mealType, servings) =>
             handleAddMeal(currentAddMealTarget.dayOfWeek, mealType, servings, recipe)
@@ -359,6 +377,19 @@ function PlanDiagnostics({
       <span className="rounded-full border border-border bg-white/70 px-2.5 py-1">
         {diagnostics.batchCount} batchy
       </span>
+      {diagnostics.participants.map((participant) => (
+        <span key={participant.id} className="rounded-full border border-border bg-white/70 px-2.5 py-1">
+          {participant.name}: śr. {participant.averageKcal.toLocaleString('pl-PL')} / {participant.targetKcal.toLocaleString('pl-PL')} kcal
+        </span>
+      ))}
+      {diagnostics.participants.some((participant) => {
+        const missing = participant.targetKcal - participant.averageKcal;
+        return missing >= 100 && missing <= 200;
+      }) && (
+        <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-700">
+          Opcjonalnie: oliwa, orzechy lub pestki +100–200 kcal
+        </span>
+      )}
     </div>
   );
 }
