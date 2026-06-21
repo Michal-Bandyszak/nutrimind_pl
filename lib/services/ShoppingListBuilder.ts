@@ -88,7 +88,7 @@ function addIngredient(
 }
 
 export async function buildShoppingList(planId: string, householdId: string): Promise<ShoppingList> {
-  const plan = await prisma.mealPlan.findFirstOrThrow({
+  const plan = await prisma.mealPlan.findFirst({
     where: { id: planId, householdId },
     include: {
       meals: {
@@ -112,6 +112,7 @@ export async function buildShoppingList(planId: string, householdId: string): Pr
       },
     },
   });
+  if (!plan) throw new Error('FORBIDDEN');
 
   // Group meals by batchGroupId → { recipe, days[] }
   const batchGroups = new Map<string, { meal: typeof plan.meals[0]; days: number[] }>();
