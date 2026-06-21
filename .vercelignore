@@ -1,0 +1,6 @@
+.env
+.env.*
+private/
+.git/
+.next/
+node_modules/
