@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
 import type { RecipeListItem, RecipeWithIngredients } from '@/lib/types';
 import {
@@ -17,7 +17,7 @@ import { safeJsonParse } from '@/lib/utils/formatUnits';
 import AddRecipeModal from '@/components/recipes/AddRecipeModal';
 import RecipeCard from '@/components/recipes/RecipeCard';
 
-type Props = { initialRecipeCount: number };
+type Props = { initialRecipes: RecipeListItem[] };
 
 const FAVORITES_KEY = 'nutrimind-favorites';
 
@@ -43,10 +43,8 @@ function toRecipeListItem(recipe: RecipeWithIngredients): RecipeListItem {
   };
 }
 
-export default function RecipesClient({ initialRecipeCount }: Props) {
-  const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+export default function RecipesClient({ initialRecipes }: Props) {
+  const [recipes, setRecipes] = useState<RecipeListItem[]>(initialRecipes);
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [kindFilter, setKindFilter] = useState<RecipeBrowserKindFilter>('all');
@@ -60,27 +58,6 @@ export default function RecipesClient({ initialRecipeCount }: Props) {
       if (saved) setFavorites(new Set(JSON.parse(saved) as string[]));
     } catch { /* ignore */ }
   }, []);
-
-  const loadRecipes = useCallback(async () => {
-    setLoading(true);
-    setLoadError(null);
-    try {
-      const res = await fetch('/api/recipes?view=list', { cache: 'no-store' });
-      const json = await res.json();
-      if (!res.ok) {
-        throw new Error(typeof json.error === 'string' ? json.error : 'Nie udało się załadować przepisów.');
-      }
-      setRecipes((json.data as RecipeListItem[]) ?? []);
-    } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Nie udało się załadować przepisów.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadRecipes();
-  }, [loadRecipes]);
 
   function toggleFavorite(id: string) {
     setFavorites((prev) => {
@@ -181,44 +158,10 @@ export default function RecipesClient({ initialRecipeCount }: Props) {
         </div>
       )}
 
-      <p className="text-xs text-gray-400">
-        {loading ? `${initialRecipeCount} przepisów · ładowanie…` : `${filtered.length} przepisów`}
-      </p>
+      <p className="text-xs text-gray-400">{filtered.length} przepisów</p>
 
       {/* Recipe list */}
       <div className="space-y-4">
-        {loading && recipes.length === 0 && (
-          <>
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="animate-pulse rounded-[1.5rem] border border-border bg-white/70 p-4 shadow-sm"
-              >
-                <div className="h-4 w-28 rounded-full bg-gray-200" />
-                <div className="mt-3 h-5 w-2/3 rounded-full bg-gray-200" />
-                <div className="mt-4 flex gap-2">
-                  <div className="h-4 w-16 rounded-full bg-gray-100" />
-                  <div className="h-4 w-16 rounded-full bg-gray-100" />
-                  <div className="h-4 w-16 rounded-full bg-gray-100" />
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-
-        {!loading && loadError && recipes.length === 0 && (
-          <div className="rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-700">
-            <p>{loadError}</p>
-            <button
-              type="button"
-              onClick={() => void loadRecipes()}
-              className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-red-700 ring-1 ring-red-200 transition hover:bg-red-100"
-            >
-              Spróbuj ponownie
-            </button>
-          </div>
-        )}
-
         {filtered.map((recipe) => (
           <RecipeCard
             key={recipe.id}
@@ -231,7 +174,7 @@ export default function RecipesClient({ initialRecipeCount }: Props) {
         ))}
       </div>
 
-      {!loading && !loadError && filtered.length === 0 && (
+      {filtered.length === 0 && (
         <div className="text-center py-16 text-gray-400 text-sm">
           Brak przepisów spełniających kryteria.
         </div>
