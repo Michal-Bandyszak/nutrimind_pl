@@ -13,6 +13,7 @@
 import fs from 'fs';
 import path from 'path';
 import { getLocalImportSetupHint, getOcrConfig } from './localImportConfig';
+import { getCanonicalOcrRecipeName } from '../lib/data/ocrRecipeNameFixes';
 
 type ParsedIngredient = {
   name: string;
@@ -310,15 +311,8 @@ function isSuspiciousTitle(title: string) {
     .some((word) => !/[aeiouyąęó]/i.test(word));
 }
 
-function fallbackTitlePrefix(type: ParsedRecipe['type']) {
-  if (type === 'second_breakfast') return 'Przekąska';
-  if (type === 'lunch') return 'Obiad';
-  return 'Kolacja';
-}
-
 function buildFallbackTitle(
   ingredients: ParsedIngredient[],
-  type: ParsedRecipe['type'],
   fallbackIndex: number,
 ) {
   const selected = ingredients
@@ -327,8 +321,7 @@ function buildFallbackTitle(
     .filter((name, index, names) => names.indexOf(name) === index)
     .slice(0, 3);
 
-  const suffix = selected.length > 0 ? selected.join(', ') : `wariant ${fallbackIndex}`;
-  return `${fallbackTitlePrefix(type)}: ${suffix}`;
+  return selected.length > 0 ? selected.join(', ') : `Danie ${fallbackIndex}`;
 }
 
 function normalizeIngredientName(rawName: string) {
@@ -458,7 +451,8 @@ function parseRecipeBlock(
 ): ParsedRecipe {
   const ingredients = parseIngredients(block);
   const rawName = titleFor(block);
-  const name = isSuspiciousTitle(rawName) ? buildFallbackTitle(ingredients, type, fallbackIndex) : rawName;
+  const fallbackName = isSuspiciousTitle(rawName) ? buildFallbackTitle(ingredients, fallbackIndex) : rawName;
+  const name = getCanonicalOcrRecipeName(fallbackName);
   const macros = parseMacros(block);
 
   return {
@@ -482,6 +476,37 @@ function parseRecipeBlock(
     ingredients,
     instructions: parseInstructions(block),
   };
+}
+
+function recipeDeduplicationKey(recipe: ParsedRecipe) {
+  return JSON.stringify({
+    sourceDiet: recipe.sourceDiet,
+    type: recipe.type,
+    name: recipe.name,
+    kcalPerServing: recipe.kcalPerServing,
+    proteinG: recipe.proteinG,
+    carbsG: recipe.carbsG,
+    fatG: recipe.fatG,
+    instructions: recipe.instructions,
+    ingredients: recipe.ingredients
+      .map((ingredient) => ({
+        name: ingredient.name,
+        amountG: ingredient.amountG,
+        displayText: ingredient.displayText,
+      }))
+      .sort((left, right) => left.name.localeCompare(right.name)),
+  });
+}
+
+function collapseDuplicateRecipes(recipes: ParsedRecipe[]) {
+  const seen = new Set<string>();
+
+  return recipes.filter((recipe) => {
+    const key = recipeDeduplicationKey(recipe);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function parseMarkdownFile({
@@ -525,7 +550,7 @@ function main() {
     throw new Error(`OCR sources not found: ${missingInputs.join(', ')}. ${getLocalImportSetupHint()}`);
   }
 
-  const recipes = ensureUniqueRecipeNames(INPUTS.flatMap(parseMarkdownFile));
+  const recipes = ensureUniqueRecipeNames(collapseDuplicateRecipes(INPUTS.flatMap(parseMarkdownFile)));
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(
     OUTPUT_PATH,

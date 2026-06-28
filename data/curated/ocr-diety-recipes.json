@@ -2561,7 +2561,7 @@
       ]
     },
     {
-      "name": "Obiad: Olej z awokado, Krewetki, Papryka słodka",
+      "name": "Krewetki z pomidorkami, ryżem brązowym i orzechami",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -2663,7 +2663,7 @@
       ]
     },
     {
-      "name": "Obiad: Olej z awokado, Krewetki, Pomidory koktajlowe",
+      "name": "Sałatka makaronowa z krewetkami i pesto bazyliowym",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -2771,7 +2771,7 @@
       ]
     },
     {
-      "name": "Obiad: Cukinia, Olej z awokado, Papryka czerwona",
+      "name": "Makaron ryżowy z krewetkami w sosie curry-kokosowym",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -2885,7 +2885,7 @@
       ]
     },
     {
-      "name": "Obiad: Dorsz, Sok z cytryny, Papryka czerwona",
+      "name": "Pieczony dorsz z kaszą jaglaną i warzywami",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -3108,7 +3108,7 @@
       ]
     },
     {
-      "name": "Obiad: Papryka czerwona, Marchew, Batat",
+      "name": "Krem z batata i papryki z krewetkami",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -3308,7 +3308,7 @@
       ]
     },
     {
-      "name": "Obiad: Olej z awokado, Pierś z kurczaka, Marchew",
+      "name": "Kurczak curry z ryżem brązowym i warzywami",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -3590,7 +3590,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z kurczaka, Olej z awokado, Sok z cytryny",
+      "name": "Szaszłyki z kurczaka z frytkami z batata i fasolką",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -3856,7 +3856,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z kurczaka, Olej z awokado, Pomidory krojone w puszce",
+      "name": "Kurczak w sosie pomidorowo-kokosowym z ryżem basmati",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -4044,7 +4044,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z indyka, Olej z awokado, Batat",
+      "name": "Grillowana pierś z indyka z batatami, brokułem i sosem koperkowym",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -4233,7 +4233,7 @@
       ]
     },
     {
-      "name": "Obiad: Pomidor, Cukinia, Papryka czerwona",
+      "name": "Kurczak zapiekany na warzywach z komosą ryżową",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -4430,7 +4430,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica wołowa, Komosa ryżowa, Olej z awokado",
+      "name": "Wołowina z pieczoną dynią, cukinią i komosą ryżową",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -4526,7 +4526,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica wołowa, Olej z awokado, Ziemniak",
+      "name": "Pieczona wołowina z ziemniakami, brokułem i marchewką",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -4714,7 +4714,7 @@
       ]
     },
     {
-      "name": "Obiad: Kurczak udko, Majeranek suszony, Stodka papryka przyprawa",
+      "name": "Pieczone udko z kurczaka z dynią i komosą ryżową",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -4999,7 +4999,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z indyka, Ryż basmati, Marchew",
+      "name": "Krem z warzyw korzeniowych z indykiem i ryżem basmati",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -5096,7 +5096,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z indyka, Batat, Kalarepa",
+      "name": "Pieczony indyk z batatem i kalarepą",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -5179,103 +5179,6 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z indyka, Ryż basmati, Marchew (2)",
-      "type": "lunch",
-      "prepTimeMin": null,
-      "cookTimeMin": null,
-      "batchFriendly": false,
-      "maxStorageDays": 3,
-      "kcalPerServing": 853,
-      "proteinG": 56,
-      "carbsG": 85,
-      "fatG": 33,
-      "fiberG": null,
-      "baseServings": 1,
-      "ingredientBasis": "per-serving",
-      "source": "dietitian",
-      "nutritionVerified": true,
-      "sourceDiet": "Import OCR Obiad A",
-      "tags": [
-        "ocr-diety",
-        "ocr-obiad"
-      ],
-      "ingredients": [
-        {
-          "name": "Pierś z indyka",
-          "amountG": 200,
-          "displayText": "Indyk pierś - 200g",
-          "category": "protein"
-        },
-        {
-          "name": "Ryż basmati",
-          "amountG": 80,
-          "displayText": "Ryż basmati - 8 łyżka / 80g",
-          "category": "grains"
-        },
-        {
-          "name": "Marchew",
-          "amountG": 60,
-          "displayText": "Marchew - 1 średnia sztuka / 60g",
-          "category": "vegetables"
-        },
-        {
-          "name": "Pietruszka (korzeń)",
-          "amountG": 80,
-          "displayText": "Pietruszka korzeń - 1 sztuka / 80g",
-          "category": "vegetables"
-        },
-        {
-          "name": "Seler korzeń",
-          "amountG": 60,
-          "displayText": "Seler korzeń - 1 plaster / 60g",
-          "category": "other"
-        },
-        {
-          "name": "Olej z awokado",
-          "amountG": 15,
-          "displayText": "Olej z awokado - 1.5 łyżka / 15g",
-          "category": "fruits"
-        },
-        {
-          "name": "Mleczko kokosowe",
-          "amountG": 60,
-          "displayText": "Mleczko kokosowe 19% - 6 łyżka / 60g",
-          "category": "dairy"
-        },
-        {
-          "name": "Sól",
-          "amountG": 1,
-          "displayText": "Sól - 1 szczypta / 1g",
-          "category": "spices"
-        },
-        {
-          "name": "Pieprz czarny",
-          "amountG": 1,
-          "displayText": "Pieprz czarny - 1 szczypta / 1g",
-          "category": "spices"
-        },
-        {
-          "name": "Natka pietruszki",
-          "amountG": 12,
-          "displayText": "Natka pietruszki - 1 łyżka / 12g",
-          "category": "spices"
-        },
-        {
-          "name": "Bulion warzywny",
-          "amountG": 250,
-          "displayText": "Bulion warzywny - 1 szklanka / 250g",
-          "category": "other"
-        }
-      ],
-      "instructions": [
-        "Warzywa pokroić i krótko podsmażyć w garnku na oleju.",
-        "Zalać bulionem i gotować do miękkości.",
-        "Zblendować warzywa z mlekiem kokosowym na gładki krem, doprawić.",
-        "Mięso pokroić w małą kostkę, osobno krótko obgotować w niewielkiej ilości wody lub poddusić, a następnie dodać do zupy.",
-        "Podać z ugotowanym ryżem, posypać natką."
-      ]
-    },
-    {
       "name": "Kurczak kokosowy z batatem",
       "type": "lunch",
       "prepTimeMin": null,
@@ -5355,7 +5258,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z kurczaka, Gałka muszkatołowa mielona, Papryka słodka",
+      "name": "Kurczak w jogurtowej marynacie z ziemniakami i sałatką",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -5541,7 +5444,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica z indyka, Bulion warzywny, Olej z awokado",
+      "name": "Polędwiczka z indyka w sosie koperkowym z kaszą gryczaną",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -5644,7 +5547,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica wołowa, Marchew, Cukinia",
+      "name": "Wołowina duszona z warzywami i ryżem brązowym",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -5832,7 +5735,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica wołowa, Kasza jaglana, Cukinia",
+      "name": "Wołowe curry z kaszą jaglaną i warzywami",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -5934,7 +5837,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica wołowa, Ziemniak, Olej z awokado",
+      "name": "Wołowina w sosie jogurtowo-rozmarynowym z pieczonymi ziemniakami i kalarepą",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -6101,7 +6004,7 @@
       ]
     },
     {
-      "name": "Obiad: Pierś z kurczaka, Kolendra liście suszone, Stodka papryka przyprawa",
+      "name": "Kurczak w sosie paprykowo-kokosowym z ryżem brązowym",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -6315,7 +6218,7 @@
       ]
     },
     {
-      "name": "Obiad: Polędwica wołowa, Olej z awokado, Batat",
+      "name": "Stek wołowy z frytkami z batata i sałatką curry",
       "type": "lunch",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -6718,7 +6621,7 @@
       ]
     },
     {
-      "name": "Kolacja: Pierś z indyka, Pomidor, Dynia",
+      "name": "Zupa z indykiem, dynią i makaronem gryczanym",
       "type": "dinner",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -7391,7 +7294,7 @@
       ]
     },
     {
-      "name": "Kolacja: Makaron gryczany, Pierś z indyka, Olej z awokado",
+      "name": "Makaron gryczany z indykiem w sosie z czerwonej papryki",
       "type": "dinner",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -7753,7 +7656,7 @@
       ]
     },
     {
-      "name": "Kolacja: Marchew, Pietruszka (korzeń), Pierś z indyka",
+      "name": "Krem z marchwi i pietruszki z indykiem",
       "type": "dinner",
       "prepTimeMin": null,
       "cookTimeMin": null,
@@ -7957,7 +7860,7 @@
       ]
     },
     {
-      "name": "Kolacja: Pierś z indyka, Batat, Marchew",
+      "name": "Krem z batata i marchewki z indykiem",
       "type": "dinner",
       "prepTimeMin": null,
       "cookTimeMin": null,

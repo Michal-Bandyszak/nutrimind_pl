@@ -13,6 +13,7 @@
     "db:seed": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true}' prisma/seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force && npm run db:seed",
+    "fix:ocr-recipe-names": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/fix-ocr-recipe-names.ts",
     "parse:diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-diets.ts",
     "parse:breakfasts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-breakfasts.ts",
     "parse:ocr-diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-ocr-diets.ts",
