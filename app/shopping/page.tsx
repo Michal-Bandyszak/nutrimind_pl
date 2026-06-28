@@ -1,6 +1,5 @@
-import { getActivePlan } from '@/lib/services/MealPlanGenerator';
-import { buildShoppingList } from '@/lib/services/ShoppingListBuilder';
-import ShoppingClient from './ShoppingClient';
+import { getActivePlanSummary } from '@/lib/services/MealPlanGenerator';
+import ShoppingPageClient from './ShoppingPageClient';
 import { ShoppingCart } from 'lucide-react';
 import { requireAuthContext } from '@/lib/auth-context';
 
@@ -8,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ShoppingPage() {
   const context = await requireAuthContext();
-  const plan = await getActivePlan(context.householdId);
+  const plan = await getActivePlanSummary(context.householdId);
 
   if (!plan) {
     return (
@@ -31,20 +30,18 @@ export default async function ShoppingPage() {
     );
   }
 
-  const shoppingList = await buildShoppingList(plan.id, context.householdId);
-
   return (
     <div className="max-w-2xl mx-auto">
       <div className="glass-header sticky top-0 z-30">
         <div className="px-4 lg:px-6 py-4">
           <h1 className="text-lg font-semibold text-gray-900">Lista zakupów</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {plan.name} · {shoppingList.totalItems} produktów
+            {plan.name} · ładowanie listy zakupów…
           </p>
         </div>
       </div>
       <div className="px-4 lg:px-6 py-5">
-        <ShoppingClient list={shoppingList} />
+        <ShoppingPageClient planId={plan.id} />
       </div>
     </div>
   );

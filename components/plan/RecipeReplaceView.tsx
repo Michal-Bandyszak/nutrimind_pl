@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { ArrowLeft, Search, Check, Loader2, X } from 'lucide-react';
-import type { MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
+import type { MealWithRecipe, RecipePickerItem } from '@/lib/types';
 import { MEAL_TYPE_EMOJI } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_LABELS, TYPE_COLORS, TYPE_FILTERS_BASIC } from '@/lib/utils/recipeConstants';
 
@@ -10,20 +10,20 @@ type Props = {
   meal: MealWithRecipe;
   onBack: () => void;
   onClose: () => void;
-  onReplace: (newRecipe: RecipeWithIngredients) => Promise<void>;
+  onReplace: (newRecipe: RecipePickerItem) => Promise<void>;
 };
 
 export default function RecipeReplaceView({ meal, onBack, onClose, onReplace }: Props) {
-  const [allRecipes, setAllRecipes] = useState<RecipeWithIngredients[]>([]);
+  const [allRecipes, setAllRecipes] = useState<RecipePickerItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState(meal.mealType);
 
   useEffect(() => {
-    fetch('/api/recipes')
+    fetch('/api/recipes?view=picker', { cache: 'no-store' })
       .then((r) => r.json())
-      .then((json) => setAllRecipes((json.data as RecipeWithIngredients[]) ?? []))
+      .then((json) => setAllRecipes((json.data as RecipePickerItem[]) ?? []))
       .finally(() => setLoading(false));
   }, []);
 
@@ -40,7 +40,7 @@ export default function RecipeReplaceView({ meal, onBack, onClose, onReplace }: 
 
   const [replaceError, setReplaceError] = useState<string | null>(null);
 
-  async function handleSelect(recipe: RecipeWithIngredients) {
+  async function handleSelect(recipe: RecipePickerItem) {
     setSaving(recipe.id);
     if (replaceError) setReplaceError(null);
     try {

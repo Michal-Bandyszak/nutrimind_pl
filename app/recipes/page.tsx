@@ -21,16 +21,16 @@ function pluralizePl(count: number, one: string, few: string, many: string) {
 
 export default async function RecipesPage() {
   const context = await requireAuthContext();
-  const recipes = await prisma.recipe.findMany({
-    where: visibleRecipeWhere(context.householdId),
-    include: {
-      ingredients: { include: { ingredient: true } },
-      _count: { select: { mealPlanMeals: true } },
-    },
-    orderBy: { name: 'asc' },
-  });
+  const where = visibleRecipeWhere(context.householdId);
+  const [recipeCount, recipeVariants] = await Promise.all([
+    prisma.recipe.count({ where }),
+    prisma.recipe.findMany({
+      where,
+      select: { variantKey: true },
+    }),
+  ]);
 
-  const recipeSummary = recipes.reduce(
+  const recipeSummary = recipeVariants.reduce(
     (acc, recipe) => {
       const recipeMeta = recipe as RecipeBrowserMeta;
       if (isRecipe2500Variant(recipeMeta)) acc.variants2500 += 1;
@@ -49,13 +49,13 @@ export default async function RecipesPage() {
         <div className="px-4 lg:px-6 py-4">
           <h1 className="text-lg font-semibold text-gray-900">Przepisy</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {recipes.length} przepisów w bazie
+            {recipeCount} przepisów w bazie
             {summaryParts.length > 0 ? ` · ${summaryParts.join(' · ')}` : ''}
           </p>
         </div>
       </div>
       <div className="px-4 lg:px-6 py-5">
-        <RecipesClient recipes={recipes} />
+        <RecipesClient initialRecipeCount={recipeCount} />
       </div>
     </div>
   );

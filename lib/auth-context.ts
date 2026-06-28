@@ -16,11 +16,13 @@ export async function getAuthContext(): Promise<AuthContext | null> {
 
   const membership = await prisma.householdMember.findFirst({
     where: { userId: session.user.id },
-    include: {
+    select: {
+      householdId: true,
       household: {
-        include: {
+        select: {
           profiles: {
             where: { isPrimary: true },
+            select: { id: true },
             take: 1,
           },
         },

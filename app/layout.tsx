@@ -1,14 +1,7 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/nav/Navigation';
 import RegisterSW from '@/components/RegisterSW';
-
-const inter = Inter({
-  subsets: ['latin', 'latin-ext'],
-  variable: '--font-inter',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'NutriMind',
@@ -42,7 +35,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={inter.variable} suppressHydrationWarning>
+    <html lang="pl" suppressHydrationWarning>
       <head>
         {/* Apply saved theme before first paint — prevents flash of wrong theme */}
         <script

@@ -49,6 +49,45 @@ export type MealPlanWithMeals = MealPlan & {
   participants: MealPlanParticipant[];
 };
 
+export type MealPlanParticipantSummary = Pick<
+  MealPlanParticipant,
+  'id' | 'nameSnapshot' | 'targetKcalSnapshot' | 'isPrimarySnapshot'
+>;
+
+export type MealPlanSummary = Pick<
+  MealPlan,
+  'id' | 'name' | 'weekStart' | 'status' | 'createdAt'
+> & {
+  participants: MealPlanParticipantSummary[];
+};
+
+export type RecipeListItem = Pick<
+  Recipe,
+  | 'id'
+  | 'name'
+  | 'type'
+  | 'role'
+  | 'source'
+  | 'variantKey'
+  | 'adjustmentNote'
+  | 'tags'
+  | 'ingredientBasis'
+  | 'baseServings'
+  | 'prepTimeMin'
+  | 'cookTimeMin'
+  | 'kcalPerServing'
+  | 'proteinG'
+  | 'carbsG'
+  | 'fatG'
+> & {
+  _count: { mealPlanMeals: number };
+};
+
+export type RecipePickerItem = Pick<
+  Recipe,
+  'id' | 'name' | 'type' | 'role' | 'kcalPerServing' | 'proteinG' | 'carbsG' | 'fatG'
+>;
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Batch configuration
 // ──────────────────────────────────────────────────────────────────────────────

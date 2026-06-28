@@ -1,9 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
+import { visibleRecipeWhere } from '@/lib/access';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  try {
+    const context = await requireApiContext();
+    const recipe = await prisma.recipe.findFirst({
+      where: {
+        id,
+        ...visibleRecipeWhere(context.householdId),
+      },
+      include: {
+        componentLinks: {
+          include: {
+            componentRecipe: {
+              include: {
+                ingredients: { include: { ingredient: true } },
+              },
+            },
+          },
+        },
+        ingredients: { include: { ingredient: true } },
+      },
+    });
+
+    if (!recipe) {
+      return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: recipe });
+  } catch (error) {
+    const { message, status } = apiError(error);
+    return NextResponse.json({ error: message }, { status });
+  }
+}
 
 // PATCH /api/recipes/[id] — update recipe + replace all ingredients
 export async function PATCH(

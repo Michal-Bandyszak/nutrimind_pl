@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
@@ -9,6 +10,52 @@ const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 
 const VALID_INGREDIENT_BASIS = ['per-serving', 'per-whole'];
 const VALID_SOURCES = ['dietitian', 'user'];
 const VALID_ROLES = ['meal', 'component'];
+
+const RECIPE_PICKER_SELECT = {
+  id: true,
+  name: true,
+  type: true,
+  role: true,
+  kcalPerServing: true,
+  proteinG: true,
+  carbsG: true,
+  fatG: true,
+} satisfies Prisma.RecipeSelect;
+
+const RECIPE_LIST_SELECT = {
+  id: true,
+  name: true,
+  type: true,
+  role: true,
+  source: true,
+  variantKey: true,
+  adjustmentNote: true,
+  tags: true,
+  ingredientBasis: true,
+  baseServings: true,
+  prepTimeMin: true,
+  cookTimeMin: true,
+  kcalPerServing: true,
+  proteinG: true,
+  carbsG: true,
+  fatG: true,
+  _count: {
+    select: { mealPlanMeals: true },
+  },
+} satisfies Prisma.RecipeSelect;
+
+const FULL_RECIPE_INCLUDE = {
+  variantOf: true,
+  variants: true,
+  componentLinks: {
+    include: {
+      componentRecipe: {
+        include: { ingredients: { include: { ingredient: true } } },
+      },
+    },
+  },
+  ingredients: { include: { ingredient: true } },
+} satisfies Prisma.RecipeInclude;
 
 export async function POST(req: NextRequest) {
   try {
@@ -146,30 +193,42 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
     const q = searchParams.get('q');
+    const view = searchParams.get('view');
     const verifiedParam = searchParams.get('verified'); // "true" | "false" | null
     const sourceParam = searchParams.get('source');     // "dietitian" | "user" | null
 
+    const where = {
+      ...visibleRecipeWhere(context.householdId),
+      ...(type && type !== 'all' ? { type } : {}),
+      ...(q ? { name: { contains: q } } : {}),
+      ...(verifiedParam === 'true' ? { nutritionVerified: true } : {}),
+      ...(verifiedParam === 'false' ? { nutritionVerified: false } : {}),
+      ...(sourceParam && VALID_SOURCES.includes(sourceParam) ? { source: sourceParam } : {}),
+    };
+
+    if (view === 'picker') {
+      const recipes = await prisma.recipe.findMany({
+        where,
+        select: RECIPE_PICKER_SELECT,
+        orderBy: { name: 'asc' },
+      });
+
+      return NextResponse.json({ data: recipes });
+    }
+
+    if (view === 'list') {
+      const recipes = await prisma.recipe.findMany({
+        where,
+        select: RECIPE_LIST_SELECT,
+        orderBy: { name: 'asc' },
+      });
+
+      return NextResponse.json({ data: recipes });
+    }
+
     const recipes = await prisma.recipe.findMany({
-      where: {
-        ...visibleRecipeWhere(context.householdId),
-        ...(type && type !== 'all' ? { type } : {}),
-        ...(q ? { name: { contains: q } } : {}),
-        ...(verifiedParam === 'true'  ? { nutritionVerified: true }  : {}),
-        ...(verifiedParam === 'false' ? { nutritionVerified: false } : {}),
-        ...(sourceParam && VALID_SOURCES.includes(sourceParam) ? { source: sourceParam } : {}),
-      },
-      include: {
-        variantOf: true,
-        variants: true,
-        componentLinks: {
-          include: {
-            componentRecipe: {
-              include: { ingredients: { include: { ingredient: true } } },
-            },
-          },
-        },
-        ingredients: { include: { ingredient: true } },
-      },
+      where,
+      include: FULL_RECIPE_INCLUDE,
       orderBy: { name: 'asc' },
     });
 

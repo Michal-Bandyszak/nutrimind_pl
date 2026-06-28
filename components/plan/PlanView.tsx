@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 import { SlidersHorizontal, Check, X, Loader2 } from 'lucide-react';
-import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
+import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipePickerItem } from '@/lib/types';
 import { buildPlanNutritionDiagnostics, DAILY_KCAL_TOLERANCE } from '@/lib/utils/planNutrition';
 import { planToBatchConfig } from '@/lib/utils/planUtils';
 import BatchConfigPanel from './BatchConfigPanel';
@@ -48,6 +48,18 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
     [plan, targetKcalPerPerson],
   );
 
+  const refreshPlan = useCallback(async () => {
+    const res = await fetch('/api/meal-plans/active', { cache: 'no-store' });
+    const json = await res.json();
+    if (!res.ok || !json.data) {
+      throw new Error(typeof json.error === 'string' ? json.error : 'Nie udało się odświeżyć planu.');
+    }
+    const updated = json.data as MealPlanWithMeals;
+    setPlan(updated);
+    confirmedPlan.current = updated;
+    return updated;
+  }, []);
+
   // Open rebatch panel: always re-sync config from current plan
   function openRebatch() {
     setRebatchConfig(planToBatchConfig(plan));
@@ -81,16 +93,16 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
 
   // ── Replace handler ───────────────────────────────────────────────────────
   const handleReplace = useCallback(
-    async (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => {
+    async (meal: MealWithRecipe, newRecipe: RecipePickerItem) => {
       setPlanActionError(null);
       // Optimistic update across batch group (or single meal)
       setPlan((prev) => ({
         ...prev,
         meals: prev.meals.map((m) => {
           if (meal.batchGroupId && m.batchGroupId === meal.batchGroupId)
-            return { ...m, recipe: newRecipe, recipeId: newRecipe.id };
+            return { ...m, recipe: { ...m.recipe, ...newRecipe }, recipeId: newRecipe.id };
           if (!meal.batchGroupId && m.id === meal.id)
-            return { ...m, recipe: newRecipe, recipeId: newRecipe.id };
+            return { ...m, recipe: { ...m.recipe, ...newRecipe }, recipeId: newRecipe.id };
           return m;
         }),
       }));
@@ -113,15 +125,19 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
         throw new Error(message);
       } else {
         setPlanActionError(null);
-        setPlan((cur) => { confirmedPlan.current = cur; return cur; });
+        try {
+          await refreshPlan();
+        } catch {
+          setPlan((cur) => { confirmedPlan.current = cur; return cur; });
+        }
       }
     },
-    [plan.id],
+    [plan.id, refreshPlan],
   );
 
   // ── Add meal handler ──────────────────────────────────────────────────────
   const handleAddMeal = useCallback(
-    async (dayOfWeek: number, mealType: string, servings: number, recipe: RecipeWithIngredients) => {
+    async (dayOfWeek: number, mealType: string, servings: number, recipe: RecipePickerItem) => {
       const res = await fetch(`/api/meal-plans/${plan.id}/meals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
