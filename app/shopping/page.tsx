@@ -1,5 +1,6 @@
+import { Suspense } from 'react';
 import { getActivePlanSummary } from '@/lib/services/MealPlanGenerator';
-import ShoppingPageClient from './ShoppingPageClient';
+import ShoppingPageContent from './ShoppingPageContent';
 import { ShoppingCart } from 'lucide-react';
 import { requireAuthContext } from '@/lib/auth-context';
 
@@ -35,14 +36,45 @@ export default async function ShoppingPage() {
       <div className="glass-header sticky top-0 z-30">
         <div className="px-4 lg:px-6 py-4">
           <h1 className="text-lg font-semibold text-gray-900">Lista zakupów</h1>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {plan.name} · ładowanie listy zakupów…
-          </p>
+          <p className="text-xs text-gray-400 mt-0.5">{plan.name}</p>
         </div>
       </div>
       <div className="px-4 lg:px-6 py-5">
-        <ShoppingPageClient planId={plan.id} />
+        <Suspense fallback={<ShoppingShellSkeleton />}>
+          <ShoppingPageContent planId={plan.id} householdId={context.householdId} />
+        </Suspense>
       </div>
+    </div>
+  );
+}
+
+function ShoppingShellSkeleton() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      <div className="rounded-[1.5rem] border border-border bg-white/70 p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="h-3 w-24 rounded-full bg-gray-200" />
+          <div className="h-3 w-20 rounded-full bg-gray-100" />
+        </div>
+        <div className="mt-3 h-2 rounded-full bg-gray-100" />
+      </div>
+
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index}>
+          <div className="mb-2 h-4 w-28 rounded-full bg-gray-200" />
+          <div className="overflow-hidden rounded-[1.5rem] border border-border bg-white/70">
+            {Array.from({ length: 4 }).map((__, rowIndex) => (
+              <div
+                key={rowIndex}
+                className="flex items-center justify-between gap-3 border-b border-border px-4 py-3 last:border-b-0"
+              >
+                <div className="h-4 w-32 rounded-full bg-gray-200" />
+                <div className="h-4 w-16 rounded-full bg-gray-100" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

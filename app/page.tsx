@@ -1,6 +1,7 @@
+import { Suspense } from 'react';
 import { getActivePlanSummary } from '@/lib/services/MealPlanGenerator';
 import GenerateButton from '@/components/plan/GenerateButton';
-import PlanPageClient from '@/components/plan/PlanPageClient';
+import PlanPageContent from '@/components/plan/PlanPageContent';
 import { CalendarDays } from 'lucide-react';
 import { requireAuthContext } from '@/lib/auth-context';
 
@@ -27,13 +28,52 @@ export default async function PlanPage() {
       {/* Content */}
       <div className="px-4 lg:px-6 py-5">
         {plan ? (
-          <PlanPageClient
-            summary={plan}
-            targetKcalPerPerson={primary?.targetKcalSnapshot ?? 2500}
-          />
+          <Suspense fallback={<PlanShellSkeleton summary={plan} />}>
+            <PlanPageContent
+              planId={plan.id}
+              householdId={context.householdId}
+              targetKcalPerPerson={primary?.targetKcalSnapshot ?? 2500}
+            />
+          </Suspense>
         ) : (
           <EmptyState />
         )}
+      </div>
+    </div>
+  );
+}
+
+function PlanShellSkeleton({ summary }: { summary: NonNullable<Awaited<ReturnType<typeof getActivePlanSummary>>> }) {
+  return (
+    <div className="space-y-5 animate-pulse">
+      <div className="rounded-[1.5rem] border border-border bg-white/70 px-4 py-4">
+        <div className="flex flex-wrap gap-2">
+          {summary.participants.map((participant) => (
+            <div
+              key={participant.id}
+              className="rounded-full bg-teal-50 px-3 py-1.5 text-xs text-teal-700"
+            >
+              {participant.nameSnapshot} · {participant.targetKcalSnapshot} kcal
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="rounded-[1.5rem] border border-border bg-white/70 p-4 shadow-sm"
+          >
+            <div className="h-3 w-20 rounded-full bg-gray-200" />
+            <div className="mt-3 h-5 w-3/4 rounded-full bg-gray-200" />
+            <div className="mt-4 space-y-2">
+              <div className="h-10 rounded-2xl bg-gray-100" />
+              <div className="h-10 rounded-2xl bg-gray-100" />
+              <div className="h-10 rounded-2xl bg-gray-100" />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
