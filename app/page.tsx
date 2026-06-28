@@ -1,6 +1,6 @@
-import { getActivePlan } from '@/lib/services/MealPlanGenerator';
-import PlanView from '@/components/plan/PlanView';
+import { getActivePlanSummary } from '@/lib/services/MealPlanGenerator';
 import GenerateButton from '@/components/plan/GenerateButton';
+import PlanPageClient from '@/components/plan/PlanPageClient';
 import { CalendarDays } from 'lucide-react';
 import { requireAuthContext } from '@/lib/auth-context';
 
@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PlanPage() {
   const context = await requireAuthContext();
-  const plan = await getActivePlan(context.householdId);
+  const plan = await getActivePlanSummary(context.householdId);
   const primary = plan?.participants.find((participant) => participant.isPrimarySnapshot);
 
   return (
@@ -27,7 +27,10 @@ export default async function PlanPage() {
       {/* Content */}
       <div className="px-4 lg:px-6 py-5">
         {plan ? (
-          <PlanView key={plan.id} plan={plan} targetKcalPerPerson={primary?.targetKcalSnapshot ?? 2500} />
+          <PlanPageClient
+            summary={plan}
+            targetKcalPerPerson={primary?.targetKcalSnapshot ?? 2500}
+          />
         ) : (
           <EmptyState />
         )}

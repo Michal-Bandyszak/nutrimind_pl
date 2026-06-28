@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Search, Check, Loader2, ChevronDown, Minus, Plus } from 'lucide-react';
-import type { RecipeWithIngredients } from '@/lib/types';
+import type { RecipePickerItem } from '@/lib/types';
 import { DAY_NAMES_FULL } from '@/lib/utils/batchColors';
 import { MEAL_TYPE_LABELS } from '@/lib/utils/recipeConstants';
 
@@ -52,7 +52,7 @@ type Props = {
   dayOfWeek: number; // 1 = Mon … 7 = Sun
   mealType: string;
   onClose: () => void;
-  onAdd: (recipe: RecipeWithIngredients, mealType: string, servings: number) => Promise<void>;
+  onAdd: (recipe: RecipePickerItem, mealType: string, servings: number) => Promise<void>;
   participantCount: number;
 };
 
@@ -65,7 +65,7 @@ function defaultServingsForMealType(mealType: string, participantCount: number) 
 }
 
 export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onClose, onAdd, participantCount }: Props) {
-  const [allRecipes, setAllRecipes] = useState<RecipeWithIngredients[]>([]);
+  const [allRecipes, setAllRecipes] = useState<RecipePickerItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -88,9 +88,9 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
   }, [onClose]);
 
   useEffect(() => {
-    fetch('/api/recipes')
+    fetch('/api/recipes?view=picker', { cache: 'no-store' })
       .then((r) => r.json())
-      .then((json) => setAllRecipes((json.data as RecipeWithIngredients[]) ?? []))
+      .then((json) => setAllRecipes((json.data as RecipePickerItem[]) ?? []))
       .finally(() => setLoading(false));
   }, []);
 
@@ -104,7 +104,7 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
     });
   }, [allRecipes, query, typeFilter]);
 
-  async function handleSelect(recipe: RecipeWithIngredients) {
+  async function handleSelect(recipe: RecipePickerItem) {
     setSaving(recipe.id);
     setError(null);
     try {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { MealPlanParticipant, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
+import type { MealPlanParticipant, MealWithRecipe, RecipePickerItem } from '@/lib/types';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import RecipeDetailView from './RecipeDetailView';
 import RecipeReplaceView from './RecipeReplaceView';
@@ -12,7 +12,7 @@ type Props = {
   color: BatchColor | null;
   batchDays?: number;
   onClose: () => void;
-  onReplace?: (newRecipe: RecipeWithIngredients) => Promise<void>;
+  onReplace?: (newRecipe: RecipePickerItem) => Promise<void>;
   onDelete?: () => Promise<void>;
   participants?: MealPlanParticipant[];
   onPortionChange?: (participantId: string, servings: number) => Promise<void>;

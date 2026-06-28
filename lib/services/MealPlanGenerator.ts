@@ -1,5 +1,10 @@
 import { prisma } from '@/lib/db/prisma';
-import type { MealPlanWithMeals, BatchConfig, MealDividers } from '@/lib/types';
+import type {
+  MealPlanWithMeals,
+  MealPlanSummary,
+  BatchConfig,
+  MealDividers,
+} from '@/lib/types';
 import { dividersToGroups, DEFAULT_BATCH_CONFIG } from '@/lib/types';
 import {
   applyRecipeToDayContexts,
@@ -371,6 +376,31 @@ export async function getActivePlan(householdId: string): Promise<MealPlanWithMe
   return fetchPlanWithMeals(plan.id, householdId);
 }
 
+export async function getActivePlanSummary(householdId: string): Promise<MealPlanSummary | null> {
+  const plan = await prisma.mealPlan.findFirst({
+    where: { householdId, status: 'active' },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      name: true,
+      weekStart: true,
+      status: true,
+      createdAt: true,
+      participants: {
+        select: {
+          id: true,
+          nameSnapshot: true,
+          targetKcalSnapshot: true,
+          isPrimarySnapshot: true,
+        },
+        orderBy: [{ isPrimarySnapshot: 'desc' }, { nameSnapshot: 'asc' }],
+      },
+    },
+  });
+
+  return plan as MealPlanSummary | null;
+}
+
 export async function fetchPlanWithMeals(id: string, householdId: string): Promise<MealPlanWithMeals> {
   const plan = await prisma.mealPlan.findFirstOrThrow({
     where: { id, householdId },
@@ -381,8 +411,6 @@ export async function fetchPlanWithMeals(id: string, householdId: string): Promi
           portions: true,
           recipe: {
             include: {
-              variantOf: true,
-              variants: true,
               componentLinks: {
                 include: {
                   componentRecipe: {

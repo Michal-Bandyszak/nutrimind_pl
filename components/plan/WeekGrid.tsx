@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react';
-import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipeWithIngredients } from '@/lib/types';
+import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipePickerItem } from '@/lib/types';
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL, MEAL_TYPE_LABELS } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import { DAILY_KCAL_TOLERANCE, summarizeMealsPerPerson } from '@/lib/utils/planNutrition';
@@ -22,7 +22,7 @@ type Props = {
   onDragOver: (dayOfWeek: number, mealType: string) => void;
   onDragEnd: () => void;
   onDrop: (targetDay: number, mealType: string) => void;
-  onReplace?: (meal: MealWithRecipe, newRecipe: RecipeWithIngredients) => Promise<void>;
+  onReplace?: (meal: MealWithRecipe, newRecipe: RecipePickerItem) => Promise<void>;
   onAddMeal?: (dayOfWeek: number, mealType: string) => void;
   onDeleteMeal?: (meal: MealWithRecipe) => Promise<void>;
   onPortionChange?: (meal: MealWithRecipe, participantId: string, servings: number) => Promise<void>;
@@ -317,7 +317,7 @@ export default function WeekGrid({
           onClose={() => setSelectedMeal(null)}
           onReplace={
             onReplace
-              ? (newRecipe: RecipeWithIngredients) => onReplace(selectedMeal.meal, newRecipe)
+              ? (newRecipe) => onReplace(selectedMeal.meal, newRecipe)
               : undefined
           }
           onDelete={

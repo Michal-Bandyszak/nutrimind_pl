@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Clock, ChevronDown, ChevronUp, Users, Minus, Plus, ArrowRightLeft, Loader2, X, Star } from 'lucide-react';
-import type { RecipeWithIngredients } from '@/lib/types';
+import type { RecipeListItem, RecipeWithIngredients } from '@/lib/types';
 import type { SubstitutionResult } from '@/lib/services/SubstitutionEngine';
 import {
   TYPE_COLORS,
@@ -15,7 +15,7 @@ import {
 import { formatIngredientAmount, scaleAmount, safeJsonParse } from '@/lib/utils/formatUnits';
 
 type Props = {
-  recipe: RecipeWithIngredients;
+  recipe: RecipeListItem;
   expanded: boolean;
   onToggle: () => void;
   isFavorite: boolean;
@@ -25,12 +25,37 @@ type Props = {
 export default function RecipeCard({
   recipe, expanded, onToggle, isFavorite, onToggleFavorite,
 }: Props) {
+  const [detail, setDetail] = useState<RecipeWithIngredients | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState<string | null>(null);
   const isPerWhole = recipe.ingredientBasis === 'per-whole';
   const baseServings = recipe.baseServings || 1;
   const [servings, setServings] = useState(isPerWhole ? baseServings : 2);
   const [subsFor, setSubsFor] = useState<string | null>(null);
   const [subsData, setSubsData] = useState<SubstitutionResult | null>(null);
   const [subsLoading, setSubsLoading] = useState(false);
+
+  const loadDetail = useCallback(async () => {
+    setDetailLoading(true);
+    setDetailError(null);
+    try {
+      const res = await fetch(`/api/recipes/${recipe.id}`, { cache: 'no-store' });
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(typeof json.error === 'string' ? json.error : 'Nie udało się załadować przepisu.');
+      }
+      setDetail(json.data as RecipeWithIngredients);
+    } catch (err) {
+      setDetailError(err instanceof Error ? err.message : 'Nie udało się załadować przepisu.');
+    } finally {
+      setDetailLoading(false);
+    }
+  }, [recipe.id]);
+
+  useEffect(() => {
+    if (!expanded || detail || detailLoading) return;
+    void loadDetail();
+  }, [detail, detailLoading, expanded, loadDetail]);
 
   async function handleIngredientClick(ingredientId: string) {
     if (subsFor === ingredientId) {
@@ -50,9 +75,9 @@ export default function RecipeCard({
     }
   }
 
-  const instructions = safeJsonParse<string[]>(recipe.instructions, []);
+  const instructions = safeJsonParse<string[]>(detail?.instructions, []);
   const recipeTags = safeJsonParse<string[]>(recipe.tags, []);
-  const recipeMeta = recipe as RecipeWithIngredients & RecipeBrowserMeta;
+  const recipeMeta = recipe as RecipeListItem & RecipeBrowserMeta;
   const variantLabel = getRecipeBrowserVariantLabel(recipeMeta);
   const adjustmentNote = getRecipeBrowserNote(recipeMeta);
   const isVariant2500 = isRecipe2500Variant(recipeMeta);
@@ -155,6 +180,35 @@ export default function RecipeCard({
       {/* Expanded detail */}
       {expanded && (
         <div className="border-t border-border">
+          {!detail && detailLoading && (
+            <div className="space-y-3 px-4 py-4 animate-pulse">
+              <div className="h-4 w-36 rounded-full bg-gray-200" />
+              <div className="h-16 rounded-2xl bg-gray-100" />
+              <div className="h-24 rounded-2xl bg-gray-100" />
+            </div>
+          )}
+
+          {!detail && detailError && (
+            <div className="px-4 py-4">
+              <div className="rounded-[1.25rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <p>{detailError}</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDetail(null);
+                    setDetailError(null);
+                    void loadDetail();
+                  }}
+                  className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-red-700 ring-1 ring-red-200 transition hover:bg-red-100"
+                >
+                  Spróbuj ponownie
+                </button>
+              </div>
+            </div>
+          )}
+
+          {detail && (
+            <>
           {adjustmentNote && (
             <div className={`px-4 py-2 border-b ${
               isVariant2500
@@ -214,7 +268,7 @@ export default function RecipeCard({
                 {recipe.proteinG && <span>B {Math.round(recipe.proteinG * macroScale)}g</span>}
                 {recipe.carbsG && <span>W {Math.round(recipe.carbsG * macroScale)}g</span>}
                 {recipe.fatG && <span>T {Math.round(recipe.fatG * macroScale)}g</span>}
-                {recipe.fiberG && <span>Bł {Math.round(recipe.fiberG * macroScale)}g</span>}
+                {detail.fiberG && <span>Bł {Math.round(detail.fiberG * macroScale)}g</span>}
               </div>
             </div>
           )}
@@ -235,7 +289,7 @@ export default function RecipeCard({
               <p className="text-xs text-gray-300">kliknij składnik → zamienniki</p>
             </div>
             <ul className="space-y-1">
-              {recipe.ingredients.map((ri) => {
+              {detail.ingredients.map((ri) => {
                 const perServing = isPerWhole ? ri.amountG / baseServings : ri.amountG;
                 const scaled = scaleAmount(perServing, servings, ri.scalesLinearly);
                 const isActive = subsFor === ri.ingredient.id;
@@ -342,10 +396,12 @@ export default function RecipeCard({
           )}
 
           {/* Source */}
-          {recipe.sourceDiet && (
+          {detail.sourceDiet && (
             <div className="px-4 py-2 border-t border-border">
-              <p className="text-xs text-gray-300">Źródło: {recipe.sourceDiet}</p>
+              <p className="text-xs text-gray-300">Źródło: {detail.sourceDiet}</p>
             </div>
+          )}
+            </>
           )}
         </div>
       )}
