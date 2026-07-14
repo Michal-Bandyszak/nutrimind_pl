@@ -17,6 +17,7 @@ import {
   type PlanDayKcalTotals,
   type RecipeCandidate,
 } from '@/lib/utils/mealPlanScoring';
+import { APP_TIME_ZONE, currentWeekStart } from '@/lib/utils/appDate';
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -27,19 +28,10 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function getMonday(d: Date = new Date()): Date {
-  const date = new Date(d);
-  const day = date.getDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  date.setDate(date.getDate() + diff);
-  date.setHours(0, 0, 0, 0);
-  return date;
-}
-
 function formatWeekLabel(start: Date): string {
   const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+  end.setUTCDate(start.getUTCDate() + 6);
+  const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', timeZone: APP_TIME_ZONE };
   return `${start.toLocaleDateString('pl-PL', opts)} – ${end.toLocaleDateString('pl-PL', opts)}`;
 }
 
@@ -161,7 +153,7 @@ export async function generateWeekPlan(
   weekStart?: Date,
 ): Promise<MealPlanWithMeals> {
   if (!profiles.length) throw new Error('Brak aktywnych profili żywieniowych.');
-  const start = weekStart ?? getMonday();
+  const start = weekStart ?? currentWeekStart();
   const targetKcalPerPerson = Math.max(...profiles.map((profile) => profile.targetKcal));
   const recipeScope = { OR: [{ householdId: null }, { householdId }] };
 
@@ -237,30 +229,6 @@ export async function generateWeekPlan(
   if (!lunches.length)    throw new Error('Brak przepisów na obiad.');
   if (!dinners.length)    throw new Error('Brak przepisów na kolację.');
 
-  // Archive current active plan
-  await prisma.mealPlan.updateMany({
-    where: { householdId, status: 'active' },
-    data: { status: 'archived' },
-  });
-
-  const plan = await prisma.mealPlan.create({
-    data: {
-      householdId,
-      name: formatWeekLabel(start),
-      weekStart: start,
-      status: 'active',
-      participants: {
-        create: profiles.map((profile) => ({
-          personProfileId: profile.id,
-          nameSnapshot: profile.name,
-          targetKcalSnapshot: profile.targetKcal,
-          isPrimarySnapshot: profile.isPrimary,
-        })),
-      },
-    },
-    include: { participants: true },
-  });
-
   const servingsByProfile = profiles.map((profile) => ({
     profile,
     servings: Math.max(0.25, Math.round((profile.targetKcal / targetKcalPerPerson) * 4) / 4),
@@ -288,9 +256,33 @@ export async function generateWeekPlan(
   const mealTargets = buildMealTargets(plannedMealTypes, targetKcalPerPerson);
   const cumulativeMealTargets = buildCumulativeMealTargets(plannedMealTypes, targetKcalPerPerson);
 
-  // Breakfast, second_breakfast, lunch, dinner, cocktail with custom batch config
-  rows.push(...buildMealRows(
-    plan.id,
+  const planId = await prisma.$transaction(async (tx) => {
+    await tx.mealPlan.updateMany({
+      where: { householdId, status: 'active' },
+      data: { status: 'archived' },
+    });
+
+    const plan = await tx.mealPlan.create({
+      data: {
+        householdId,
+        name: formatWeekLabel(start),
+        weekStart: start,
+        status: 'active',
+        participants: {
+          create: profiles.map((profile) => ({
+            personProfileId: profile.id,
+            nameSnapshot: profile.name,
+            targetKcalSnapshot: profile.targetKcal,
+            isPrimarySnapshot: profile.isPrimary,
+          })),
+        },
+      },
+      include: { participants: true },
+    });
+
+    // Breakfast, second_breakfast, lunch, dinner, cocktail with custom batch config
+    rows.push(...buildMealRows(
+      plan.id,
     'breakfast',
     config.breakfast,
     breakfasts,
@@ -299,10 +291,10 @@ export async function generateWeekPlan(
     dayContexts,
     dayKcalTotals,
     cumulativeMealTargets.breakfast ?? targetKcalPerPerson,
-  ));
-  if (secondBreakfasts.length) {
-    rows.push(...buildMealRows(
-      plan.id,
+    ));
+    if (secondBreakfasts.length) {
+      rows.push(...buildMealRows(
+        plan.id,
       'second_breakfast',
       config.second_breakfast,
       secondBreakfasts,
@@ -311,10 +303,10 @@ export async function generateWeekPlan(
       dayContexts,
       dayKcalTotals,
       cumulativeMealTargets.second_breakfast ?? targetKcalPerPerson,
-    ));
-  }
-  rows.push(...buildMealRows(
-    plan.id,
+      ));
+    }
+    rows.push(...buildMealRows(
+      plan.id,
     'lunch',
     config.lunch,
     lunches,
@@ -323,9 +315,9 @@ export async function generateWeekPlan(
     dayContexts,
     dayKcalTotals,
     cumulativeMealTargets.lunch ?? targetKcalPerPerson,
-  ));
-  rows.push(...buildMealRows(
-    plan.id,
+    ));
+    rows.push(...buildMealRows(
+      plan.id,
     'dinner',
     config.dinner,
     dinners,
@@ -334,10 +326,10 @@ export async function generateWeekPlan(
     dayContexts,
     dayKcalTotals,
     cumulativeMealTargets.dinner ?? targetKcalPerPerson,
-  ));
-  if (cocktails.length) {
-    rows.push(...buildMealRows(
-      plan.id,
+    ));
+    if (cocktails.length) {
+      rows.push(...buildMealRows(
+        plan.id,
       'cocktail',
       config.cocktail,
       cocktails,
@@ -346,25 +338,28 @@ export async function generateWeekPlan(
       dayContexts,
       dayKcalTotals,
       cumulativeMealTargets.cocktail ?? targetKcalPerPerson,
-    ));
-  }
+      ));
+    }
 
-  await prisma.mealPlanMeal.createMany({ data: rows });
-  const meals = await prisma.mealPlanMeal.findMany({ where: { mealPlanId: plan.id } });
-  const participantByProfile = new Map(
-    plan.participants.map((participant) => [participant.personProfileId, participant]),
-  );
-  await prisma.mealPlanMealPortion.createMany({
-    data: meals.flatMap((meal) =>
-      servingsByProfile.map(({ profile, servings }) => ({
-        mealPlanMealId: meal.id,
-        participantId: participantByProfile.get(profile.id)!.id,
-        personProfileId: profile.id,
-        servings,
-      })),
-    ),
+    await tx.mealPlanMeal.createMany({ data: rows });
+    const meals = await tx.mealPlanMeal.findMany({ where: { mealPlanId: plan.id } });
+    const participantByProfile = new Map(
+      plan.participants.map((participant) => [participant.personProfileId, participant]),
+    );
+    await tx.mealPlanMealPortion.createMany({
+      data: meals.flatMap((meal) =>
+        servingsByProfile.map(({ profile, servings }) => ({
+          mealPlanMealId: meal.id,
+          participantId: participantByProfile.get(profile.id)!.id,
+          personProfileId: profile.id,
+          servings,
+        })),
+      ),
+    });
+    return plan.id;
   });
-  return fetchPlanWithMeals(plan.id, householdId);
+
+  return fetchPlanWithMeals(planId, householdId);
 }
 
 export async function getActivePlan(householdId: string): Promise<MealPlanWithMeals | null> {

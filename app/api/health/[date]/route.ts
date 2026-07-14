@@ -1,9 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
+import { isValidDateKey } from '@/lib/utils/appDate';
 
-function isValidDate(s: string) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s));
+const INVALID_INPUT = 'INVALID_HEALTH_LOG_INPUT';
+
+function optionalNumber(value: unknown, min: number, max: number, integer = false): number | null | undefined {
+  if (value === undefined || value === null) return value;
+  const number = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(number) || number < min || number > max || (integer && !Number.isInteger(number))) {
+    throw new Error(INVALID_INPUT);
+  }
+  return number;
+}
+
+function routineValue(value: unknown): string | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) {
+    throw new Error(INVALID_INPUT);
+  }
+  return JSON.stringify(value);
 }
 
 export async function GET(
@@ -11,7 +27,7 @@ export async function GET(
   { params }: { params: Promise<{ date: string }> },
 ) {
   const { date } = await params;
-  if (!isValidDate(date)) {
+  if (!isValidDateKey(date)) {
     return NextResponse.json({ error: 'Nieprawidłowy format daty.' }, { status: 400 });
   }
   try {
@@ -36,32 +52,33 @@ export async function PUT(
   { params }: { params: Promise<{ date: string }> },
 ) {
   const { date } = await params;
-  if (!isValidDate(date)) {
+  if (!isValidDateKey(date)) {
     return NextResponse.json({ error: 'Nieprawidłowy format daty.' }, { status: 400 });
   }
   try {
     const context = await requireApiContext();
-    const body = await req.json();
+    const body: unknown = await req.json();
+    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error(INVALID_INPUT);
     const {
       morningDone, eveningDone,
       waterGlasses, sleepH, sleepQuality, energyLevel, moodLevel,
       pointsDiet, pointsSupp, pointsTrain, pointsRoutine, pointsRelax, pointsMindset,
-    } = body;
+    } = body as Record<string, unknown>;
 
     const data = {
-      morningDone: Array.isArray(morningDone) ? JSON.stringify(morningDone) : undefined,
-      eveningDone: Array.isArray(eveningDone) ? JSON.stringify(eveningDone) : undefined,
-      waterGlasses: waterGlasses != null ? Number(waterGlasses) : undefined,
-      sleepH: sleepH != null ? Number(sleepH) : undefined,
-      sleepQuality: sleepQuality != null ? Number(sleepQuality) : undefined,
-      energyLevel: energyLevel != null ? Number(energyLevel) : undefined,
-      moodLevel: moodLevel != null ? Number(moodLevel) : undefined,
-      pointsDiet: pointsDiet != null ? Number(pointsDiet) : undefined,
-      pointsSupp: pointsSupp != null ? Number(pointsSupp) : undefined,
-      pointsTrain: pointsTrain != null ? Number(pointsTrain) : undefined,
-      pointsRoutine: pointsRoutine != null ? Number(pointsRoutine) : undefined,
-      pointsRelax: pointsRelax != null ? Number(pointsRelax) : undefined,
-      pointsMindset: pointsMindset != null ? Number(pointsMindset) : undefined,
+      morningDone: routineValue(morningDone),
+      eveningDone: routineValue(eveningDone),
+      waterGlasses: optionalNumber(waterGlasses, 0, 30, true),
+      sleepH: optionalNumber(sleepH, 0, 24),
+      sleepQuality: optionalNumber(sleepQuality, 1, 5, true),
+      energyLevel: optionalNumber(energyLevel, 1, 5, true),
+      moodLevel: optionalNumber(moodLevel, 1, 5, true),
+      pointsDiet: optionalNumber(pointsDiet, 1, 3, true),
+      pointsSupp: optionalNumber(pointsSupp, 1, 3, true),
+      pointsTrain: optionalNumber(pointsTrain, 1, 3, true),
+      pointsRoutine: optionalNumber(pointsRoutine, 1, 3, true),
+      pointsRelax: optionalNumber(pointsRelax, 1, 3, true),
+      pointsMindset: optionalNumber(pointsMindset, 1, 3, true),
     };
     // Remove undefined values
     const cleanData = Object.fromEntries(
@@ -80,6 +97,9 @@ export async function PUT(
     });
     return NextResponse.json({ data: log });
   } catch (error) {
+    if (error instanceof Error && error.message === INVALID_INPUT) {
+      return NextResponse.json({ error: 'Nieprawidłowe dane dziennika.' }, { status: 400 });
+    }
     const { message, status } = apiError(error);
     return NextResponse.json({ error: message }, { status });
   }

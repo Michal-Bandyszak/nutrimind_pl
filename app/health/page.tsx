@@ -2,18 +2,13 @@ import { prisma } from '@/lib/db/prisma';
 import { safeJsonParse } from '@/lib/utils/formatUnits';
 import HealthClient from './HealthClient';
 import { requireAuthContext } from '@/lib/auth-context';
+import { todayInAppTimeZone } from '@/lib/utils/appDate';
 
 export const dynamic = 'force-dynamic';
 
-function todayDate(): string {
-  // Return local YYYY-MM-DD — server is in UTC, pass to client which uses it as key
-  const now = new Date();
-  return now.toISOString().slice(0, 10);
-}
-
 export default async function HealthPage() {
   const context = await requireAuthContext();
-  const date = todayDate();
+  const date = todayInAppTimeZone();
 
   const raw = await prisma.healthLog.findUnique({
     where: {

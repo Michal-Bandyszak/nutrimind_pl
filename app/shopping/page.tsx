@@ -3,6 +3,7 @@ import { getActivePlanSummary } from '@/lib/services/MealPlanGenerator';
 import ShoppingPageContent from './ShoppingPageContent';
 import { ShoppingCart } from 'lucide-react';
 import { requireAuthContext } from '@/lib/auth-context';
+import { isCurrentPlanWeek } from '@/lib/utils/appDate';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export default async function ShoppingPage() {
   const context = await requireAuthContext();
   const plan = await getActivePlanSummary(context.householdId);
 
-  if (!plan) {
+  if (!plan || !isCurrentPlanWeek(plan.weekStart)) {
     return (
       <div className="max-w-[1400px] mx-auto">
         <div className="glass-header sticky top-0 z-30">
@@ -22,9 +23,13 @@ export default async function ShoppingPage() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-[1.75rem] bg-teal-50 shadow-sm ring-1 ring-teal-100">
             <ShoppingCart size={28} className="text-teal-600" />
           </div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-1">Brak aktywnego planu</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-1">
+            {plan ? 'Plan jest z poprzedniego tygodnia' : 'Brak aktywnego planu'}
+          </h2>
           <p className="text-sm text-gray-400 max-w-xs">
-            Najpierw wygeneruj plan tygodnia — lista zakupów pojawi się automatycznie.
+            {plan
+              ? 'Wygeneruj nowy plan, aby przygotować aktualną listę zakupów.'
+              : 'Najpierw wygeneruj plan tygodnia — lista zakupów pojawi się automatycznie.'}
           </p>
         </div>
       </div>

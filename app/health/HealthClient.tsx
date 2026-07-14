@@ -35,23 +35,29 @@ export default function HealthClient({ date, initialLog }: Props) {
   const [log, setLog] = useState<LogState>(initialLog ?? emptyLog());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const saveRequestRef = useRef(0);
 
   const save = useCallback(
     async (data: LogState) => {
+      const requestId = ++saveRequestRef.current;
       setSaving(true);
+      setSaveError(false);
       try {
-        await fetch(`/api/health/${date}`, {
+        const res = await fetch(`/api/health/${date}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
+        if (!res.ok) throw new Error('Nie udało się zapisać dziennika.');
+        if (requestId !== saveRequestRef.current) return;
         setSaved(true);
         setTimeout(() => setSaved(false), 1800);
       } catch {
-        // silent
+        if (requestId === saveRequestRef.current) setSaveError(true);
       } finally {
-        setSaving(false);
+        if (requestId === saveRequestRef.current) setSaving(false);
       }
     },
     [date],
@@ -99,6 +105,7 @@ export default function HealthClient({ date, initialLog }: Props) {
           <div className="flex items-center gap-2">
             {saving && <span className="text-xs text-gray-400">Zapisuję…</span>}
             {saved && !saving && <span className="text-xs text-teal-600 font-medium flex items-center gap-1"><Check size={12} /> Zapisano</span>}
+            {saveError && !saving && <span className="text-xs text-red-500">Nie zapisano — spróbuj ponownie.</span>}
           </div>
         </div>
 

@@ -142,15 +142,18 @@ export default function SettingsClient({ initialSettings }: Props) {
         </section>
       )}
 
-      <section>
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">Domyślne grupowanie</h2>
-        <div className="panel-surface rounded-[1.5rem] p-4">
+      <details className="group panel-surface rounded-[1.5rem]">
+        <summary className="cursor-pointer list-none px-4 py-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
+          Domyślne grupowanie
+          <span className="ml-2 text-xs font-normal normal-case text-gray-400">(opcjonalne)</span>
+        </summary>
+        <div className="border-t border-border p-4">
           <BatchConfigPanel
             config={settings.defaultBatchConfig}
             onChange={(config: BatchConfig) => setSettings((prev) => ({ ...prev, defaultBatchConfig: config }))}
           />
         </div>
-      </section>
+      </details>
 
       <div className="flex items-center gap-3">
         <button onClick={handleSave} disabled={saving} className="btn-primary flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium disabled:opacity-60">

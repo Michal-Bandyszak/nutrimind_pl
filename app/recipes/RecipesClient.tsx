@@ -114,8 +114,15 @@ export default function RecipesClient({ initialRecipes }: Props) {
       </div>
 
       {/* Type filters + Add button */}
-      <div className="flex items-center gap-2">
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 flex-1">
+      <div className="space-y-2">
+        <button
+          onClick={() => setModalOpen(true)}
+          className="btn-primary flex w-full items-center justify-center gap-1.5 rounded-2xl px-3 py-2.5 text-sm font-medium transition sm:hidden"
+        >
+          <Plus size={15} /> Dodaj przepis
+        </button>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 flex-1">
           {TYPE_FILTERS.map(({ value, label }) => (
             <button
               key={value}
@@ -129,13 +136,14 @@ export default function RecipesClient({ initialRecipes }: Props) {
               {label}
             </button>
           ))}
+          </div>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="btn-primary hidden shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition sm:flex"
+          >
+            <Plus size={13} /> Dodaj przepis
+          </button>
         </div>
-        <button
-          onClick={() => setModalOpen(true)}
-          className="btn-primary shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full transition"
-        >
-          <Plus size={13} /> Dodaj przepis
-        </button>
       </div>
 
       {RECIPE_KIND_FILTERS.length > 1 && (

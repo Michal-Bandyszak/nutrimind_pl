@@ -4,6 +4,7 @@ import GenerateButton from '@/components/plan/GenerateButton';
 import PlanPageContent from '@/components/plan/PlanPageContent';
 import { CalendarDays } from 'lucide-react';
 import { requireAuthContext } from '@/lib/auth-context';
+import { isCurrentPlanWeek } from '@/lib/utils/appDate';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +28,7 @@ export default async function PlanPage() {
 
       {/* Content */}
       <div className="px-4 lg:px-6 py-5">
-        {plan ? (
+        {plan && isCurrentPlanWeek(plan.weekStart) ? (
           <Suspense fallback={<PlanShellSkeleton summary={plan} />}>
             <PlanPageContent
               planId={plan.id}
@@ -36,7 +37,7 @@ export default async function PlanPage() {
             />
           </Suspense>
         ) : (
-          <EmptyState />
+          <EmptyState hasOutdatedPlan={Boolean(plan)} />
         )}
       </div>
     </div>
@@ -79,15 +80,19 @@ function PlanShellSkeleton({ summary }: { summary: NonNullable<Awaited<ReturnTyp
   );
 }
 
-function EmptyState() {
+function EmptyState({ hasOutdatedPlan = false }: { hasOutdatedPlan?: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-[1.75rem] bg-teal-50 shadow-sm ring-1 ring-teal-100">
         <CalendarDays size={28} className="text-teal-600" />
       </div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">Brak aktywnego planu</h2>
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">
+        {hasOutdatedPlan ? 'Plan jest z poprzedniego tygodnia' : 'Brak aktywnego planu'}
+      </h2>
       <p className="text-sm text-gray-400 max-w-xs">
-        Naciśnij &ldquo;Nowy plan&rdquo; żeby wygenerować tygodniowy jadłospis z gotowaniem wsadowym.
+        {hasOutdatedPlan
+          ? 'Wygeneruj nowy plan, aby zobaczyć aktualny jadłospis i listę zakupów.'
+          : 'Naciśnij &ldquo;Nowy plan&rdquo; żeby wygenerować tygodniowy jadłospis z gotowaniem wsadowym.'}
       </p>
     </div>
   );

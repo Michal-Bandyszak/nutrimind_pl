@@ -6,6 +6,7 @@ import type { MealPlanWithMeals, DayMeals, MealWithRecipe, RecipePickerItem } fr
 import { buildBatchColorMap, DAY_NAMES, DAY_NAMES_FULL, MEAL_TYPE_LABELS } from '@/lib/utils/batchColors';
 import type { BatchColor } from '@/lib/utils/batchColors';
 import { DAILY_KCAL_TOLERANCE, summarizeMealsPerPerson } from '@/lib/utils/planNutrition';
+import { APP_TIME_ZONE, currentPlanDayOfWeek } from '@/lib/utils/appDate';
 import MealCard from './MealCard';
 import RecipeModal from './RecipeModal';
 
@@ -33,8 +34,8 @@ function buildDays(plan: MealPlanWithMeals): DayMeals[] {
   return Array.from({ length: 7 }, (_, i) => {
     const dayOfWeek = i + 1;
     const date = new Date(weekStart);
-    date.setDate(weekStart.getDate() + i);
-    const dateLabel = date.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' });
+    date.setUTCDate(weekStart.getUTCDate() + i);
+    const dateLabel = date.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short', timeZone: APP_TIME_ZONE });
     const dayMeals = plan.meals.filter((m) => m.dayOfWeek === dayOfWeek);
     return {
       dayOfWeek,
@@ -77,7 +78,12 @@ export default function WeekGrid({
   }, [plan.meals]);
 
   const [selectedMeal, setSelectedMeal] = useState<{ meal: MealWithRecipe; color: BatchColor | null; batchDays: number } | null>(null);
+  const [showWholeWeekOnMobile, setShowWholeWeekOnMobile] = useState(false);
   const days = buildDays(plan);
+  const todayDayOfWeek = currentPlanDayOfWeek(plan.weekStart);
+  const mobileDays = showWholeWeekOnMobile || !todayDayOfWeek
+    ? days
+    : days.filter((day) => day.dayOfWeek === todayDayOfWeek);
   const hasAuxMeals = days.some((day) => day.snacks.length > 0);
 
   function getBatchDays(meal: MealWithRecipe): number {
@@ -230,10 +236,22 @@ export default function WeekGrid({
 
       {/* ——— Phone: vertical day list ——— */}
       <div className="md:hidden space-y-5">
-        {days.map((day, i) => (
+        <div className="flex items-center justify-between px-4">
+          <p className="text-sm font-semibold text-gray-900">
+            {showWholeWeekOnMobile ? 'Plan tygodnia' : 'Plan na dziś'}
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowWholeWeekOnMobile((value) => !value)}
+            className="text-xs font-medium text-teal-700"
+          >
+            {showWholeWeekOnMobile ? 'Pokaż dziś' : 'Cały tydzień'}
+          </button>
+        </div>
+        {mobileDays.map((day) => (
           <section key={day.dayOfWeek}>
             <div className="flex items-baseline gap-2 px-4 mb-2">
-              <h2 className="text-sm font-semibold text-gray-900">{DAY_NAMES_FULL[i]}</h2>
+              <h2 className="text-sm font-semibold text-gray-900">{DAY_NAMES_FULL[day.dayOfWeek - 1]}</h2>
               <span className="text-xs text-gray-400">{day.dateLabel}</span>
             </div>
 

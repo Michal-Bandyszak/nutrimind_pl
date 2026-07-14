@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AlertTriangle, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 import type { ShoppingList, ShoppingIngredient } from '@/lib/types';
 
@@ -8,7 +8,24 @@ type Props = { list: ShoppingList };
 
 export default function ShoppingClient({ list }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
-  const [leftoversOpen, setLeftoversOpen] = useState(true);
+  const [leftoversOpen, setLeftoversOpen] = useState(false);
+  const [isChecklistLoaded, setIsChecklistLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`nutrimind-shopping-${list.planId}`);
+      setChecked(new Set(saved ? JSON.parse(saved) : []));
+    } catch {
+      setChecked(new Set());
+    } finally {
+      setIsChecklistLoaded(true);
+    }
+  }, [list.planId]);
+
+  useEffect(() => {
+    if (!isChecklistLoaded) return;
+    localStorage.setItem(`nutrimind-shopping-${list.planId}`, JSON.stringify([...checked]));
+  }, [checked, isChecklistLoaded, list.planId]);
 
   function toggle(id: string) {
     setChecked((prev) => {
@@ -91,7 +108,7 @@ export default function ShoppingClient({ list }: Props) {
           >
             <AlertTriangle size={15} className="text-amber-500 shrink-0" />
             <span className="text-sm font-semibold text-amber-800 flex-1">
-              Zostanie Ci {list.leftovers.length} {list.leftovers.length === 1 ? 'produkt' : 'produkty/produktów'} po tygodniu
+              Zostanie Ci {list.leftovers.length} {productWord(list.leftovers.length)} po tygodniu
             </span>
             {leftoversOpen
               ? <ChevronUp size={15} className="text-amber-400 shrink-0" />
@@ -165,18 +182,16 @@ function ShoppingRow({
   const hasWaste = item.leftoverG !== null && item.leftoverG > 10;
 
   return (
-    <div
-      className={`flex items-start gap-3 px-4 py-3 cursor-pointer select-none transition-colors ${checked ? 'bg-gray-50/90' : 'hover:bg-gray-50/60'}`}
-      onClick={onToggle}
-    >
+    <label className={`flex items-start gap-3 px-4 py-3 cursor-pointer select-none transition-colors ${checked ? 'bg-gray-50/90' : 'hover:bg-gray-50/60'}`}>
       {/* Checkbox */}
-      <div className={`mt-0.5 w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center transition-colors ${checked ? 'bg-teal-600 border-teal-600' : 'border-gray-300'}`}>
+      <input type="checkbox" checked={checked} onChange={onToggle} className="sr-only" />
+      <span className={`mt-0.5 w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center transition-colors ${checked ? 'bg-teal-600 border-teal-600' : 'border-gray-300'}`}>
         {checked && (
           <svg width="10" height="8" viewBox="0 0 10 8" fill="none" className="text-white">
             <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
-      </div>
+      </span>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
@@ -206,6 +221,12 @@ function ShoppingRow({
           {[...new Set(item.usedIn.map((u) => u.recipeName))].slice(0, 2).join(', ')}
         </p>
       </div>
-    </div>
+    </label>
   );
+}
+
+function productWord(count: number): string {
+  if (count === 1) return 'produkt';
+  if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'produkty';
+  return 'produktów';
 }

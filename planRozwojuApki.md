@@ -1,120 +1,233 @@
-# NutriMind — Plan rozwoju aplikacji
+# NutriMind — plan architektury i UX/UI
 
-## Stan obecny (Faza 1 MVP — KOMPLETNA ✓)
+Aktualizacja: 2026-07-14
 
-### Co jest zrobione:
-- ✅ Baza danych SQLite + Prisma, 58 przepisów, 473 składników
-- ✅ Generator planów z konfiguracją batch cooking (2 dni gotowania/tydzień)
-- ✅ Widok tygodniowy z drag & drop, swap, replace przepisów
-- ✅ Lista zakupów z kategoriami, opakowaniami, waste warnings
-- ✅ Przeglądarka przepisów z CRUD (dodaj, edytuj, usuń)
-- ✅ PWA (manifest, service worker, ikony)
-- ✅ Strona zdrowia (rutyny poranne/wieczorne, woda, sen, energia, nastrój, punkty 1% Strategy)
-- ✅ Ustawienia (osoby, kalorie, domyślny batch config)
-- ✅ Responsywny UI (desktop sidebar + mobile bottom bar)
-- ✅ Skalowanie porcji dla 2 osób
-- ✅ Kolorowe oznaczenie grup batch cooking (6 kolorów)
+## Cel
 
----
+NutriMind ma przede wszystkim odpowiadać na trzy codzienne pytania:
 
-## Propozycje nowych funkcji do wdrożenia
+1. Co dziś jemy i co trzeba przygotować?
+2. Co trzeba kupić?
+3. Czy dzisiejsze dane zdrowotne zostały zapisane?
 
-### 🟢 Szybkie wygrane (1-2h każda)
+Obecna aplikacja ma już wystarczający fundament. Nie potrzebuje nowego frameworka,
+mikroserwisów, globalnego store ani wymiany warstwy UI. Następny etap powinien
+uporządkować semantykę bieżącego tygodnia, niezawodność zapisów i hierarchię
+informacji.
 
-| # | Funkcja | Opis |
-|---|---------|------|
-| 1 | **Historia planów** | Przeglądanie archiwalnych planów tygodniowych, przywracanie starych planów |
-| 2 | **Eksport listy zakupów** | Kopiowanie do schowka / udostępnianie jako tekst (np. do Messengera) |
-| 3 | **Statystyki przepisów** | Ile razy użyty w planach, średnie makro, popularność |
-| 4 | **Dark mode** | Przełącznik w ustawieniach, zapisywany w localStorage |
-| 5 | **Ulubione przepisy** | Gwiazdka na przepisie, filtrowanie po ulubionych |
+## Wdrożone — 2026-07-14
 
-### 🟡 Średni nakład (3-6h)
+- Wspólna data aplikacyjna w strefie `Europe/Warsaw`, blokada nieaktualnego planu
+  i jego zakupów oraz mobilny widok domyślnie ograniczony do „Dziś”.
+- Atomowe generowanie planu w transakcji Prisma.
+- Walidacja wejścia i uczciwy komunikat błędu dla zapisu dziennika zdrowia.
+- Trwałe odhaczanie zakupów per plan, dostępny checkbox oraz uproszczone ekrany
+  przepisów i ustawień.
+- Usunięte nieużywane alternatywne klienty planu i zakupów; dodany `npm run check:core`.
 
-| # | Funkcja | Opis |
-|---|---------|------|
-| 6 | **Dashboard dzienny** | Strona główna: co dziś jesz, makra dnia, postęp rutyny, woda, punkty — wszystko w jednym |
-| 7 | **Widok per osoba** | Porcje i makra oddzielnie dla Michała (2500 kcal) i Natalii (1800 kcal) |
-| 8 | **Tracker wagi** | Wykres wagi w czasie (Recharts), trend, BMI, cel wagowy |
-| 9 | **Historia zdrowia** | Wykres ostatnich 7/30 dni: energia, nastrój, sen, punkty — trendy i progres |
-| 10 | **Substytucje składników** | Kliknij składnik → sugerowane zamienniki z bazy diet (np. łosoś ↔ dorsz, olej ↔ oliwa) |
-| 11 | **Powiadomienia PWA** | Przypomnienia o rutynie porannej i wieczornej (Push API) |
+## Najbliższe priorytety
 
-### 🔴 Większy nakład (1-2 dni)
+1. **P0: środowisko i zależności** — uzupełnić lokalny Better Auth oraz
+   zaktualizować Next.js do wydania bez podatności `postcss` zgłoszonej przez
+   `npm audit`; po aktualizacji uruchomić build i ręcznie sprawdzić logowanie.
+2. **P1: bezpieczne błędy API** — `apiError` nie powinien zwracać klientowi
+   surowych komunikatów z Prisma. Zachować kody 401/403 i jawne błędy walidacji,
+   a pozostałe logować po stronie serwera oraz zwracać ogólny komunikat.
+3. **P1: testy domeny** — rozszerzyć prosty runner o awarię transakcji generatora,
+   walidację zdrowia i zaokrąglanie opakowań zakupów.
+4. **P2: dokumentacja** — zaktualizować `README.md` i `CLAUDE.md`, które nadal
+   zawierają historyczne odniesienia do SQLite i poprzedniego stosu.
 
-| # | Funkcja | Opis |
-|---|---------|------|
-| 12 | **AI generowanie planów** | Claude API do tworzenia zoptymalizowanych planów z uwzględnieniem Mediterranean Score |
-| 13 | **AI chat** | Asystent dietetyczny z kontekstem aktualnego planu, zdrowia i celów |
-| 14 | **Import nowych diet** | Drag & drop PDF/markdown → automatyczny parsing → nowe przepisy w bazie |
-| 15 | **Planowanie naprzód** | Generuj plany na 2-4 tygodnie, z widokiem kalendarza |
+## Stan potwierdzony
 
-### 💡 Nowe pomysły (poza oryginalnym planem)
+- Next.js 16 App Router, TypeScript, Prisma 5, PostgreSQL/Neon, Better Auth.
+- Izolacja danych per gospodarstwo jest w modelu i zapytaniach, nie tylko w UI.
+- Główne domeny są czytelne: plan, przepisy, zakupy, zdrowie i ustawienia.
+- Produkcja działa i jest responsywna; desktopowa siatka planu jest użyteczna.
+- `npm run build` przechodzi. Lokalny `.env` nie ma jednak
+  `BETTER_AUTH_SECRET` i `BETTER_AUTH_URL`, więc build emituje błędy/ostrzeżenia
+  Better Auth, mimo kodu wyjścia 0.
+- Produkcja 2026-07-14 nadal pokazuje jako aktywny plan z 15–21 czerwca, a lista
+  zakupów jest z niego wyliczana bez ostrzeżenia.
+- Brakuje uruchamialnych testów najważniejszej logiki generatora i zakupów.
 
-| # | Funkcja | Opis |
-|---|---------|------|
-| 16 | **Meal prep timer** | Countdown timer na dzień gotowania z sekwencją kroków (co gotować równolegle) |
-| 17 | **Sezonowość składników** | Flaga "w sezonie" na składnikach → tańsze + świeższe, sugestie sezonowych przepisów |
-| 18 | **Budżet zakupowy** | Estymacja kosztów planu tygodniowego na podstawie cen składników |
-| 19 | **Sharing z partnerem** | QR code / link do współdzielonego widoku listy zakupów (bez logowania) |
-| 20 | **Integracja z kalendarzem** | Eksport planu posiłków do Google Calendar / Apple Calendar (.ics) |
-| 21 | **Tracker nawodnienia** | Zaawansowany tracker z celem dziennym, powiadomieniami co 1.5h, historią |
-| 22 | **Notatki do posiłków** | Dodaj notatkę pod przepisem w planie (np. "więcej czosnku", "zamiast ryżu kasza") |
-| 23 | **Porównanie tygodni** | Porównanie makr i punktów zdrowia między tygodniami — progres w czasie |
-| 24 | **Quick meal rating** | Oceń posiłek 1-5 po zjedzeniu → lepsze przyszłe plany (baza preferencji) |
+## Decyzja architektoniczna
 
----
+Zostaje obecny monolit Next.js:
 
-## Rekomendowana kolejność wdrażania
+`strona / route handler -> auth context -> serwis lub Prisma -> PostgreSQL`
 
-### Priorytet 1 — Najwięcej wartości, szybkie do zrobienia:
-1. **Dashboard dzienny** (#6) — łączy plan + zdrowie + rutyny w jednym widoku
-2. **Widok per osoba** (#7) — wykorzystanie istniejących ustawień personAKcal/personBKcal
-3. **Eksport listy zakupów** (#2) — szybka wygrana, duża użyteczność w sklepie
-4. **Ulubione przepisy** (#5) — łatwe do dodania, poprawia UX
+Zmiany mają być punktowe:
 
-### Priorytet 2 — Rozbudowa trackingu:
-5. **Historia zdrowia + wykresy** (#9) — trendy w Recharts, motywacja do trzymania rutyny
-6. **Tracker wagi** (#8) — wykres postępów, cel wagowy
-7. **Quick meal rating** (#24) — feedback loop dla lepszych planów
+- wspólna, jawna semantyka daty i bieżącego tygodnia;
+- transakcja dla generowania planu;
+- małe, czyste funkcje dla logiki wymagającej testów;
+- komponenty serwerowe do odczytu, stan klienta tylko dla interakcji;
+- żadnej warstwy repository, React Query ani nowego design systemu bez
+  zmierzonej potrzeby.
 
-### Priorytet 3 — AI & Intelligence:
-8. **Substytucje składników** (#10) — najpierw z bazy, potem AI fallback
-9. **AI generowanie planów** (#12) — Claude API, Mediterranean Score optimization
-10. **AI chat** (#13) — asystent z kontekstem
+## Etap 0 — higiena i powtarzalny start (częściowo wykonany)
 
-### Priorytet 4 — Polish & Extras:
-11. **Dark mode** (#4)
-12. **Powiadomienia PWA** (#11)
-13. **Import nowych diet** (#14)
-14. **Meal prep timer** (#16)
+Zakres:
 
----
+- Uzupełnić lokalny `.env` na podstawie `.env.example` o Better Auth. Nie
+  commitować wartości.
+- Usunięto nieużywane `components/plan/PlanPageClient.tsx` i
+  `app/shopping/ShoppingPageClient.tsx`; aktualne strony używają serwerowych
+  `PlanPageContent` i `ShoppingPageContent`.
+- Uaktualnić `README.md` i `CLAUDE.md`: usunąć stary opis SQLite, Supabase Auth,
+  Anthropic SDK, shadcn i funkcji, które nie odpowiadają bieżącemu repo.
 
-## Fazy wg CLAUDE.md — co jeszcze brakuje:
+Warunek zakończenia:
 
-### Faza 2 (Intelligence) — częściowo zrobiona:
-- [ ] Generowanie planów przez Claude API
-- [ ] System substytucji składników (IngredientSubstitute model)
-- [ ] AI chat z kontekstem
-- [ ] Dashboard z wykresami (Recharts)
-- [ ] Widok makr per osoba z różnymi celami kcal
-- [x] Health log (zrobiony!)
-- [ ] Migracja do Supabase PostgreSQL (opcjonalnie, na przyszłość)
+- lokalne `npm run dev` i `npm run build` nie emitują błędów Better Auth;
+- dokumentacja opisuje Neon/PostgreSQL, Better Auth i rzeczywiste komendy.
 
-### Faza 3 (Coaching):
-- [ ] Tracker dopaminowy 30 dni
-- [ ] AI coaching spersonalizowany
-- [ ] Eksport PDF
-- [ ] Udostępnianie planu
+## Etap 1 — poprawność przed redesignem (wykonany, poza rozszerzeniem testów)
 
-### Faza 4 (Polish):
-- [ ] USDA FoodData Central integracja
-- [ ] Skaner kodów kreskowych
-- [ ] Optymalizator meal prep (timeline Gantt)
-- [ ] Lighthouse score > 90
-- [ ] Onboarding tour
+### 1. Bieżący tydzień
 
----
+- Dodano jedną małą funkcję daty aplikacyjnej dla strefy `Europe/Warsaw` i użyto
+  jej w planie oraz zdrowiu.
+- Odróżnić `active` od `current`: plan jest bieżący tylko wtedy, gdy jego zakres
+  zawiera dzisiejszą datę.
+- Nie archiwizować starego planu podczas zwykłego odczytu.
+- Gdy plan jest nieaktualny, pokazać wyraźny komunikat i CTA „Wygeneruj plan na
+  ten tydzień”. Stary plan może pozostać niżej jako podgląd.
+- Lista zakupów nie udaje aktualnej, jeśli bazuje na wygasłym planie.
 
-*Ostatnia aktualizacja: 2026-02-25*
+Pliki startowe:
+
+- `lib/services/MealPlanGenerator.ts`
+- `app/page.tsx`
+- `app/shopping/page.tsx`
+- `app/health/page.tsx`
+
+### 2. Atomowe generowanie planu
+
+- Zostawić pobranie kandydatów przed zapisem.
+- Archiwizację starego planu, utworzenie nowego planu, posiłków i porcji wykonano
+  w jednej interaktywnej transakcji Prisma.
+- Dopiero po udanej transakcji pobrać pełny plan.
+
+To zapobiega stanowi: stary plan zarchiwizowany, a nowy aktywny plan pusty lub
+częściowy po błędzie w połowie operacji.
+
+### 3. Pewny zapis zdrowia
+
+- `HealthClient` sprawdza `res.ok`; komunikat „Zapisano” pojawia się tylko po sukcesie.
+- Po błędzie zachować dane w formularzu i pokazać „Nie zapisano — spróbuj
+  ponownie”.
+- Walidować po stronie API prawdziwą datę kalendarzową i zakresy liczb
+  (woda, sen, skale 1–5, punkty 1–3).
+
+### 4. Minimalne testy ryzykownej logiki
+
+- Dodać jeden lekki runner testów TypeScript i tylko testy chroniące:
+  bieżący tydzień/strefę czasową, atomowy kontrakt generatora, zakresy zdrowia
+  oraz zaokrąglanie opakowań listy zakupów.
+- Nie budować rozbudowanej piramidy testów ani fixture frameworka.
+
+Warunek zakończenia:
+
+- wygasły plan i jego zakupy są jawnie oznaczone;
+- błąd w dowolnym zapisie generatora nie zmienia aktywnego planu;
+- API nie przyjmuje wartości spoza zakresu;
+- błędna odpowiedź zapisu zdrowia nigdy nie pokazuje „Zapisano”.
+
+## Etap 2 — codzienny UX (wykonany w minimalnym zakresie)
+
+### Ekran główny
+
+- Zachować `/` i obecną nawigację. Nie dodawać szóstej pozycji „Dashboard”.
+- Dodać dwa widoki na tych samych danych: `Dziś` i `Tydzień`.
+- Na telefonie domyślnie otwierać `Dziś`; na desktopie zachować obecną siatkę
+  tygodnia jako domyślną.
+- Widok `Dziś` pokazuje tylko dzisiejsze posiłki, kalorie/makra per profil i
+  informację, które potrawy zaczynają dziś nowy batch.
+- Uzupełnić etykietę diagnostyczną: zamiast samego „dni w celu” pokazać np.
+  „7/7 dni w celu”.
+
+Nie tworzyć osobnej bazy ani API dashboardu — potrzebne dane są już w planie.
+
+### Lista zakupów
+
+- Panel resztek domyślnie zwinąć. Na telefonie obecnie zasłania kilka pierwszych
+  ekranów właściwej listy.
+- Poprawić tekst „32 produkty/produktów” na prawidłową odmianę.
+- Zapisywać zaznaczenia w `localStorage` pod kluczem planu, żeby odświeżenie
+  strony nie zerowało zakupów.
+- Zastąpić klikalny `div` natywnym checkboxem/etykietą, aby lista działała z
+  klawiatury i czytnika ekranu.
+
+`localStorage` jest celowym limitem pierwszej wersji. Synchronizację zakupów
+między kontami dodać dopiero, gdy będzie faktycznie potrzebna.
+
+### Przepisy
+
+- Na telefonie przenieść „Dodaj przepis” do nagłówka, żeby przycisk nie nachodził
+  na przewijaną listę filtrów.
+- Zachować obecną wyszukiwarkę i filtry; poprawić tylko sticky/scroll i hierarchię.
+- Nie dodawać kolejnego systemu tagów ani nowej biblioteki komponentów.
+
+### Ustawienia
+
+- Profile, tryb planowania i wygląd zostawić na wierzchu.
+- Całe „Domyślne grupowanie” umieścić w natywnym, domyślnie zamkniętym
+  `<details>` jako ustawienie zaawansowane.
+
+Warunek zakończenia:
+
+- na telefonie użytkownik widzi dzisiejszy plan bez przewijania siedmiu dni;
+- właściwa lista zakupów jest widoczna od razu;
+- odświeżenie strony nie usuwa zaznaczeń zakupów;
+- najczęstsze ustawienia nie są przykryte długim konfiguratorem batchy.
+
+## Etap 3 — małe porządki w kodzie
+
+- Z `components/recipes/AddRecipeModal.tsx` wydzielić wyłącznie czysty parser
+  tekstu przepisu i jego walidację. Komponent ma 740 linii i miesza heurystyki
+  importu z obsługą modala.
+- Zostawić `PlanView` jako koordynator interakcji. Dzielić go dopiero, gdy kolejna
+  funkcja faktycznie zwiększy sprzężenie.
+- W generatorze pobrać kandydatów jednym zapytaniem i pogrupować w pamięci, jeśli
+  pomiar pokaże, że pięć równoległych zapytań do Neon jest istotnym kosztem.
+- W `app/recipes/page.tsx` zastąpić pobieranie wszystkich `variantKey` małym
+  zapytaniem `count`, ale tylko w ramach pracy nad wydajnością tej strony.
+
+Warunek zakończenia:
+
+- parser importu ma testy bez renderowania Reacta;
+- nie ma nieużywanych alternatywnych ścieżek ładowania stron;
+- liczba nowych abstrakcji jest ograniczona do funkcji używanych w co najmniej
+  jednym realnym przepływie i teście.
+
+## Etap 4 — wydajność po pomiarze
+
+- Zmierzyć osobno czas: auth context, summary planu, pełny plan, przepisy i listę
+  zakupów na produkcji.
+- Zachować obecny streaming/Suspense, dopóki pomiar nie wykaże regresji.
+- Optymalizować liczbę i kształt zapytań Prisma, nie dodawać cache ani klienta do
+  fetchowania „na wszelki wypadek”.
+- Po każdej zmianie porównać pierwszy render desktop/mobile i czas przejścia
+  między trasami.
+
+## Kolejność wdrożenia
+
+1. Higiena lokalnego środowiska i dokumentacji.
+2. Bieżący tydzień + blokada nieaktualnej listy zakupów.
+3. Transakcja generatora + test awarii.
+4. Zapis i walidacja zdrowia.
+5. Widok `Dziś` + poprawki mobilnej listy zakupów.
+6. Przepisy i ustawienia — wyłącznie poprawa hierarchii.
+7. Ekstrakcja parsera i optymalizacje potwierdzone pomiarem.
+
+## Poza zakresem teraz
+
+- mikroserwisy, osobny backend i repository layer;
+- React Query/Zustand/Redux;
+- migracja UI do shadcn lub innego design systemu;
+- AI chat i AI generator przed uporządkowaniem podstawowego przepływu;
+- natywna aplikacja mobilna;
+- migracja stringów/JSON do nowych enumów i typów bazy bez konkretnego błędu,
+  który miałaby rozwiązać.
