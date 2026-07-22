@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
 import { visibleRecipeWhere } from '@/lib/access';
+import { normalizeRecipeName } from '@/lib/utils/recipeConstants';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
@@ -61,6 +62,7 @@ export async function PATCH(
     if (!name || typeof name !== 'string' || !name.trim()) {
       return NextResponse.json({ error: 'Pole "name" jest wymagane.' }, { status: 400 });
     }
+    const normalizedName = normalizeRecipeName(name);
     if (!type || !VALID_TYPES.includes(type)) {
       return NextResponse.json({ error: 'Nieprawidłowy typ przepisu.' }, { status: 400 });
     }
@@ -77,6 +79,19 @@ export async function PATCH(
     });
     if (!existing) {
       return NextResponse.json({ error: 'Przepis nie istnieje.' }, { status: 404 });
+    }
+    const duplicate = await prisma.recipe.findFirst({
+      where: {
+        id: { not: id },
+        householdId: context.householdId,
+        source: 'user',
+        variantKey: existing.variantKey,
+        name: { equals: normalizedName, mode: 'insensitive' },
+      },
+      select: { id: true },
+    });
+    if (duplicate) {
+      return NextResponse.json({ error: 'Przepis o tej nazwie już istnieje.' }, { status: 409 });
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -103,7 +118,7 @@ export async function PATCH(
       await tx.recipe.update({
         where: { id },
         data: {
-          name: name.trim(),
+          name: normalizedName,
           type,
           prepTimeMin: prepTimeMin ?? null,
           batchFriendly: batchFriendly ?? false,

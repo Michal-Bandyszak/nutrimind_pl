@@ -4,6 +4,10 @@ export const VALID_TYPES = [
   'breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert',
 ] as const;
 
+export function normalizeRecipeName(value: string) {
+  return value.replace(/\s+/g, ' ').trim();
+}
+
 export const TYPE_COLORS: Record<string, string> = {
   breakfast:        'bg-amber-100 text-amber-700',
   second_breakfast: 'bg-orange-100 text-orange-700',

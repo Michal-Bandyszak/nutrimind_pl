@@ -1,6 +1,12 @@
 {
   "description": "Original NutriMind recipes for a balanced, Mediterranean-aligned plan adapted to Polish products. Macros are per serving and checked for energy consistency by scripts/check-core-utils.ts.",
   "nutritionBasis": "Estimated from standard per-100g values based on USDA FoodData Central and typical Polish product labels; exact brands may vary.",
+  "sources": [
+    { "name": "NCEŻ/PZH - Pasta z makreli", "url": "https://ncez.pzh.gov.pl/przepisy/pasta-z-makreli/" },
+    { "name": "NCEŻ/PZH - Hummus z burakiem", "url": "https://ncez.pzh.gov.pl/przepisy/hummus-z-burakiem/" },
+    { "name": "NCEŻ/PZH - Dieta dla zdrowia i układu krążenia", "url": "https://ncez.pzh.gov.pl/wp-content/uploads/2023/10/3.-Dieta-dla-Zdrowia-i-ukladu-krazenia-10.2023.pdf" },
+    { "name": "NCEŻ/PZH - Ryby w diecie", "url": "https://ncez.pzh.gov.pl/abc-zywienia/ryby-w-diecie-korzysci-i-zagrozenia/" }
+  ],
   "recipes": [
     {
       "name": "Jajka sadzone z ziemniakami, jarmużem i kefirem",
@@ -265,6 +271,217 @@
         "Na oleju podsmaż cebulę, marchew i pietruszkę przez kilka minut.",
         "Dodaj pomidory, bulion, pęczak i tymianek; gotuj około 30 minut.",
         "Dodaj przepłukaną ciecierzycę i gotuj jeszcze 5 minut."
+      ]
+    },
+    {
+      "name": "Żytnie kanapki z pastą z makreli i kiszonym ogórkiem",
+      "type": "breakfast",
+      "prepTimeMin": 12,
+      "cookTimeMin": 8,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 530,
+      "proteinG": 32,
+      "carbsG": 49,
+      "fatG": 23,
+      "fiberG": 7,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "omega3", "ryba:wedzona"],
+      "ingredients": [
+        { "name": "Chleb żytni", "amountG": 90, "displayText": "Chleb żytni, 3 kromki (90 g)", "category": "grains" },
+        { "name": "Makrela wędzona", "amountG": 70, "displayText": "Makrela wędzona bez skóry i ości, 70 g", "category": "protein" },
+        { "name": "Jajko", "amountG": 60, "displayText": "Jajko, 1 szt. (60 g)", "category": "protein" },
+        { "name": "Jogurt grecki", "amountG": 50, "displayText": "Jogurt grecki, 50 g", "category": "dairy" },
+        { "name": "Ogórek kiszony", "amountG": 60, "displayText": "Ogórek kiszony, 1 szt. (60 g)", "category": "vegetables" },
+        { "name": "Szczypiorek", "amountG": 10, "displayText": "Szczypiorek, 10 g", "category": "vegetables" },
+        { "name": "Musztarda", "amountG": 8, "displayText": "Musztarda, 1 łyżeczka (8 g)", "category": "spices" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Ugotuj jajko na twardo, ostudź i drobno posiekaj.",
+        "Rozgnieć makrelę z jajkiem, jogurtem, musztardą, szczypiorkiem i pieprzem.",
+        "Podaj pastę na chlebie żytnim z pokrojonym ogórkiem kiszonym; nie dosalaj."
+      ]
+    },
+    {
+      "name": "Buraczany hummus z chlebem żytnim i marchewką",
+      "type": "second_breakfast",
+      "prepTimeMin": 12,
+      "cookTimeMin": 0,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 600,
+      "proteinG": 20,
+      "carbsG": 91,
+      "fatG": 18,
+      "fiberG": 20,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "ciecierzyca-ok", "bez-miesa", "batch"],
+      "ingredients": [
+        { "name": "ciecierzyca z puszki", "amountG": 130, "displayText": "Ciecierzyca, odsączona i przepłukana, 130 g", "category": "protein" },
+        { "name": "Burak", "amountG": 100, "displayText": "Burak gotowany, 100 g", "category": "vegetables" },
+        { "name": "Tahini", "amountG": 15, "displayText": "Tahini, 1 łyżka (15 g)", "category": "oils" },
+        { "name": "Olej rzepakowy", "amountG": 5, "displayText": "Olej rzepakowy, 1 łyżeczka (5 g)", "category": "oils" },
+        { "name": "Sok z cytryny", "amountG": 10, "displayText": "Sok z cytryny, 10 g", "category": "fruits" },
+        { "name": "Chleb żytni", "amountG": 70, "displayText": "Chleb żytni, 2-3 kromki (70 g)", "category": "grains" },
+        { "name": "Marchew", "amountG": 120, "displayText": "Marchew pokrojona w słupki, 120 g", "category": "vegetables" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Zblenduj ciecierzycę, buraka, tahini, olej, sok z cytryny i pieprz.",
+        "Jeśli pasta jest zbyt gęsta, dodaj 1-2 łyżki zimnej wody.",
+        "Podaj z chlebem żytnim i słupkami marchewki."
+      ]
+    },
+    {
+      "name": "Sałatka śledziowa z pieczonym burakiem, ziemniakiem i jabłkiem",
+      "type": "lunch",
+      "prepTimeMin": 18,
+      "cookTimeMin": 30,
+      "batchFriendly": true,
+      "maxStorageDays": 1,
+      "kcalPerServing": 635,
+      "proteinG": 31,
+      "carbsG": 79,
+      "fatG": 22,
+      "fiberG": 13,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "omega3", "ryba:solona"],
+      "ingredients": [
+        { "name": "Filet śledziowy", "amountG": 100, "displayText": "Filet śledziowy, wymoczony, 100 g", "category": "protein" },
+        { "name": "Ziemniak", "amountG": 180, "displayText": "Ziemniaki, 180 g", "category": "vegetables" },
+        { "name": "Burak", "amountG": 100, "displayText": "Burak, 100 g", "category": "vegetables" },
+        { "name": "Marchew", "amountG": 70, "displayText": "Marchew, 70 g", "category": "vegetables" },
+        { "name": "Jabłko", "amountG": 70, "displayText": "Jabłko, 70 g", "category": "fruits" },
+        { "name": "Cebula czerwona", "amountG": 30, "displayText": "Czerwona cebula, 30 g", "category": "vegetables" },
+        { "name": "Jogurt naturalny", "amountG": 60, "displayText": "Jogurt naturalny, 60 g", "category": "dairy" },
+        { "name": "Olej rzepakowy", "amountG": 5, "displayText": "Olej rzepakowy, 1 łyżeczka (5 g)", "category": "oils" },
+        { "name": "Musztarda", "amountG": 10, "displayText": "Musztarda, 10 g", "category": "spices" },
+        { "name": "Chleb żytni", "amountG": 40, "displayText": "Chleb żytni, 1-2 kromki (40 g)", "category": "grains" }
+      ],
+      "instructions": [
+        "Jeśli śledź jest mocno słony, mocz go godzinę w zimnej wodzie i dokładnie osusz.",
+        "Ziemniaki, buraka i marchew upiecz do miękkości, ostudź i pokrój.",
+        "Połącz warzywa ze śledziem, jabłkiem i cebulą; dodaj sos z jogurtu i musztardy.",
+        "Podaj z chlebem żytnim; nie dosalaj."
+      ]
+    },
+    {
+      "name": "Mrożony pstrąg z kaszą gryczaną i kapustą kiszoną",
+      "type": "lunch",
+      "prepTimeMin": 12,
+      "cookTimeMin": 28,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 705,
+      "proteinG": 51,
+      "carbsG": 65,
+      "fatG": 27,
+      "fiberG": 13,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "omega3", "ryba:mrozona", "kiszonki", "batch"],
+      "ingredients": [
+        { "name": "Pstrąg mrożony", "amountG": 200, "displayText": "Filet z pstrąga, mrożony, 200 g", "category": "protein" },
+        { "name": "Kasza gryczana", "amountG": 75, "displayText": "Kasza gryczana sucha, 75 g", "category": "grains" },
+        { "name": "Kapusta kiszona", "amountG": 150, "displayText": "Kapusta kiszona, 150 g", "category": "vegetables" },
+        { "name": "Marchew", "amountG": 80, "displayText": "Marchew, 80 g", "category": "vegetables" },
+        { "name": "Olej rzepakowy", "amountG": 10, "displayText": "Olej rzepakowy, 10 g", "category": "oils" },
+        { "name": "Sok z cytryny", "amountG": 10, "displayText": "Sok z cytryny, 10 g", "category": "fruits" },
+        { "name": "Koperek", "amountG": 8, "displayText": "Koperek, 8 g", "category": "spices" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Rozmroź pstrąga w lodówce, osusz, skrop cytryną i posyp koperkiem.",
+        "Piecz rybę około 20 minut w 190°C, a kaszę ugotuj według instrukcji.",
+        "Kapustę wymieszaj ze startą marchewką i olejem; podaj bez podgrzewania obok ryby i kaszy."
+      ]
+    },
+    {
+      "name": "Pieczone kotleciki kalafiorowo-owsiane z ziemniakami i dipem",
+      "type": "dinner",
+      "prepTimeMin": 18,
+      "cookTimeMin": 28,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 675,
+      "proteinG": 31,
+      "carbsG": 91,
+      "fatG": 21,
+      "fiberG": 16,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "bez-miesa", "batch"],
+      "ingredients": [
+        { "name": "Kalafior mrożony", "amountG": 250, "displayText": "Kalafior świeży lub mrożony, 250 g", "category": "vegetables" },
+        { "name": "Jajko", "amountG": 60, "displayText": "Jajko, 1 szt. (60 g)", "category": "protein" },
+        { "name": "Płatki owsiane", "amountG": 45, "displayText": "Płatki owsiane, zmielone, 45 g", "category": "grains" },
+        { "name": "Ziemniak", "amountG": 220, "displayText": "Ziemniaki, 220 g", "category": "vegetables" },
+        { "name": "Jogurt naturalny", "amountG": 150, "displayText": "Jogurt naturalny, 150 g", "category": "dairy" },
+        { "name": "Ogórek świeży", "amountG": 150, "displayText": "Ogórek, 150 g", "category": "vegetables" },
+        { "name": "Olej rzepakowy", "amountG": 8, "displayText": "Olej rzepakowy, 8 g", "category": "oils" },
+        { "name": "Koperek", "amountG": 8, "displayText": "Koperek, 8 g", "category": "spices" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Kalafior ugotuj krótko, dobrze odparuj i rozgnieć z jajkiem oraz zmielonymi płatkami.",
+        "Uformuj małe kotleciki, posmaruj połową oleju i piecz około 25 minut w 200°C.",
+        "Ziemniaki ugotuj, a jogurt wymieszaj z tartym ogórkiem, koperkiem i pieprzem.",
+        "Podaj kotleciki z ziemniakami i dipem."
+      ]
+    },
+    {
+      "name": "Kapuściany gulasz z ciecierzycą, pęczakiem i pieczarkami",
+      "type": "dinner",
+      "prepTimeMin": 15,
+      "cookTimeMin": 35,
+      "batchFriendly": true,
+      "maxStorageDays": 3,
+      "kcalPerServing": 750,
+      "proteinG": 27,
+      "carbsG": 124,
+      "fatG": 16,
+      "fiberG": 30,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "ciecierzyca-ok", "bez-miesa", "kiszonki", "batch"],
+      "ingredients": [
+        { "name": "ciecierzyca z puszki", "amountG": 150, "displayText": "Ciecierzyca, odsączona i przepłukana, 150 g", "category": "protein" },
+        { "name": "Kasza pęczak", "amountG": 60, "displayText": "Kasza pęczak sucha, 60 g", "category": "grains" },
+        { "name": "Kapusta biała", "amountG": 200, "displayText": "Kapusta biała, 200 g", "category": "vegetables" },
+        { "name": "Kapusta kiszona", "amountG": 150, "displayText": "Kapusta kiszona, 150 g", "category": "vegetables" },
+        { "name": "Pieczarki", "amountG": 150, "displayText": "Pieczarki, 150 g", "category": "vegetables" },
+        { "name": "Marchew", "amountG": 100, "displayText": "Marchew, 100 g", "category": "vegetables" },
+        { "name": "Cebula", "amountG": 70, "displayText": "Cebula, 70 g", "category": "vegetables" },
+        { "name": "Koncentrat pomidorowy", "amountG": 30, "displayText": "Koncentrat pomidorowy, 30 g", "category": "vegetables" },
+        { "name": "Olej rzepakowy", "amountG": 10, "displayText": "Olej rzepakowy, 10 g", "category": "oils" },
+        { "name": "Majeranek suszony", "amountG": 1, "displayText": "Majeranek, 1 łyżeczka", "category": "spices" }
+      ],
+      "instructions": [
+        "Na oleju zeszklij cebulę, dodaj pieczarki i marchew.",
+        "Dodaj białą kapustę, koncentrat, pęczak, majeranek i około 350 ml wody; duś 25 minut.",
+        "Dodaj przepłukaną ciecierzycę i kapustę kiszoną, a następnie gotuj jeszcze 8-10 minut."
       ]
     }
   ]

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
 import { visibleRecipeWhere } from '@/lib/access';
+import { normalizeRecipeName } from '@/lib/utils/recipeConstants';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
     if (name.length > 200) {
       return NextResponse.json({ error: 'Nazwa przepisu jest zbyt długa (max 200 znaków).' }, { status: 400 });
     }
+    const normalizedName = normalizeRecipeName(name);
     if (!type || !VALID_TYPES.includes(type)) {
       return NextResponse.json({ error: 'Nieprawidłowy typ przepisu.' }, { status: 400 });
     }
@@ -104,7 +106,7 @@ export async function POST(req: NextRequest) {
 
     const existing = await prisma.recipe.findFirst({
       where: {
-        name: name.trim(),
+        name: { equals: normalizedName, mode: 'insensitive' },
         source: resolvedSource,
         variantKey: resolvedVariantKey,
         householdId: context.householdId,
@@ -134,7 +136,7 @@ export async function POST(req: NextRequest) {
       const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
       const created = await tx.recipe.create({
         data: {
-          name: name.trim(),
+          name: normalizedName,
           type,
           prepTimeMin: prepTimeMin ?? null,
           cookTimeMin: cookTimeMin ?? null,

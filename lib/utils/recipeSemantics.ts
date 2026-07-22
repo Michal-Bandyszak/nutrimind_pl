@@ -46,7 +46,7 @@ export function inferRecipeSemantics({
   pushUnique(families, 'salad', /\bsałatk|\bsalatk|\bbowl\b/i.test(haystack));
 
   pushUnique(proteins, 'egg', /\bjaj/i.test(haystack));
-  pushUnique(proteins, 'fish', /\błoso|\blosos|\bdorsz|\btuńczyk|\btunczyk|\bsardyn|\bkrewet/i.test(haystack));
+  pushUnique(proteins, 'fish', /łoso|losos|dorsz|tuńczyk|tunczyk|sardyn|krewet|makrel|śled|sled|pstrąg|pstrag|mintaj/i.test(haystack));
   pushUnique(proteins, 'poultry', /\bkurczak|\bindyk\b/i.test(haystack));
   pushUnique(proteins, 'beef', /\bwołow|\bwolow|\bwoł\b|\bstek\b|\btatar\b/i.test(haystack));
   pushUnique(proteins, 'legumes', /\bciecierzyc|\bsoczewic|\bfasol|\bhummus\b/i.test(haystack));

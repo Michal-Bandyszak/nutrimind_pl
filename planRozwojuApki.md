@@ -48,6 +48,20 @@ lub gdy osiem nowych receptur nie zapewni wystarczającej różnorodności.
   po zmianie potwierdzono 8/8 nowych makr, 7 komponentów i brak źle
   sklasyfikowanych nazw zawierających olej, oliwę lub masło.
 
+### Rozszerzenie i porządkowanie bazy — 2026-07-22
+
+- Dodano sześć dalszych receptur uzupełniających realne luki: makrelę, śledzia,
+  mrożonego pstrąga, buraczany hummus, kotleciki kalafiorowe i kapuściany gulasz.
+- Audyt 260 bazowych posiłków wskazał jeden dokładny duplikat ukryty przez twardą
+  spację. Rekordy scalono po backupie, zachowując trzy odwołania z planów.
+- Pięć podobnych par oraz placuszki używane jako różne typy posiłku pozostawiono,
+  ponieważ różnią się składem, kalorycznością lub profilem low-carb/testosteronowym.
+- Dodano powtarzalny `npm run audit:recipes`; tryb `--fix-exact` scala wyłącznie
+  identyczne, niepowiązane rekordy i przed zmianą zapisuje lokalny backup.
+- API normalizuje białe znaki w nazwach i blokuje kolizje nazw również przy edycji.
+- Po imporcie baza ma 286 receptur, w tym 265 bazowych; ponowny audyt nie wykazał
+  żadnego dokładnego duplikatu.
+
 ## Cel
 
 NutriMind ma przede wszystkim odpowiadać na trzy codzienne pytania:

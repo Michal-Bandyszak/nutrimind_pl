@@ -8,6 +8,8 @@ import {
   todayInAppTimeZone,
 } from '../lib/utils/appDate';
 import { recipeSelectionScore, type RecipeCandidate } from '../lib/utils/mealPlanScoring';
+import { normalizeRecipeName } from '../lib/utils/recipeConstants';
+import { inferRecipeSemantics } from '../lib/utils/recipeSemantics';
 
 const justAfterMidnightInWarsaw = new Date('2026-07-14T22:30:00.000Z');
 
@@ -18,6 +20,14 @@ assert.equal(isValidDateKey('2024-02-29'), true);
 assert.equal(isValidDateKey('2026-02-29'), false);
 
 console.log('Core date checks passed.');
+
+assert.equal(
+  normalizeRecipeName('  Chrupiąca  grzanka z pomidorową\u00a0salsą  '),
+  'Chrupiąca grzanka z pomidorową salsą',
+);
+for (const fishName of ['Łosoś', 'Makrela wędzona', 'Filet śledziowy', 'Pstrąg mrożony', 'Mintaj mrożony']) {
+  assert.ok(inferRecipeSemantics({ name: fishName }).proteins.includes('fish'), fishName);
+}
 
 const selectionOptions = {
   usedIds: new Set<string>(),
@@ -64,12 +74,12 @@ const curatedPath = path.join(process.cwd(), 'data/curated/polish-balanced-recip
 const curated = JSON.parse(fs.readFileSync(curatedPath, 'utf8')) as { recipes: CuratedRecipe[] };
 const curatedNames = new Set(curated.recipes.map((recipe) => recipe.name));
 
-assert.equal(curated.recipes.length, 8);
+assert.equal(curated.recipes.length, 14);
 assert.equal(curatedNames.size, curated.recipes.length);
-assert.equal(curated.recipes.filter((recipe) => recipe.type === 'breakfast').length, 2);
-assert.equal(curated.recipes.filter((recipe) => recipe.type === 'second_breakfast').length, 2);
-assert.equal(curated.recipes.filter((recipe) => recipe.type === 'lunch').length, 2);
-assert.equal(curated.recipes.filter((recipe) => recipe.type === 'dinner').length, 2);
+assert.equal(curated.recipes.filter((recipe) => recipe.type === 'breakfast').length, 3);
+assert.equal(curated.recipes.filter((recipe) => recipe.type === 'second_breakfast').length, 3);
+assert.equal(curated.recipes.filter((recipe) => recipe.type === 'lunch').length, 4);
+assert.equal(curated.recipes.filter((recipe) => recipe.type === 'dinner').length, 4);
 
 for (const recipe of curated.recipes) {
   assert.equal(recipe.nutritionVerified, true, `${recipe.name}: nutritionVerified`);
