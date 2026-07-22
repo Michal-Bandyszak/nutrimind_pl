@@ -1,6 +1,52 @@
 # NutriMind — plan architektury i UX/UI
 
-Aktualizacja: 2026-07-14
+Aktualizacja: 2026-07-22
+
+## Aktualny zakres — różnorodność diety i szybkość
+
+Decyzje produktowe:
+
+- domyślny generator pozostaje zbilansowany i korzysta ze wszystkich
+  zweryfikowanych pul, w tym low-carb i dawnej diety testosteronowej;
+- profil śródziemnomorski, lokalność i budżetowość są lekką preferencją, a nie
+  filtrem wykluczającym pozostałe przepisy;
+- masło klarowane jest dozwolonym tłuszczem do smażenia obok oleju rzepakowego;
+  oliwa pozostaje opcją smakową i do użycia na zimno;
+- nazwa źródła „dieta testosteronowa” nie jest obietnicą wpływu zdrowotnego;
+- aplikacja nie dobiera restrykcyjnego profilu medycznego bez aktualnych badań
+  i decyzji użytkownika.
+
+Zakres wdrożenia:
+
+1. Uszczelnić seed: aliasy źródeł, prawidłowe wykrywanie OCR i aktualizacja
+   kategorii składników bez tworzenia duplikatów.
+2. Dodać osiem własnych, polskich przepisów pilotażowych oraz kontrolę ich
+   kompletności i zgodności kalorii z makrami.
+3. Dodać małą premię punktową dla tagów `profil:srodziemnomorski`, `lokalne` i
+   `budzetowe`, bez karania low-carb i pozostałych źródeł.
+4. Uruchomić funkcje Vercel we Frankfurcie (`fra1`) i włączyć krótki cache sesji
+   Better Auth; bez zmiany hostingu, bazy ani dodawania cache infrastrukturalnego.
+5. Zweryfikować dane lekkim runnerem, następnie `check:core` i produkcyjnym buildem.
+
+Świadomie pominięte: selektor medycznych profili, nowa ontologia diet, zewnętrzne
+API żywieniowe i hurtowy import cudzych baz. Wrócić do nich dopiero po badaniach
+lub gdy osiem nowych receptur nie zapewni wystarczającej różnorodności.
+
+### Wdrożone — 2026-07-22
+
+- Produkcyjny Neon ma 281 przepisów: dodano po dwa nowe śniadania, drugie
+  śniadania, obiady i kolacje; zachowano 25 receptur testosteronowych i 22 low-carb.
+- Makra nowych receptur przeliczono od gramatur składników na podstawie
+  standardowych wartości FoodData Central i typowych polskich etykiet; marki
+  produktów mogą powodować niewielkie różnice.
+- Seed ma tryb `--dry-run`, kanoniczne aliasy źródeł, poprawne prefiksy OCR,
+  kontrolę duplikatów oraz aktualizację kategorii składników.
+- Generator lekko premiuje lokalne, budżetowe przepisy śródziemnomorskie, ale
+  nie filtruje ani nie karze pozostałych diet.
+- Dodano region Vercel `fra1` i 60-sekundowy cache sesji Better Auth.
+- Przed zmianą Neon zapisano pełny, ignorowany przez Git backup tabel receptur;
+  po zmianie potwierdzono 8/8 nowych makr, 7 komponentów i brak źle
+  sklasyfikowanych nazw zawierających olej, oliwę lub masło.
 
 ## Cel
 

@@ -10,12 +10,17 @@ import path from 'path';
 const prisma = new PrismaClient();
 const CURATED_RECIPE_FILES = [
   'mediterranean-microbiome-recipes.json',
+  'polish-balanced-recipes.json',
   'breakfast-recipes.json',
   'ocr-diety-recipes.json',
 ];
 const VARIANT_FILE = 'recipe-calorie-variants-2500.json';
 const COMPONENT_FILE = 'recipe-components.json';
-const OCR_SOURCE_PREFIX = 'OCR Import';
+const OCR_SOURCE_PREFIXES = ['OCR Import', 'Import OCR', 'OCRDiety'];
+const SOURCE_DIET_ALIASES: Record<string, string> = {
+  'Zestaw sniadan A': 'Sniadania OCR 2026-06-13',
+  'Plan bazowy C': 'Dieta 1800 kcal',
+};
 const RECIPE_NAME_ALLOWLIST = new Set([
   'Gruszka, orzechy',
   'Jabłko, orzechy',
@@ -198,9 +203,25 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
 function recipeLookupKey(ref: RecipeRef | Pick<SeedRecipe, 'name' | 'sourceDiet' | 'variantKey'>) {
   return JSON.stringify({
     name: ref.name,
-    sourceDiet: ref.sourceDiet ?? null,
+    sourceDiet: canonicalSourceDiet(ref.sourceDiet),
     variantKey: ref.variantKey ?? 'base',
   });
+}
+
+function canonicalSourceDiet(sourceDiet?: string | null) {
+  if (!sourceDiet) return null;
+  return SOURCE_DIET_ALIASES[sourceDiet] ?? sourceDiet;
+}
+
+function sourceDietCandidates(sourceDiet?: string | null) {
+  const canonical = canonicalSourceDiet(sourceDiet);
+  if (!canonical) return [];
+  return [
+    canonical,
+    ...Object.entries(SOURCE_DIET_ALIASES)
+      .filter(([, target]) => target === canonical)
+      .map(([alias]) => alias),
+  ];
 }
 
 function scalesLinearly(ingredientName: string): boolean {
@@ -210,10 +231,17 @@ function scalesLinearly(ingredientName: string): boolean {
 
 function inferCategory(name: string) {
   const lower = name.toLowerCase();
+  if (CATEGORY_KEYWORDS.oils.some((keyword) => lower.includes(keyword))) return 'oils';
   for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    if (category === 'oils') continue;
     if (keywords.some((keyword) => lower.includes(keyword))) return category;
   }
   return 'other';
+}
+
+function resolveCategory(ingredient: SeedIngredient) {
+  const inferred = inferCategory(ingredient.name);
+  return inferred === 'other' ? ingredient.category || 'other' : inferred;
 }
 
 function getPackageInfo(ingredientName: string) {
@@ -248,7 +276,7 @@ function hasLetters(value: string) {
 }
 
 function isOcrSource(sourceDiet?: string | null) {
-  return (sourceDiet ?? '').startsWith(OCR_SOURCE_PREFIX);
+  return OCR_SOURCE_PREFIXES.some((prefix) => (sourceDiet ?? '').startsWith(prefix));
 }
 
 function isInvalidIngredientName(name: string) {
@@ -323,6 +351,11 @@ function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
     recipe: {
       ...recipe,
       name: normalizedName,
+      sourceDiet: canonicalSourceDiet(recipe.sourceDiet),
+      variantOf: recipe.variantOf ? {
+        ...recipe.variantOf,
+        sourceDiet: canonicalSourceDiet(recipe.variantOf.sourceDiet),
+      } : recipe.variantOf,
       instructions: normalizedInstructions,
       tags: normalizedTags,
       ingredients: normalizedIngredients,
@@ -393,6 +426,7 @@ function buildVariantRecipes(
 }
 
 async function main() {
+  const dryRun = process.argv.includes('--dry-run');
   const combinedPath = path.join(__dirname, '../data/parsed/combined.json');
   const combined = fs.existsSync(combinedPath)
     ? (JSON.parse(fs.readFileSync(combinedPath, 'utf-8')) as { recipes: SeedRecipe[] })
@@ -435,6 +469,23 @@ async function main() {
     return [validated.recipe];
   });
 
+  const recipeKeys = recipes.map((recipe) => recipeLookupKey(recipe));
+  const duplicateKeys = recipeKeys.filter((key, index) => recipeKeys.indexOf(key) !== index);
+  if (duplicateKeys.length) {
+    throw new Error(`Duplicate canonical recipe keys: ${[...new Set(duplicateKeys)].join(', ')}`);
+  }
+
+  if (dryRun) {
+    const countsBySource = recipes.reduce<Record<string, number>>((counts, recipe) => {
+      const source = recipe.sourceDiet ?? 'no-source';
+      counts[source] = (counts[source] ?? 0) + 1;
+      return counts;
+    }, {});
+    console.log(`\nDry run passed: ${recipes.length} unique recipes.`);
+    console.table(countsBySource);
+    return;
+  }
+
   console.log(`\n🌱 Seeding ${recipes.length} recipes into database...\n`);
 
   let ingredientCount = 0;
@@ -464,12 +515,13 @@ async function main() {
     for (const ingredient of recipe.ingredients) {
       const pkg = getPackageInfo(ingredient.name);
       const pkgData = buildPackageData(pkg);
+      const category = resolveCategory(ingredient);
       const record = await prisma.ingredient.upsert({
         where: { name: ingredient.name },
-        update: pkgData,
+        update: { category, ...pkgData },
         create: {
           name: ingredient.name,
-          category: ingredient.category || inferCategory(ingredient.name),
+          category,
           ...pkgData,
         },
       });
@@ -482,7 +534,9 @@ async function main() {
       const existing = await prisma.recipe.findFirst({
         where: {
           name: recipe.name,
-          sourceDiet: recipe.sourceDiet ?? null,
+          sourceDiet: recipe.sourceDiet
+            ? { in: sourceDietCandidates(recipe.sourceDiet) }
+            : null,
           variantKey: recipe.variantKey ?? 'base',
         },
       });

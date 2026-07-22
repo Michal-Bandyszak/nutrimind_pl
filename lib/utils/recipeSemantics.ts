@@ -10,7 +10,7 @@ export type RecipeSemantics = {
   formats: string[];
 };
 
-function normalizeTags(tags?: string | string[] | null): string[] {
+export function normalizeRecipeTags(tags?: string | string[] | null): string[] {
   if (!tags) return [];
   if (Array.isArray(tags)) return tags.map((tag) => tag.toLowerCase());
   try {
@@ -32,7 +32,7 @@ export function inferRecipeSemantics({
 }: SemanticsInput): RecipeSemantics {
   const lowerName = name.toLowerCase();
   const lowerIngredients = ingredientNames.map((ingredient) => ingredient.toLowerCase());
-  const lowerTags = normalizeTags(tags);
+  const lowerTags = normalizeRecipeTags(tags);
   const haystack = [lowerName, ...lowerIngredients, ...lowerTags].join(' ');
 
   const families: string[] = [];

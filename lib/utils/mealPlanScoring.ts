@@ -1,8 +1,9 @@
 import {
   inferRecipeSemantics,
   hasSemanticOverlap,
+  normalizeRecipeTags,
   type RecipeSemantics,
-} from '@/lib/utils/recipeSemantics';
+} from './recipeSemantics';
 
 export const DEFAULT_TARGET_KCAL_PER_PERSON = 2500;
 
@@ -30,6 +31,12 @@ export type DayContextEntry = RecipeSemantics & {
 
 export type PlanDayContexts = Map<number, DayContextEntry[]>;
 export type PlanDayKcalTotals = Map<number, number>;
+
+const BALANCED_PREFERENCE_BONUSES: Record<string, number> = {
+  'profil:srodziemnomorski': 60,
+  lokalne: 20,
+  budzetowe: 20,
+};
 
 type RecipeSelectionOptions = {
   usedIds: Set<string>;
@@ -105,8 +112,19 @@ export function recipeSelectionScore(
   const dayBalancePenalty = dayKcalTotals && cumulativeTargetKcal
     ? dailyBalancePenaltyForGroup(recipe, daysInGroup, dayKcalTotals, cumulativeTargetKcal)
     : 0;
+  const balancedPreferenceBonus = normalizeRecipeTags(recipe.tags).reduce(
+    (sum, tag) => sum + (BALANCED_PREFERENCE_BONUSES[tag] ?? 0),
+    0,
+  );
 
-  return kcalPenalty + storagePenalty + reusePenalty + batchPenalty + preferredPenalty + diversityPenalty + dayBalancePenalty;
+  return kcalPenalty
+    + storagePenalty
+    + reusePenalty
+    + batchPenalty
+    + preferredPenalty
+    + diversityPenalty
+    + dayBalancePenalty
+    - balancedPreferenceBonus;
 }
 
 export function chooseRecipeForGroup(

@@ -1,0 +1,271 @@
+{
+  "description": "Original NutriMind recipes for a balanced, Mediterranean-aligned plan adapted to Polish products. Macros are per serving and checked for energy consistency by scripts/check-core-utils.ts.",
+  "nutritionBasis": "Estimated from standard per-100g values based on USDA FoodData Central and typical Polish product labels; exact brands may vary.",
+  "recipes": [
+    {
+      "name": "Jajka sadzone z ziemniakami, jarmużem i kefirem",
+      "type": "breakfast",
+      "prepTimeMin": 10,
+      "cookTimeMin": 18,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 553,
+      "proteinG": 29,
+      "carbsG": 55,
+      "fatG": 25,
+      "fiberG": 9,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "tluszcz:maslo-klarowane"],
+      "ingredients": [
+        { "name": "Jajko", "amountG": 120, "displayText": "Jajka, 2 szt. (120 g)", "category": "protein" },
+        { "name": "Ziemniak", "amountG": 220, "displayText": "Ziemniaki, 220 g", "category": "vegetables" },
+        { "name": "Jarmuż", "amountG": 80, "displayText": "Jarmuż świeży lub mrożony, 80 g", "category": "vegetables" },
+        { "name": "Kefir", "amountG": 180, "displayText": "Kefir, 180 g", "category": "dairy" },
+        { "name": "Masło klarowane", "amountG": 8, "displayText": "Masło klarowane, 8 g", "category": "oils" },
+        { "name": "Cebula", "amountG": 50, "displayText": "Cebula, 1/2 szt. (50 g)", "category": "vegetables" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Ugotuj ziemniaki lub wykorzystaj ziemniaki ugotowane poprzedniego dnia i pokrój je w plastry.",
+        "Na maśle klarowanym podsmaż cebulę, ziemniaki i jarmuż.",
+        "Dodaj jajka i smaż do preferowanego ścięcia białka. Podaj z kefirem i pieprzem."
+      ]
+    },
+    {
+      "name": "Skyr z mrożonymi jagodami, owsem i orzechami",
+      "type": "breakfast",
+      "prepTimeMin": 7,
+      "cookTimeMin": 0,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 489,
+      "proteinG": 32,
+      "carbsG": 56,
+      "fatG": 16,
+      "fiberG": 12,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "bez-gotowania"],
+      "ingredients": [
+        { "name": "Skyr naturalny", "amountG": 200, "displayText": "Skyr naturalny, 200 g", "category": "dairy" },
+        { "name": "Mrożone owoce jagodowe", "amountG": 150, "displayText": "Mrożone owoce jagodowe, rozmrożone, 150 g", "category": "fruits" },
+        { "name": "Płatki owsiane", "amountG": 45, "displayText": "Płatki owsiane, 45 g", "category": "grains" },
+        { "name": "Orzechy włoskie", "amountG": 18, "displayText": "Orzechy włoskie, 18 g", "category": "nuts" },
+        { "name": "Cynamon", "amountG": 1, "displayText": "Cynamon, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Przełóż skyr do miski i dodaj rozmrożone owoce.",
+        "Wsyp płatki owsiane, posiekane orzechy i cynamon.",
+        "Wymieszaj bezpośrednio przed jedzeniem."
+      ]
+    },
+    {
+      "name": "Żytni twarożek z jajkiem, rzodkiewką i ogórkiem",
+      "type": "second_breakfast",
+      "prepTimeMin": 10,
+      "cookTimeMin": 8,
+      "batchFriendly": false,
+      "maxStorageDays": 1,
+      "kcalPerServing": 501,
+      "proteinG": 39,
+      "carbsG": 55,
+      "fatG": 15,
+      "fiberG": 7,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "wysokobialkowe"],
+      "ingredients": [
+        { "name": "Chleb żytni", "amountG": 90, "displayText": "Chleb żytni, 3 kromki (90 g)", "category": "grains" },
+        { "name": "Twaróg półtłusty", "amountG": 120, "displayText": "Twaróg półtłusty, 120 g", "category": "dairy" },
+        { "name": "Jajko", "amountG": 60, "displayText": "Jajko, 1 szt. (60 g)", "category": "protein" },
+        { "name": "Rzodkiewka", "amountG": 80, "displayText": "Rzodkiewki, 80 g", "category": "vegetables" },
+        { "name": "Ogórek świeży", "amountG": 100, "displayText": "Ogórek, 100 g", "category": "vegetables" },
+        { "name": "Szczypiorek", "amountG": 10, "displayText": "Szczypiorek, 10 g", "category": "vegetables" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Ugotuj jajko na twardo i posiekaj je razem z rzodkiewką.",
+        "Rozgnieć twaróg z jajkiem, rzodkiewką, szczypiorkiem i pieprzem.",
+        "Podaj z chlebem żytnim i plasterkami ogórka."
+      ]
+    },
+    {
+      "name": "Sałatka z pieczonym burakiem, ciecierzycą i fetą",
+      "type": "second_breakfast",
+      "prepTimeMin": 12,
+      "cookTimeMin": 30,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 558,
+      "proteinG": 22,
+      "carbsG": 57,
+      "fatG": 29,
+      "fiberG": 16,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "ciecierzyca-ok"],
+      "ingredients": [
+        { "name": "Burak", "amountG": 220, "displayText": "Burak, 220 g", "category": "vegetables" },
+        { "name": "ciecierzyca z puszki", "amountG": 130, "displayText": "Ciecierzyca, odsączona i przepłukana, 130 g", "category": "protein" },
+        { "name": "Ser feta", "amountG": 45, "displayText": "Ser feta, 45 g", "category": "dairy" },
+        { "name": "Roszponka", "amountG": 50, "displayText": "Roszponka, 50 g", "category": "vegetables" },
+        { "name": "Orzechy włoskie", "amountG": 12, "displayText": "Orzechy włoskie, 12 g", "category": "nuts" },
+        { "name": "Olej rzepakowy", "amountG": 8, "displayText": "Olej rzepakowy, 8 g", "category": "oils" },
+        { "name": "Sok z cytryny", "amountG": 10, "displayText": "Sok z cytryny, 10 g", "category": "fruits" }
+      ],
+      "instructions": [
+        "Pokrój buraka, wymieszaj z połową oleju i piecz około 30 minut w 200°C.",
+        "Po ostudzeniu połącz go z ciecierzycą, roszponką i pokruszoną fetą.",
+        "Dodaj orzechy oraz sos z pozostałego oleju i soku z cytryny."
+      ]
+    },
+    {
+      "name": "Kurczak z kaszą gryczaną, pieczarkami i kapustą kiszoną",
+      "type": "lunch",
+      "prepTimeMin": 15,
+      "cookTimeMin": 28,
+      "batchFriendly": true,
+      "maxStorageDays": 3,
+      "kcalPerServing": 661,
+      "proteinG": 57,
+      "carbsG": 75,
+      "fatG": 18,
+      "fiberG": 15,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "batch", "tluszcz:maslo-klarowane"],
+      "ingredients": [
+        { "name": "Pierś z kurczaka", "amountG": 170, "displayText": "Pierś z kurczaka, 170 g", "category": "protein" },
+        { "name": "Kasza gryczana", "amountG": 80, "displayText": "Kasza gryczana sucha, 80 g", "category": "grains" },
+        { "name": "Pieczarki", "amountG": 180, "displayText": "Pieczarki, 180 g", "category": "vegetables" },
+        { "name": "Kapusta kiszona", "amountG": 130, "displayText": "Kapusta kiszona, 130 g", "category": "vegetables" },
+        { "name": "Cebula", "amountG": 70, "displayText": "Cebula, 70 g", "category": "vegetables" },
+        { "name": "Masło klarowane", "amountG": 10, "displayText": "Masło klarowane, 10 g", "category": "oils" },
+        { "name": "Tymianek", "amountG": 1, "displayText": "Tymianek, 1 łyżeczka", "category": "spices" }
+      ],
+      "instructions": [
+        "Ugotuj kaszę gryczaną według instrukcji na opakowaniu.",
+        "Na maśle klarowanym podsmaż cebulę, pieczarki i kurczaka pokrojonego w paski.",
+        "Dopraw tymiankiem i podaj z kaszą oraz kapustą kiszoną dodaną już na talerzu."
+      ]
+    },
+    {
+      "name": "Mrożony mintaj z ziemniakami i surówką buraczano-kapuścianą",
+      "type": "lunch",
+      "prepTimeMin": 15,
+      "cookTimeMin": 25,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 725,
+      "proteinG": 53,
+      "carbsG": 89,
+      "fatG": 19,
+      "fiberG": 16,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "ryba:mrozona", "batch"],
+      "ingredients": [
+        { "name": "Mintaj mrożony", "amountG": 220, "displayText": "Filet z mintaja, mrożony, 220 g", "category": "protein" },
+        { "name": "Ziemniak", "amountG": 320, "displayText": "Ziemniaki, 320 g", "category": "vegetables" },
+        { "name": "Burak", "amountG": 130, "displayText": "Burak gotowany, 130 g", "category": "vegetables" },
+        { "name": "Kapusta biała", "amountG": 130, "displayText": "Kapusta biała, 130 g", "category": "vegetables" },
+        { "name": "Jabłko", "amountG": 90, "displayText": "Jabłko, 90 g", "category": "fruits" },
+        { "name": "Olej rzepakowy", "amountG": 15, "displayText": "Olej rzepakowy, 15 g", "category": "oils" },
+        { "name": "Koperek", "amountG": 8, "displayText": "Koperek, 8 g", "category": "spices" },
+        { "name": "Sok z cytryny", "amountG": 10, "displayText": "Sok z cytryny, 10 g", "category": "fruits" }
+      ],
+      "instructions": [
+        "Rozmroź rybę w lodówce, osusz, skrop cytryną i piecz około 18 minut w 190°C.",
+        "Ugotuj ziemniaki i posyp je koperkiem.",
+        "Zetrzyj buraka, kapustę i jabłko, a następnie wymieszaj z olejem rzepakowym."
+      ]
+    },
+    {
+      "name": "Frittata ziemniaczana z mrożonym szpinakiem i fetą",
+      "type": "dinner",
+      "prepTimeMin": 12,
+      "cookTimeMin": 24,
+      "batchFriendly": true,
+      "maxStorageDays": 2,
+      "kcalPerServing": 668,
+      "proteinG": 39,
+      "carbsG": 46,
+      "fatG": 37,
+      "fiberG": 11,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "tluszcz:maslo-klarowane"],
+      "ingredients": [
+        { "name": "Jajko", "amountG": 180, "displayText": "Jajka, 3 szt. (180 g)", "category": "protein" },
+        { "name": "Ziemniak", "amountG": 180, "displayText": "Ziemniaki ugotowane, 180 g", "category": "vegetables" },
+        { "name": "Szpinak mrożony", "amountG": 150, "displayText": "Szpinak mrożony, 150 g", "category": "vegetables" },
+        { "name": "Ser feta", "amountG": 50, "displayText": "Ser feta, 50 g", "category": "dairy" },
+        { "name": "Cebula", "amountG": 60, "displayText": "Cebula, 60 g", "category": "vegetables" },
+        { "name": "Masło klarowane", "amountG": 8, "displayText": "Masło klarowane, 8 g", "category": "oils" },
+        { "name": "Pieprz czarny", "amountG": 1, "displayText": "Pieprz, szczypta", "category": "spices" }
+      ],
+      "instructions": [
+        "Na maśle klarowanym podsmaż cebulę i odparuj rozmrożony szpinak.",
+        "Dodaj pokrojone ziemniaki, zalej roztrzepanymi jajkami i posyp fetą.",
+        "Piecz około 18 minut w 185°C, aż środek się zetnie."
+      ]
+    },
+    {
+      "name": "Pomidorowa z ciecierzycą, pęczakiem i warzywami korzeniowymi",
+      "type": "dinner",
+      "prepTimeMin": 15,
+      "cookTimeMin": 35,
+      "batchFriendly": true,
+      "maxStorageDays": 3,
+      "kcalPerServing": 695,
+      "proteinG": 26,
+      "carbsG": 117,
+      "fatG": 17,
+      "fiberG": 31,
+      "baseServings": 1,
+      "ingredientBasis": "per-serving",
+      "source": "curated",
+      "nutritionVerified": true,
+      "sourceDiet": "NutriMind Polska - zbilansowane",
+      "tags": ["profil:srodziemnomorski", "lokalne", "budzetowe", "ciecierzyca-ok", "zupa", "batch"],
+      "ingredients": [
+        { "name": "ciecierzyca z puszki", "amountG": 150, "displayText": "Ciecierzyca, odsączona i przepłukana, 150 g", "category": "protein" },
+        { "name": "Kasza pęczak", "amountG": 55, "displayText": "Kasza pęczak sucha, 55 g", "category": "grains" },
+        { "name": "Pomidory z puszki", "amountG": 300, "displayText": "Pomidory z puszki, 300 g", "category": "vegetables" },
+        { "name": "Marchew", "amountG": 100, "displayText": "Marchew, 100 g", "category": "vegetables" },
+        { "name": "Pietruszka (korzeń)", "amountG": 70, "displayText": "Korzeń pietruszki, 70 g", "category": "vegetables" },
+        { "name": "Cebula", "amountG": 70, "displayText": "Cebula, 70 g", "category": "vegetables" },
+        { "name": "Olej rzepakowy", "amountG": 10, "displayText": "Olej rzepakowy, 10 g", "category": "oils" },
+        { "name": "Bulion warzywny", "amountG": 450, "displayText": "Bulion warzywny, 450 ml", "category": "other" },
+        { "name": "Tymianek", "amountG": 1, "displayText": "Tymianek, 1 łyżeczka", "category": "spices" }
+      ],
+      "instructions": [
+        "Na oleju podsmaż cebulę, marchew i pietruszkę przez kilka minut.",
+        "Dodaj pomidory, bulion, pęczak i tymianek; gotuj około 30 minut.",
+        "Dodaj przepłukaną ciecierzycę i gotuj jeszcze 5 minut."
+      ]
+    }
+  ]
+}
