@@ -19,6 +19,7 @@
     "parse:ocr-diets": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2018\"}' scripts/parse-ocr-diets.ts",
     "gen:icons": "node scripts/generate-icons.mjs",
     "check:core": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true}' scripts/check-core-utils.ts",
+    "check:recipes": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true}' scripts/check-recipes.ts",
     "reconcile:ingredients": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/reconcile-ingredients.ts",
     "profile:reads": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/profile-reads.ts",
     "audit:recipes": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/audit-recipe-duplicates.ts",

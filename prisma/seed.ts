@@ -16,6 +16,7 @@ const CURATED_RECIPE_FILES = [
   'breakfast-recipes.json',
   'ocr-diety-recipes.json',
   'recovered-production-recipes.json',
+  'rozkoszny-recipes.json',
 ];
 const VARIANT_FILE = 'recipe-calorie-variants-2500.json';
 const COMPONENT_FILE = 'recipe-components.json';
