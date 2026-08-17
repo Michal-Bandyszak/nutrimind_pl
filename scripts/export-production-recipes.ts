@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { isNutritionReady } from '../lib/utils/nutritionReady';
 
 const prisma = new PrismaClient();
+const SANITIZED_SOURCE_DIET = 'NutriMind katalog bazowy';
 const CURATED_FILES = [
   'mediterranean-microbiome-recipes.json',
   'polish-balanced-recipes.json',
@@ -16,7 +17,7 @@ type RecipeKey = { name: string; sourceDiet: string | null; variantKey: string }
 function canonicalSourceDiet(sourceDiet: string | null | undefined) {
   if (!sourceDiet) return null;
   if (sourceDiet === 'Zestaw sniadan A') return 'Sniadania OCR 2026-06-13';
-  if (sourceDiet === 'Plan bazowy C') return 'NutriMind katalog bazowy';
+  if (sourceDiet === 'Plan bazowy C') return SANITIZED_SOURCE_DIET;
   return sourceDiet;
 }
 
@@ -120,7 +121,7 @@ async function main() {
       fatG: recipe.fatG,
       fiberG: recipe.fiberG,
       instructions: parseJson<string[]>(recipe.instructions, []),
-      sourceDiet: recipe.sourceDiet,
+      sourceDiet: SANITIZED_SOURCE_DIET,
       tags: parseJson<string[]>(recipe.tags, []),
       baseServings: recipe.baseServings,
       ingredientBasis: recipe.ingredientBasis,
@@ -138,8 +139,8 @@ async function main() {
 
   const outputPath = path.join(curatedDir, 'recovered-production-recipes.json');
   fs.writeFileSync(outputPath, `${JSON.stringify({
-    description: 'Sanitized read-only export of global production recipes absent from tracked curated sources.',
-    sourceDiet: 'NutriMind katalog bazowy',
+    description: 'Sanitized base recipe catalog for reproducible NutriMind seeding.',
+    sourceDiet: SANITIZED_SOURCE_DIET,
     recipes: exported,
   }, null, 2)}\n`);
   console.log(`Exported ${exported.length} sanitized recipes to ${outputPath}`);

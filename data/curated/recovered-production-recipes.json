@@ -1,5 +1,5 @@
 {
-  "description": "Sanitized read-only export of global production recipes absent from tracked curated sources.",
+  "description": "Sanitized base recipe catalog for reproducible NutriMind seeding.",
   "sourceDiet": "NutriMind katalog bazowy",
   "recipes": [
     {
