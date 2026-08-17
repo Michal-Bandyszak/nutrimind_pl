@@ -27,9 +27,7 @@ export default async function RecipesPageContent({ householdId }: Props) {
       proteinG: true,
       carbsG: true,
       fatG: true,
-      _count: {
-        select: { mealPlanMeals: true },
-      },
+      nutritionReady: true,
     },
     orderBy: { name: 'asc' },
   }) as RecipeListItem[];

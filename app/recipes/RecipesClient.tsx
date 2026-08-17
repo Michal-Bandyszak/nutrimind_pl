@@ -39,7 +39,7 @@ function toRecipeListItem(recipe: RecipeWithIngredients): RecipeListItem {
     proteinG: recipe.proteinG,
     carbsG: recipe.carbsG,
     fatG: recipe.fatG,
-    _count: recipe._count ?? { mealPlanMeals: 0 },
+    nutritionReady: recipe.nutritionReady,
   };
 }
 
@@ -51,6 +51,7 @@ export default function RecipesClient({ initialRecipes }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [visibleLimit, setVisibleLimit] = useState(40);
 
   useEffect(() => {
     try {
@@ -58,6 +59,10 @@ export default function RecipesClient({ initialRecipes }: Props) {
       if (saved) setFavorites(new Set(JSON.parse(saved) as string[]));
     } catch { /* ignore */ }
   }, []);
+
+  useEffect(() => {
+    setVisibleLimit(40);
+  }, [query, typeFilter, kindFilter]);
 
   function toggleFavorite(id: string) {
     setFavorites((prev) => {
@@ -170,7 +175,7 @@ export default function RecipesClient({ initialRecipes }: Props) {
 
       {/* Recipe list */}
       <div className="space-y-4">
-        {filtered.map((recipe) => (
+        {filtered.slice(0, visibleLimit).map((recipe) => (
           <RecipeCard
             key={recipe.id}
             recipe={recipe}
@@ -181,6 +186,16 @@ export default function RecipesClient({ initialRecipes }: Props) {
           />
         ))}
       </div>
+
+      {visibleLimit < filtered.length && (
+        <button
+          type="button"
+          onClick={() => setVisibleLimit((limit) => limit + 40)}
+          className="btn-secondary mx-auto block rounded-full px-4 py-2 text-sm font-medium"
+        >
+          Pokaż kolejne 40
+        </button>
+      )}
 
       {filtered.length === 0 && (
         <div className="text-center py-16 text-gray-400 text-sm">

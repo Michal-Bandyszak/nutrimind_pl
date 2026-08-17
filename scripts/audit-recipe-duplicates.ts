@@ -112,7 +112,6 @@ function loadRecipes() {
       },
       _count: {
         select: {
-          mealPlanMeals: true,
           variants: true,
           componentLinks: true,
           usedAsComponent: true,
@@ -161,7 +160,6 @@ async function main() {
         proportionScore: Number(proportionScore.toFixed(2)),
         nameScore: Number(nameScore.toFixed(2)),
         kcalDifference: Math.abs((left.kcalPerServing ?? 0) - (right.kcalPerServing ?? 0)),
-        references: left._count.mealPlanMeals + right._count.mealPlanMeals,
         variants: left._count.variants + right._count.variants,
       });
     }
@@ -194,7 +192,9 @@ async function main() {
       continue;
     }
 
-    const survivor = left._count.mealPlanMeals >= right._count.mealPlanMeals ? left : right;
+    const survivor = left.nutritionReady !== right.nutritionReady
+      ? (left.nutritionReady ? left : right)
+      : left.createdAt <= right.createdAt ? left : right;
     const duplicate = survivor.id === left.id ? right : left;
     const mealPlanMeals = await prisma.mealPlanMeal.findMany({
       where: { recipeId: { in: [left.id, right.id] } },

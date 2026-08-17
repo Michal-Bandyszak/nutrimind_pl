@@ -119,6 +119,11 @@ export default function RecipeCard({
                   Własny
                 </span>
               ) : null}
+              <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${
+                recipe.nutritionReady ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'
+              }`}>
+                {recipe.nutritionReady ? 'Gotowy do planu' : 'Wymaga uzupełnienia'}
+              </span>
               {isPerWhole && baseServings > 1 && (
                 <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
                   <Users size={10} /> {baseServings} porcji
@@ -143,11 +148,6 @@ export default function RecipeCard({
               <span className="text-xs text-gray-300 flex items-center gap-1">
                 <Clock size={12} />
                 {(recipe.prepTimeMin ?? 0) + (recipe.cookTimeMin ?? 0)} min
-              </span>
-            )}
-            {recipe._count && recipe._count.mealPlanMeals > 0 && (
-              <span className="text-xs text-gray-300" title="Razy użyto w planach">
-                ×{recipe._count.mealPlanMeals}
               </span>
             )}
             <button

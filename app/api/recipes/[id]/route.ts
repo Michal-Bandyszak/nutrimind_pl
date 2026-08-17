@@ -22,15 +22,6 @@ export async function GET(
         ...visibleRecipeWhere(context.householdId),
       },
       include: {
-        componentLinks: {
-          include: {
-            componentRecipe: {
-              include: {
-                ingredients: { include: { ingredient: true } },
-              },
-            },
-          },
-        },
         ingredients: { include: { ingredient: true } },
       },
     });

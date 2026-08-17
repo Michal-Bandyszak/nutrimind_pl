@@ -5,7 +5,7 @@ import type {
   BatchConfig,
   MealDividers,
 } from '@/lib/types';
-import { dividersToGroups, DEFAULT_BATCH_CONFIG } from '@/lib/types';
+import { dividersToGroups, DEFAULT_BATCH_CONFIG, PLAN_VIEW_SELECT } from '@/lib/types';
 import {
   applyRecipeToDayContexts,
   applyRecipeToDayKcalTotals,
@@ -337,6 +337,7 @@ export async function getActivePlan(householdId: string): Promise<MealPlanWithMe
   const plan = await prisma.mealPlan.findFirst({
     where: { householdId, status: 'active' },
     orderBy: { createdAt: 'desc' },
+    select: { id: true },
   });
   if (!plan) return null;
   return fetchPlanWithMeals(plan.id, householdId);
@@ -370,27 +371,7 @@ export async function getActivePlanSummary(householdId: string): Promise<MealPla
 export async function fetchPlanWithMeals(id: string, householdId: string): Promise<MealPlanWithMeals> {
   const plan = await prisma.mealPlan.findFirstOrThrow({
     where: { id, householdId },
-    include: {
-      participants: { orderBy: [{ isPrimarySnapshot: 'desc' }, { nameSnapshot: 'asc' }] },
-      meals: {
-        include: {
-          portions: true,
-          recipe: {
-            include: {
-              componentLinks: {
-                include: {
-                  componentRecipe: {
-                    include: { ingredients: { include: { ingredient: true } } },
-                  },
-                },
-              },
-              ingredients: { include: { ingredient: true } },
-            },
-          },
-        },
-        orderBy: [{ dayOfWeek: 'asc' }, { mealType: 'asc' }],
-      },
-    },
+    select: PLAN_VIEW_SELECT,
   });
-  return plan as MealPlanWithMeals;
+  return plan;
 }

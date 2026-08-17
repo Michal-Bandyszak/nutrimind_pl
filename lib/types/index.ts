@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 import type {
   Recipe,
   Ingredient,
@@ -36,18 +37,72 @@ export type RecipeWithIngredients = Recipe & {
   componentLinks?: RecipeComponentLink[];
   variantOf?: Recipe | null;
   variants?: Recipe[];
-  _count?: { mealPlanMeals: number };
 };
 
-export type MealWithRecipe = MealPlanMeal & {
-  recipe: RecipeWithIngredients;
-  portions: MealPlanMealPortion[];
-};
+/** Fields rendered by the weekly plan and shopping list. Keep this selector in sync with its payload type. */
+export const PLAN_VIEW_SELECT = {
+  id: true,
+  name: true,
+  weekStart: true,
+  participants: true,
+  meals: {
+    orderBy: [{ dayOfWeek: 'asc' }, { mealType: 'asc' }],
+    select: {
+      id: true,
+      dayOfWeek: true,
+      mealType: true,
+      recipeId: true,
+      servings: true,
+      batchGroupId: true,
+      batchDayNum: true,
+      portions: true,
+      recipe: {
+        select: {
+          id: true,
+          name: true,
+          variantKey: true,
+          adjustmentNote: true,
+          kcalPerServing: true,
+          proteinG: true,
+          carbsG: true,
+          fatG: true,
+          fiberG: true,
+          instructions: true,
+          baseServings: true,
+          ingredientBasis: true,
+          ingredients: {
+            select: {
+              id: true,
+              amountG: true,
+              scalesLinearly: true,
+              ingredient: {
+                select: {
+                  id: true,
+                  name: true,
+                  pieceWeightG: true,
+                  hintUnitG: true,
+                  hintUnit: true,
+                },
+              },
+            },
+          },
+          componentLinks: {
+            select: {
+              id: true,
+              displayText: true,
+              note: true,
+              replacedIngredients: true,
+              componentRecipe: { select: { id: true, name: true } },
+            },
+          },
+        },
+      },
+    },
+  },
+} satisfies Prisma.MealPlanSelect;
 
-export type MealPlanWithMeals = MealPlan & {
-  meals: MealWithRecipe[];
-  participants: MealPlanParticipant[];
-};
+export type MealPlanWithMeals = Prisma.MealPlanGetPayload<{ select: typeof PLAN_VIEW_SELECT }>;
+export type MealWithRecipe = MealPlanWithMeals['meals'][number];
 
 export type MealPlanParticipantSummary = Pick<
   MealPlanParticipant,
@@ -79,9 +134,8 @@ export type RecipeListItem = Pick<
   | 'proteinG'
   | 'carbsG'
   | 'fatG'
-> & {
-  _count: { mealPlanMeals: number };
-};
+  | 'nutritionReady'
+>;
 
 export type RecipePickerItem = Pick<
   Recipe,

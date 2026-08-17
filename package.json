@@ -20,6 +20,7 @@
     "gen:icons": "node scripts/generate-icons.mjs",
     "check:core": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true}' scripts/check-core-utils.ts",
     "reconcile:ingredients": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/reconcile-ingredients.ts",
+    "profile:reads": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/profile-reads.ts",
     "audit:recipes": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/audit-recipe-duplicates.ts",
     "bootstrap:accounts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\",\"esModuleInterop\":true,\"target\":\"ES2020\"}' scripts/bootstrap-accounts.ts"
   },

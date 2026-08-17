@@ -43,23 +43,8 @@ const RECIPE_LIST_SELECT = {
   proteinG: true,
   carbsG: true,
   fatG: true,
-  _count: {
-    select: { mealPlanMeals: true },
-  },
+  nutritionReady: true,
 } satisfies Prisma.RecipeSelect;
-
-const FULL_RECIPE_INCLUDE = {
-  variantOf: true,
-  variants: true,
-  componentLinks: {
-    include: {
-      componentRecipe: {
-        include: { ingredients: { include: { ingredient: true } } },
-      },
-    },
-  },
-  ingredients: { include: { ingredient: true } },
-} satisfies Prisma.RecipeInclude;
 
 export async function POST(req: NextRequest) {
   try {
@@ -250,7 +235,7 @@ export async function GET(req: NextRequest) {
 
     const recipes = await prisma.recipe.findMany({
       where,
-      include: FULL_RECIPE_INCLUDE,
+      select: RECIPE_LIST_SELECT,
       orderBy: { name: 'asc' },
     });
 

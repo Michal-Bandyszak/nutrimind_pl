@@ -90,13 +90,24 @@ function addIngredient(
 export async function buildShoppingList(planId: string, householdId: string): Promise<ShoppingList> {
   const plan = await prisma.mealPlan.findFirst({
     where: { id: planId, householdId },
-    include: {
+    select: {
+      name: true,
       meals: {
-        include: {
+        select: {
+          id: true,
+          dayOfWeek: true,
+          mealType: true,
+          servings: true,
+          batchGroupId: true,
           recipe: {
-            include: {
+            select: {
+              name: true,
+              ingredientBasis: true,
+              baseServings: true,
               ingredients: {
-                include: {
+                select: {
+                  amountG: true,
+                  scalesLinearly: true,
                   ingredient: {
                     select: {
                       id: true, name: true, category: true,
