@@ -10,6 +10,19 @@ export type RecipeSemantics = {
   formats: string[];
 };
 
+const FAMILY_PRIORITY = [
+  'eggs',
+  'porridge',
+  'pancakes',
+  'sandwich-spread',
+  'smoothie',
+  'salad',
+  'soup',
+  'stew-curry',
+  'pasta',
+  'bowl',
+];
+
 export function normalizeRecipeTags(tags?: string | string[] | null): string[] {
   if (!tags) return [];
   if (Array.isArray(tags)) return tags.map((tag) => tag.toLowerCase());
@@ -39,11 +52,16 @@ export function inferRecipeSemantics({
   const proteins: string[] = [];
   const formats: string[] = [];
 
-  pushUnique(families, 'porridge', /\bowsiank|\bjaglank|\bpudding chia|\bbudyń ows/i.test(haystack));
+  pushUnique(families, 'porridge', /\bowsiank|\bjaglank|\bpudding chia|\bbudyń ows|\bpudding z komosy|\bpudding ryż/i.test(haystack));
   pushUnique(families, 'eggs', /\bjaj|\bomlet|\bjajecznic|\bfrittat|\bszakszuk/i.test(haystack));
+  pushUnique(families, 'pancakes', /\bplacuszk|\bplack|\bnaleśnik|\bnalesnik|\bsocca|\bpancake/i.test(haystack));
   pushUnique(families, 'sandwich-spread', /\bkanapk|\bpasta\b|\bhummus|\btwaroż|\btwaroz|\bwrap\b|\btortilla\b/i.test(haystack));
   pushUnique(families, 'smoothie', /\bkoktajl|\bsmoothie|\bshake\b/i.test(haystack));
-  pushUnique(families, 'salad', /\bsałatk|\bsalatk|\bbowl\b/i.test(haystack));
+  pushUnique(families, 'salad', /\bsałatk|\bsalatk/i.test(haystack));
+  pushUnique(families, 'soup', /\bzupa|\bkrem\b|\bchłodnik/i.test(haystack));
+  pushUnique(families, 'stew-curry', /\bgulasz|\bcurry|\bleczo|\bpotrawk/i.test(haystack));
+  pushUnique(families, 'pasta', /\bmakaron|\bspaghetti|\brisotto/i.test(haystack));
+  pushUnique(families, 'bowl', /\bbowl\b|\bmiska\b/i.test(haystack));
 
   pushUnique(proteins, 'egg', /\bjaj/i.test(haystack));
   pushUnique(proteins, 'fish', /łoso|losos|dorsz|tuńczyk|tunczyk|sardyn|krewet|makrel|śled|sled|pstrąg|pstrag|mintaj/i.test(haystack));
@@ -61,4 +79,8 @@ export function inferRecipeSemantics({
 
 export function hasSemanticOverlap(a: string[], b: string[]) {
   return a.some((value) => b.includes(value));
+}
+
+export function primarySemanticFamily(semantics: RecipeSemantics): string {
+  return FAMILY_PRIORITY.find((family) => semantics.families.includes(family)) ?? 'other';
 }

@@ -2,6 +2,7 @@ import {
   inferRecipeSemantics,
   hasSemanticOverlap,
   normalizeRecipeTags,
+  primarySemanticFamily,
   type RecipeSemantics,
 } from './recipeSemantics';
 
@@ -18,6 +19,8 @@ export const MEAL_TARGET_WEIGHTS: Record<string, number> = {
 export type RecipeCandidate = {
   id: string;
   name: string;
+  role?: string;
+  nutritionReady?: boolean;
   maxStorageDays: number;
   kcalPerServing: number | null;
   batchFriendly?: boolean;
@@ -43,12 +46,25 @@ type RecipeSelectionOptions = {
   requiredStorageDays: number;
   targetKcalPerServing: number;
   preferredRecipeId?: string | null;
+  previousPlanRecipeIds?: ReadonlySet<string>;
   mealType?: string;
   daysInGroup?: number[];
   dayContexts?: PlanDayContexts;
   dayKcalTotals?: PlanDayKcalTotals;
   cumulativeTargetKcal?: number;
+  familyCounts?: Map<string, number>;
+  familyLimit?: number;
+  random?: () => number;
 };
+
+export class NoEligibleRecipeError extends Error {
+  readonly code = 'NO_ELIGIBLE_RECIPE';
+
+  constructor(readonly mealType: string, readonly batchDays: number) {
+    super(`Brak bezpiecznego przepisu dla ${mealType} na blok ${batchDays} dni.`);
+    this.name = 'NoEligibleRecipeError';
+  }
+}
 
 export function buildMealTargets(
   mealTypes: string[],
@@ -89,6 +105,7 @@ export function recipeSelectionScore(
     requiredStorageDays,
     targetKcalPerServing,
     preferredRecipeId,
+    previousPlanRecipeIds,
     mealType,
     daysInGroup = [],
     dayContexts,
@@ -104,7 +121,7 @@ export function recipeSelectionScore(
     ? 0
     : 10000 + (requiredStorageDays - recipe.maxStorageDays) * 1000;
   const reusePenalty = usedIds.has(recipe.id) ? 750 : 0;
-  const batchPenalty = requiredStorageDays > 1 && recipe.batchFriendly === false ? 150 : 0;
+  const previousPlanPenalty = previousPlanRecipeIds?.has(recipe.id) ? 400 : 0;
   const preferredPenalty = preferredRecipeId && recipe.id !== preferredRecipeId ? 120 : 0;
   const diversityPenalty = mealType && dayContexts
     ? semanticPenaltyForGroup(recipe, mealType, daysInGroup, dayContexts)
@@ -120,7 +137,7 @@ export function recipeSelectionScore(
   return kcalPenalty
     + storagePenalty
     + reusePenalty
-    + batchPenalty
+    + previousPlanPenalty
     + preferredPenalty
     + diversityPenalty
     + dayBalancePenalty
@@ -131,11 +148,42 @@ export function chooseRecipeForGroup(
   recipes: RecipeCandidate[],
   options: RecipeSelectionOptions,
 ): RecipeCandidate {
-  return recipes.reduce((best, recipe) => {
-    const bestScore = recipeSelectionScore(best, options);
-    const score = recipeSelectionScore(recipe, options);
-    return score < bestScore ? recipe : best;
-  }, recipes[0]);
+  const {
+    mealType = 'meal',
+    requiredStorageDays,
+    familyCounts,
+    familyLimit = 2,
+  } = options;
+  const eligible = recipes.filter((recipe) => (
+    recipe.role !== 'component'
+    && recipe.nutritionReady !== false
+    && recipe.kcalPerServing != null
+    && recipe.kcalPerServing > 0
+    && recipe.maxStorageDays >= requiredStorageDays
+    && (mealType !== 'lunch' || requiredStorageDays <= 1 || recipe.batchFriendly === true)
+  ));
+
+  if (!eligible.length) throw new NoEligibleRecipeError(mealType, requiredStorageDays);
+
+  const capped = familyCounts
+    ? eligible.filter((recipe) => {
+        const family = primarySemanticFamily(buildDayContextEntry(recipe, mealType));
+        return (familyCounts.get(`${mealType}:${family}`) ?? 0) < familyLimit;
+      })
+    : eligible;
+  const pool = capped.length ? capped : eligible;
+  const ranked = pool
+    .map((recipe) => ({ recipe, score: recipeSelectionScore(recipe, options) }))
+    .sort((a, b) => a.score - b.score || a.recipe.id.localeCompare(b.recipe.id));
+  const top = ranked.slice(0, 5);
+  const random = options.random ?? Math.random;
+  const totalWeight = top.reduce((sum, _entry, index) => sum + top.length - index, 0);
+  let threshold = Math.min(1 - Number.EPSILON, Math.max(0, random())) * totalWeight;
+  for (let index = 0; index < top.length; index += 1) {
+    threshold -= top.length - index;
+    if (threshold < 0) return top[index].recipe;
+  }
+  return top[top.length - 1].recipe;
 }
 
 export function buildDayContextEntry(recipe: RecipeCandidate, mealType: string): DayContextEntry {

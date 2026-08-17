@@ -19,7 +19,7 @@ const COMPONENT_FILE = 'recipe-components.json';
 const OCR_SOURCE_PREFIXES = ['OCR Import', 'Import OCR', 'OCRDiety'];
 const SOURCE_DIET_ALIASES: Record<string, string> = {
   'Zestaw sniadan A': 'Sniadania OCR 2026-06-13',
-  'Plan bazowy C': 'Dieta 1800 kcal',
+  'Plan bazowy C': 'NutriMind katalog bazowy',
 };
 const RECIPE_NAME_ALLOWLIST = new Set([
   'Gruszka, orzechy',

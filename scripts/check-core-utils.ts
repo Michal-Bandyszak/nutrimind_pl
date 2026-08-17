@@ -7,7 +7,12 @@ import {
   isValidDateKey,
   todayInAppTimeZone,
 } from '../lib/utils/appDate';
-import { recipeSelectionScore, type RecipeCandidate } from '../lib/utils/mealPlanScoring';
+import {
+  chooseRecipeForGroup,
+  NoEligibleRecipeError,
+  recipeSelectionScore,
+  type RecipeCandidate,
+} from '../lib/utils/mealPlanScoring';
 import { normalizeRecipeName } from '../lib/utils/recipeConstants';
 import { inferRecipeSemantics } from '../lib/utils/recipeSemantics';
 
@@ -55,6 +60,98 @@ assert.ok(
 assert.equal(Number.isFinite(recipeSelectionScore(neutralCandidate, selectionOptions)), true);
 
 console.log('Balanced recipe preference checks passed.');
+
+const selectionCandidate = (overrides: Partial<RecipeCandidate>): RecipeCandidate => ({
+  id: 'candidate',
+  name: 'Neutralny kandydat',
+  role: 'meal',
+  nutritionReady: true,
+  maxStorageDays: 7,
+  kcalPerServing: 500,
+  batchFriendly: true,
+  tags: '[]',
+  ...overrides,
+});
+
+const lunchWithoutBatch = selectionCandidate({ id: 'lunch-1', batchFriendly: false });
+assert.equal(
+  chooseRecipeForGroup([lunchWithoutBatch], {
+    ...selectionOptions,
+    mealType: 'lunch',
+    requiredStorageDays: 1,
+    random: () => 0,
+  }).id,
+  'lunch-1',
+);
+assert.throws(
+  () => chooseRecipeForGroup([lunchWithoutBatch], {
+    ...selectionOptions,
+    mealType: 'lunch',
+    requiredStorageDays: 2,
+  }),
+  (error: unknown) => error instanceof NoEligibleRecipeError,
+);
+
+const rankedCandidates = Array.from({ length: 6 }, (_, index) => selectionCandidate({
+  id: `rank-${index + 1}`,
+  name: `Rank ${index + 1}`,
+  kcalPerServing: 500 + index,
+}));
+const deterministicOptions = {
+  ...selectionOptions,
+  mealType: 'breakfast',
+  random: () => 0.42,
+};
+const firstSelection = chooseRecipeForGroup(rankedCandidates, deterministicOptions);
+const secondSelection = chooseRecipeForGroup(rankedCandidates, deterministicOptions);
+assert.equal(firstSelection.id, secondSelection.id);
+assert.notEqual(firstSelection.id, 'rank-6');
+
+const familyCounts = new Map([['breakfast:eggs', 2]]);
+assert.equal(
+  chooseRecipeForGroup([
+    selectionCandidate({ id: 'egg', name: 'Jajka ze szpinakiem' }),
+    selectionCandidate({ id: 'salad', name: 'Sałatka z burakiem' }),
+  ], {
+    ...selectionOptions,
+    mealType: 'breakfast',
+    familyCounts,
+    random: () => 0,
+  }).id,
+  'salad',
+);
+assert.equal(
+  chooseRecipeForGroup([selectionCandidate({ id: 'egg', name: 'Jajka ze szpinakiem' })], {
+    ...selectionOptions,
+    mealType: 'breakfast',
+    familyCounts,
+    random: () => 0,
+  }).id,
+  'egg',
+);
+
+assert.equal(
+  chooseRecipeForGroup([
+    selectionCandidate({ id: 'previous', kcalPerServing: 500 }),
+    selectionCandidate({ id: 'new', kcalPerServing: 500 }),
+  ], {
+    ...selectionOptions,
+    mealType: 'breakfast',
+    previousPlanRecipeIds: new Set(['previous']),
+    random: () => 0,
+  }).id,
+  'new',
+);
+assert.throws(
+  () => chooseRecipeForGroup([], {
+    ...selectionOptions,
+    mealType: 'dinner',
+    requiredStorageDays: 3,
+  }),
+  (error: unknown) => error instanceof NoEligibleRecipeError,
+);
+
+console.log('Diverse safe selection checks passed.');
 
 type CuratedRecipe = {
   name: string;
