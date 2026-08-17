@@ -150,7 +150,7 @@ export default function ManualTab({
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Składniki</p>
         <div className="space-y-2">
           {ingredients.map((ing) => (
-            <div key={ing.id} className="grid grid-cols-[1fr_80px_120px_auto_auto] gap-2 items-center">
+            <div key={ing.id} className="grid grid-cols-2 gap-2 items-center sm:grid-cols-[minmax(0,1fr)_80px_120px_auto_auto]">
               <input
                 type="text"
                 placeholder="Nazwa składnika"

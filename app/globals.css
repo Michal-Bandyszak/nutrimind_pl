@@ -433,6 +433,24 @@ html.dark .modal-scrim {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+dialog.modal-dialog {
+  max-width: none;
+  max-height: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+dialog.modal-dialog::backdrop {
+  background: rgba(23, 18, 12, 0.58);
+  backdrop-filter: blur(2px);
+}
+
+html.dark dialog.modal-dialog::backdrop {
+  background: rgba(5, 7, 6, 0.78);
+}
+
 html.dark .modal-panel {
   background: linear-gradient(180deg, #1a211e, #151a18);
   box-shadow:

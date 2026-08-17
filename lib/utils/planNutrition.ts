@@ -1,5 +1,4 @@
-import type { MealPlanWithMeals, MealWithRecipe } from '@/lib/types';
-import { DEFAULT_TARGET_KCAL_PER_PERSON } from '@/lib/utils/mealPlanScoring';
+import type { MealWithRecipe } from '@/lib/types';
 
 export const DAILY_KCAL_TOLERANCE = 150;
 
@@ -52,61 +51,4 @@ export function summarizeMealsPerPerson(meals: MealWithRecipe[], participantId?:
     },
     { kcal: 0, protein: 0, carbs: 0, fat: 0 },
   );
-}
-
-export function buildPlanNutritionDiagnostics(
-  plan: MealPlanWithMeals,
-  targetKcalPerPerson = DEFAULT_TARGET_KCAL_PER_PERSON,
-  tolerance = DAILY_KCAL_TOLERANCE,
-) {
-  const primary = plan.participants.find((participant) => participant.isPrimarySnapshot)
-    ?? plan.participants[0];
-  const participantId = primary?.id;
-  const daily = Array.from({ length: 7 }, (_, idx) => {
-    const dayOfWeek = idx + 1;
-    const meals = plan.meals.filter((meal) => meal.dayOfWeek === dayOfWeek);
-    const totals = summarizeMealsPerPerson(meals, participantId);
-    const kcal = Math.round(totals.kcal);
-    const delta = kcal - targetKcalPerPerson;
-
-    return {
-      dayOfWeek,
-      kcal,
-      delta,
-      outsideTolerance: Math.abs(delta) > tolerance,
-    };
-  });
-
-  const kcalValues = daily.map((day) => day.kcal);
-  const totalKcal = kcalValues.reduce((sum, kcal) => sum + kcal, 0);
-  const batchCount = new Set(
-    plan.meals
-      .map((meal) => meal.batchGroupId)
-      .filter((batchGroupId): batchGroupId is string => Boolean(batchGroupId)),
-  ).size;
-
-  return {
-    targetKcalPerPerson,
-    tolerance,
-    daily,
-    averageKcal: Math.round(totalKcal / daily.length),
-    minKcal: Math.min(...kcalValues),
-    maxKcal: Math.max(...kcalValues),
-    batchCount,
-    daysOutsideTolerance: daily.filter((day) => day.outsideTolerance).length,
-    participants: plan.participants.map((participant) => {
-      const participantDaily = Array.from({ length: 7 }, (_, idx) => {
-        const meals = plan.meals.filter((meal) => meal.dayOfWeek === idx + 1);
-        return Math.round(summarizeMealsPerPerson(meals, participant.id).kcal);
-      });
-      return {
-        id: participant.id,
-        name: participant.nameSnapshot,
-        targetKcal: participant.targetKcalSnapshot,
-        averageKcal: Math.round(
-          participantDaily.reduce((sum, kcal) => sum + kcal, 0) / participantDaily.length,
-        ),
-      };
-    }),
-  };
 }

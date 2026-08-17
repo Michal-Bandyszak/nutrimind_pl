@@ -110,11 +110,14 @@ export default function HealthClient({ date, initialLog }: Props) {
         </div>
 
         {/* Tab bar */}
-        <div className="flex border-t border-border">
+        <div className="flex border-t border-border" role="tablist" aria-label="Sekcje zdrowia">
           {(['today', 'history', 'tips'] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
+              type="button"
+              role="tab"
+              aria-selected={tab === t}
               className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
                 tab === t
                   ? 'text-teal-700 border-b-2 border-teal-700'

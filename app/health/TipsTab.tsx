@@ -19,6 +19,9 @@ export default function TipsTab() {
             <button
               className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-gray-50/60 transition-colors"
               onClick={() => setOpenCat(isOpen ? null : cat.id)}
+              type="button"
+              aria-expanded={isOpen}
+              aria-controls={`health-tip-${cat.id}`}
             >
               <span className="text-lg">{cat.emoji}</span>
               <span className="flex-1 text-sm font-semibold text-gray-800">{cat.label}</span>
@@ -26,7 +29,7 @@ export default function TipsTab() {
               {isOpen ? <ChevronUp size={15} className="text-gray-400" /> : <ChevronDown size={15} className="text-gray-400" />}
             </button>
             {isOpen && (
-              <div className="border-t border-border divide-y divide-border">
+              <div id={`health-tip-${cat.id}`} className="border-t border-border divide-y divide-border">
                 {cat.tips.map((tip, i) => (
                   <div key={i} className="px-4 py-3.5">
                     <p className="text-sm font-medium text-gray-800 mb-1">{tip.title}</p>

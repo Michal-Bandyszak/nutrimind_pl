@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { SlidersHorizontal, Check, X, Loader2 } from 'lucide-react';
 import type { MealPlanWithMeals, BatchConfig, MealWithRecipe, RecipePickerItem } from '@/lib/types';
-import { buildPlanNutritionDiagnostics, DAILY_KCAL_TOLERANCE } from '@/lib/utils/planNutrition';
 import { planToBatchConfig } from '@/lib/utils/planUtils';
 import BatchConfigPanel from './BatchConfigPanel';
 import WeekGrid from './WeekGrid';
@@ -43,11 +42,6 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
   const [rebatchLoading, setRebatchLoading] = useState(false);
   const [rebatchError, setRebatchError] = useState<string | null>(null);
   const [planActionError, setPlanActionError] = useState<string | null>(null);
-  const diagnostics = useMemo(
-    () => buildPlanNutritionDiagnostics(plan, targetKcalPerPerson, DAILY_KCAL_TOLERANCE),
-    [plan, targetKcalPerPerson],
-  );
-
   const refreshPlan = useCallback(async () => {
     const res = await fetch('/api/meal-plans/active', { cache: 'no-store' });
     const json = await res.json();
@@ -280,12 +274,8 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex items-center justify-between gap-3">
-        {planActionError ? (
-          <p className="text-xs font-medium text-red-500">{planActionError}</p>
-        ) : (
-          <PlanDiagnostics diagnostics={diagnostics} />
-        )}
+      <div className="flex items-center justify-end gap-3">
+        {planActionError && <p className="mr-auto text-xs font-medium text-red-500">{planActionError}</p>}
         <button
           onClick={openRebatch}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border text-xs font-medium transition-all ${
@@ -361,50 +351,6 @@ export default function PlanView({ plan: initialPlan, targetKcalPerPerson }: Pro
             handleAddMeal(currentAddMealTarget.dayOfWeek, mealType, servings, recipe)
           }
         />
-      )}
-    </div>
-  );
-}
-
-function PlanDiagnostics({
-  diagnostics,
-}: {
-  diagnostics: ReturnType<typeof buildPlanNutritionDiagnostics>;
-}) {
-  const outsideText = diagnostics.daysOutsideTolerance === 0
-    ? 'dni w celu'
-    : `${diagnostics.daysOutsideTolerance} poza celem`;
-
-  return (
-    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-gray-400">
-      <span className="rounded-full border border-border bg-white/70 px-2.5 py-1 font-medium text-gray-500">
-        Śr. {diagnostics.averageKcal.toLocaleString('pl-PL')} kcal
-      </span>
-      <span className="rounded-full border border-border bg-white/70 px-2.5 py-1">
-        {diagnostics.minKcal.toLocaleString('pl-PL')}–{diagnostics.maxKcal.toLocaleString('pl-PL')} kcal
-      </span>
-      <span className={`rounded-full border px-2.5 py-1 ${
-        diagnostics.daysOutsideTolerance
-          ? 'border-amber-200 bg-amber-50 text-amber-700'
-          : 'border-teal-200 bg-teal-50 text-teal-700'
-      }`}>
-        {outsideText}
-      </span>
-      <span className="rounded-full border border-border bg-white/70 px-2.5 py-1">
-        {diagnostics.batchCount} batchy
-      </span>
-      {diagnostics.participants.map((participant) => (
-        <span key={participant.id} className="rounded-full border border-border bg-white/70 px-2.5 py-1">
-          {participant.name}: śr. {participant.averageKcal.toLocaleString('pl-PL')} / {participant.targetKcal.toLocaleString('pl-PL')} kcal
-        </span>
-      ))}
-      {diagnostics.participants.some((participant) => {
-        const missing = participant.targetKcal - participant.averageKcal;
-        return missing >= 100 && missing <= 200;
-      }) && (
-        <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-700">
-          Opcjonalnie: oliwa, orzechy lub pestki +100–200 kcal
-        </span>
       )}
     </div>
   );

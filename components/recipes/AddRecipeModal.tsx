@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import type { RecipeWithIngredients } from '@/lib/types';
@@ -474,20 +474,28 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
   const [steps, setSteps] = useState<StepRow[]>([
     { id: genId(), text: '' },
   ]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
-  // ESC to close
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const handleCancel = (event: Event) => {
+      event.preventDefault();
+      onCloseRef.current();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, [onClose]);
-
-  // Body overflow lock
-  useEffect(() => {
+    dialog.addEventListener('cancel', handleCancel);
+    if (!dialog.open) dialog.showModal();
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      dialog.removeEventListener('cancel', handleCancel);
+      if (dialog.open) dialog.close();
+      document.body.style.overflow = '';
+      previousFocusRef.current?.focus();
+    };
   }, []);
 
   async function handleCopy() {
@@ -626,14 +634,19 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
   const isSaveDisabled = saving || (activeTab === 'upload' ? !fileData || !uploadQuality.canSave : false);
 
   const content = (
-    <div
-      className="modal-scrim fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-[2px]"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    <dialog
+      ref={dialogRef}
+      className="modal-dialog fixed inset-0 z-[200] h-dvh w-full"
+      aria-labelledby="add-recipe-modal-title"
     >
-      <div className="modal-panel flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.75rem]">
+      <div
+        className="flex h-full w-full items-center justify-center p-2 sm:p-4"
+        onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+      >
+      <div className="modal-panel flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.75rem]" onClick={(event) => event.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
-          <h2 className="text-base font-semibold text-gray-900">Dodaj przepis</h2>
+          <h2 id="add-recipe-modal-title" className="text-base font-semibold text-gray-900">Dodaj przepis</h2>
           <button
             onClick={onClose}
             className="w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
@@ -733,7 +746,8 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </dialog>
   );
 
   return createPortal(content, document.body);

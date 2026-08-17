@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Search, Check, Loader2, ChevronDown, Minus, Plus } from 'lucide-react';
 import type { RecipePickerItem } from '@/lib/types';
@@ -73,19 +73,29 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
   const [mealType, setMealType] = useState(initialMealType);
   const [typeFilter, setTypeFilter] = useState(mealTypeToRecipeFilter(initialMealType));
   const [servings, setServings] = useState(() => defaultServingsForMealType(initialMealType, participantCount));
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const handleCancel = (event: Event) => {
+      event.preventDefault();
+      onCloseRef.current();
+    };
+    dialog.addEventListener('cancel', handleCancel);
+    if (!dialog.open) dialog.showModal();
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      dialog.removeEventListener('cancel', handleCancel);
+      if (dialog.open) dialog.close();
+      document.body.style.overflow = '';
+      previousFocusRef.current?.focus();
+    };
   }, []);
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
 
   useEffect(() => {
     fetch('/api/recipes?view=picker', { cache: 'no-store' })
@@ -126,17 +136,20 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
   const dayLabel = DAY_NAMES_FULL[dayOfWeek - 1] ?? `Dzień ${dayOfWeek}`;
 
   return createPortal(
-    <div
-      className="modal-scrim fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-[2px]"
-      onClick={onClose}
+    <dialog
+      ref={dialogRef}
+      className="modal-dialog fixed inset-0 z-[200] h-dvh w-full"
+      aria-labelledby="add-meal-modal-title"
     >
       <div
-        className="modal-panel relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-[1.75rem]"
-        onClick={(e) => e.stopPropagation()}
+        className="flex h-full w-full items-center justify-center p-2 sm:p-4"
+        onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
       >
+      <div className="modal-panel relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-[1.75rem]" onClick={(event) => event.stopPropagation()}>
         {/* Header */}
         <div className="px-4 py-3 border-b border-border shrink-0 flex items-center justify-between">
           <div>
+            <h2 id="add-meal-modal-title" className="sr-only">Dodaj posiłek do planu</h2>
             <p className="text-xs text-gray-400">Dodaj do planu</p>
             <p className="text-sm font-semibold text-gray-900">{dayLabel}</p>
           </div>
@@ -293,7 +306,8 @@ export default function AddMealModal({ dayOfWeek, mealType: initialMealType, onC
           )}
         </div>
       </div>
-    </div>,
+      </div>
+    </dialog>,
     document.body,
   );
 }

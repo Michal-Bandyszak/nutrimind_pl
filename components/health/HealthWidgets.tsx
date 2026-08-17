@@ -56,6 +56,9 @@ export function RoutineList({ items, done, onToggle }: {
             <div className="flex items-start gap-3 p-3">
               <button
                 onClick={() => onToggle(item.id)}
+                type="button"
+                aria-pressed={checked}
+                aria-label={`${checked ? 'Oznaczone' : 'Oznacz'}: ${item.label}`}
                 className={`shrink-0 mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
                   checked
                     ? 'bg-teal-600 border-teal-600 text-white'
@@ -70,6 +73,9 @@ export function RoutineList({ items, done, onToggle }: {
               {item.detail && (
                 <button
                   onClick={() => setExpanded(isExpanded ? null : item.id)}
+                  type="button"
+                  aria-expanded={isExpanded}
+                  aria-label={`${isExpanded ? 'Zwiń' : 'Rozwiń'} szczegóły: ${item.label}`}
                   className="shrink-0 text-gray-300 hover:text-gray-500 transition-colors"
                 >
                   {isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
@@ -103,6 +109,9 @@ export function PointsRow({ category, value, onChange }: {
             <button
               key={n}
               onClick={() => onChange(value === n ? null : n)}
+              type="button"
+              aria-pressed={(value ?? 0) >= n}
+              aria-label={`${category.label}: poziom ${n}`}
               className={`w-7 h-7 rounded-lg text-xs font-bold transition-all ${
                 (value ?? 0) >= n
                   ? 'bg-teal-600 text-white shadow-sm'
@@ -115,6 +124,9 @@ export function PointsRow({ category, value, onChange }: {
         </div>
         <button
           onClick={() => setOpen(!open)}
+          type="button"
+          aria-expanded={open}
+          aria-label={`${open ? 'Zwiń' : 'Rozwiń'} opis: ${category.label}`}
           className="text-gray-300 hover:text-gray-500 transition-colors"
         >
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -151,13 +163,18 @@ export function ScaleSelector({
           <button
             key={n}
             onClick={() => onChange(value === n ? null : n)}
+            type="button"
+            aria-pressed={value === n}
+            aria-label={`${label}: ${n} na 5${labels?.[n - 1] ? ` — ${labels[n - 1]}` : ''}`}
             title={labels?.[n - 1]}
             className={`flex-1 h-8 rounded-lg transition-all ${
               value === n
                 ? `${colors[n - 1]} text-white shadow-sm scale-105`
                 : 'bg-gray-100 hover:bg-gray-200'
             }`}
-          />
+          >
+            {n}
+          </button>
         ))}
       </div>
       {value && labels && (
