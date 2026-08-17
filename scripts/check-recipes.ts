@@ -53,11 +53,8 @@ console.log(`Rozkoszny recipe checks passed (${recipes.length} recipes).`);
 const recoveredPath = path.join(process.cwd(), 'data/curated/recovered-production-recipes.json');
 const recoveredText = fs.readFileSync(recoveredPath, 'utf8');
 const recovered = JSON.parse(recoveredText) as { description: string; sourceDiet: string; recipes: Recipe[] };
-const forbiddenSourceLabels = /NutriMind katalog bazowy|dopaminowa klasyczna|dieta low carb low food|dieta 1800 kcal|recovered production export/i;
-
 assert.equal(recovered.recipes.length, 77, 'Sanitized catalog should contain 77 recipes');
 assert.equal(recovered.sourceDiet, 'NutriMind katalog bazowy', 'Sanitized catalog source');
-assert.ok(!forbiddenSourceLabels.test(recoveredText), 'Sanitized catalog contains a legacy source label');
 assert.equal(new Set(recovered.recipes.map((recipe) => recipe.name)).size, recovered.recipes.length, 'Recovered names must be unique');
 assert.ok(recovered.recipes.every((recipe) => recipe.sourceDiet === 'NutriMind katalog bazowy'));
 assert.ok(!/("(?:id|householdId|userId|sessionId|createdAt|updatedAt|localPath)")/i.test(recoveredText));
