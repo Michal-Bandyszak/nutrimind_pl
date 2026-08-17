@@ -6,6 +6,7 @@
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
+import { isNutritionReady } from '../lib/utils/nutritionReady';
 
 const prisma = new PrismaClient();
 const CURATED_RECIPE_FILES = [
@@ -13,6 +14,7 @@ const CURATED_RECIPE_FILES = [
   'polish-balanced-recipes.json',
   'breakfast-recipes.json',
   'ocr-diety-recipes.json',
+  'recovered-production-recipes.json',
 ];
 const VARIANT_FILE = 'recipe-calorie-variants-2500.json';
 const COMPONENT_FILE = 'recipe-components.json';
@@ -43,6 +45,10 @@ const RECIPE_NAME_BLOCKLIST = new Set([
   'Wołowina w sosie jogurtowo',
   'RUTESYZARTET i PAL ylIGQ',
 ]);
+const VALID_RECIPE_TYPES = new Set(['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert']);
+const VALID_RECIPE_ROLES = new Set(['meal', 'component']);
+const VALID_RECIPE_SOURCES = new Set(['dietitian', 'user', 'curated']);
+const VALID_INGREDIENT_BASES = new Set(['per-serving', 'per-whole']);
 
 type SeedIngredient = {
   name: string;
@@ -79,6 +85,8 @@ type SeedRecipe = {
   baseServings?: number;
   ingredientBasis?: string;
   source?: string;
+  nutritionReady?: boolean;
+  /** Legacy parser compatibility; never trusted as readiness. */
   nutritionVerified?: boolean;
   ingredients: SeedIngredient[];
 };
@@ -111,6 +119,7 @@ type ComponentEntry = {
 type ValidatedRecipe = {
   recipe: SeedRecipe;
   warnings: string[];
+  ingredientsValid: boolean;
 };
 
 // Known package sizes for waste-prevention feature
@@ -267,6 +276,12 @@ function loadJson<T>(filename: string): T | null {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as T;
 }
 
+function loadRequiredJson<T>(filename: string): T {
+  const value = loadJson<T>(filename);
+  if (!value) throw new Error(`Required curated file is missing: ${filename}`);
+  return value;
+}
+
 function normalizeWhitespace(value: string) {
   return value.replace(/\s+/g, ' ').trim();
 }
@@ -321,9 +336,37 @@ function isLikelyCorruptedRecipeName(name: string) {
   return false;
 }
 
+function assertSeedRecipeShape(recipe: SeedRecipe) {
+  if (!recipe.name || typeof recipe.name !== 'string') throw new Error('Recipe name is required.');
+  if (!VALID_RECIPE_TYPES.has(recipe.type)) throw new Error(`Invalid recipe type for ${recipe.name}: ${recipe.type}`);
+  if (recipe.role && !VALID_RECIPE_ROLES.has(recipe.role)) throw new Error(`Invalid recipe role for ${recipe.name}: ${recipe.role}`);
+  if (recipe.source && !VALID_RECIPE_SOURCES.has(recipe.source)) throw new Error(`Invalid recipe source for ${recipe.name}: ${recipe.source}`);
+  if (recipe.ingredientBasis && !VALID_INGREDIENT_BASES.has(recipe.ingredientBasis)) {
+    throw new Error(`Invalid ingredient basis for ${recipe.name}: ${recipe.ingredientBasis}`);
+  }
+  if (!Array.isArray(recipe.instructions)) throw new Error(`Instructions must be an array for ${recipe.name}`);
+  if (!Array.isArray(recipe.ingredients) || !recipe.ingredients.length) {
+    throw new Error(`At least one ingredient is required for ${recipe.name}`);
+  }
+  for (const ingredient of recipe.ingredients) {
+    if (!ingredient || typeof ingredient.name !== 'string') {
+      throw new Error(`Ingredient name is invalid for ${recipe.name}`);
+    }
+    if (!Number.isFinite(ingredient.amountG) || ingredient.amountG <= 0) {
+      throw new Error(`Ingredient amount is invalid for ${recipe.name}: ${ingredient.name}`);
+    }
+  }
+  for (const field of ['kcalPerServing', 'proteinG', 'carbsG', 'fatG', 'fiberG'] as const) {
+    const value = recipe[field];
+    if (value != null && (!Number.isFinite(value) || value < 0)) {
+      throw new Error(`Macro ${field} is invalid for ${recipe.name}`);
+    }
+  }
+}
+
 function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
   const normalizedName = normalizeWhitespace(recipe.name);
-  const normalizedIngredients = recipe.ingredients
+  const validIngredients = recipe.ingredients
     .map((ingredient) => ({
       ...ingredient,
       name: normalizeWhitespace(ingredient.name),
@@ -331,6 +374,8 @@ function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
       category: ingredient.category ? normalizeWhitespace(ingredient.category) : undefined,
     }))
     .filter((ingredient) => ingredient.amountG > 0 && !isInvalidIngredientName(ingredient.name));
+  const ingredientsValid = validIngredients.length === recipe.ingredients.length;
+  const normalizedIngredients = mergeIngredients(validIngredients);
   const normalizedInstructions = (recipe.instructions ?? [])
     .map((instruction) => normalizeWhitespace(instruction))
     .filter(Boolean);
@@ -343,8 +388,11 @@ function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
   if (normalizedIngredients.length === 0) return null;
 
   const warnings: string[] = [];
-  if (normalizedIngredients.length !== recipe.ingredients.length) {
-    warnings.push(`filtered ${recipe.ingredients.length - normalizedIngredients.length} invalid ingredient(s)`);
+  if (!ingredientsValid) {
+    warnings.push(`filtered ${recipe.ingredients.length - validIngredients.length} invalid ingredient(s)`);
+  }
+  if (normalizedIngredients.length !== validIngredients.length) {
+    warnings.push(`merged ${validIngredients.length - normalizedIngredients.length} duplicate ingredient(s)`);
   }
 
   return {
@@ -361,6 +409,7 @@ function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
       ingredients: normalizedIngredients,
     },
     warnings,
+    ingredientsValid,
   };
 }
 
@@ -388,8 +437,7 @@ function buildVariantRecipes(
   return variants.flatMap((variant) => {
     const parent = baseMap.get(recipeLookupKey(variant.parentRecipe));
     if (!parent) {
-      console.warn(`⚠️ Missing parent recipe for variant: ${variant.parentRecipe.name}`);
-      return [];
+      throw new Error(`Missing parent recipe for variant: ${variant.parentRecipe.name}`);
     }
 
     const additions: SeedIngredient[] = variant.additions.map((addition) => ({
@@ -432,47 +480,59 @@ async function main() {
     ? (JSON.parse(fs.readFileSync(combinedPath, 'utf-8')) as { recipes: SeedRecipe[] })
     : { recipes: [] };
   if (!fs.existsSync(combinedPath)) {
-    console.warn('⚠️ combined.json not found. Seeding only curated recipes.');
+    console.warn('⚠️ combined.json not found. Seeding only tracked curated recipes.');
   }
+
   const curatedRecipes = CURATED_RECIPE_FILES.flatMap((filename) => {
-    const curated = loadJson<{ recipes?: SeedRecipe[] }>(filename);
-    return curated?.recipes ?? [];
+    const curated = loadRequiredJson<{ recipes?: SeedRecipe[] }>(filename);
+    return curated.recipes ?? [];
   });
-  const variantConfig = loadJson<{ recipes?: VariantEntry[] }>(VARIANT_FILE);
-  const componentConfig = loadJson<{ components?: ComponentEntry[] }>(COMPONENT_FILE);
-  const variantRecipes = buildVariantRecipes(
-    [...combined.recipes, ...curatedRecipes],
-    variantConfig?.recipes ?? [],
-  );
-  const rawRecipes = [
-    ...combined.recipes,
-    ...curatedRecipes,
-    ...variantRecipes,
-  ];
+  const variantConfig = loadRequiredJson<{ recipes?: VariantEntry[] }>(VARIANT_FILE);
+  const componentConfig = loadRequiredJson<{ components?: ComponentEntry[] }>(COMPONENT_FILE);
+  const baseRecipes = [...combined.recipes, ...curatedRecipes];
+  const variantRecipes = buildVariantRecipes(baseRecipes, variantConfig.recipes ?? []);
+  const rawRecipes = [...baseRecipes, ...variantRecipes];
   const invalidRecipes: RecipeRef[] = [];
-  const recipes = rawRecipes.flatMap((recipe) => {
-    const validated = sanitizeRecipe(recipe);
+  const validatedRecipes: { recipe: SeedRecipe; ingredientsValid: boolean }[] = [];
+
+  for (const rawRecipe of rawRecipes) {
+    assertSeedRecipeShape(rawRecipe);
+    const validated = sanitizeRecipe(rawRecipe);
     if (!validated) {
       invalidRecipes.push({
-        name: recipe.name,
-        sourceDiet: recipe.sourceDiet ?? null,
-        variantKey: recipe.variantKey ?? 'base',
+        name: rawRecipe.name,
+        sourceDiet: rawRecipe.sourceDiet ?? null,
+        variantKey: rawRecipe.variantKey ?? 'base',
       });
-      console.warn(`⚠️ Skipping suspicious recipe: ${recipe.name} [${recipe.sourceDiet ?? 'no-source'}]`);
-      return [];
+      console.warn(`⚠️ Suspicious recipe excluded from managed catalog: ${rawRecipe.name} [${rawRecipe.sourceDiet ?? 'no-source'}]`);
+      continue;
     }
-
     for (const warning of validated.warnings) {
       console.warn(`⚠️ ${validated.recipe.name}: ${warning}`);
     }
+    validatedRecipes.push({ recipe: validated.recipe, ingredientsValid: validated.ingredientsValid });
+  }
 
-    return [validated.recipe];
-  });
-
+  const recipes = validatedRecipes.map(({ recipe }) => recipe);
   const recipeKeys = recipes.map((recipe) => recipeLookupKey(recipe));
   const duplicateKeys = recipeKeys.filter((key, index) => recipeKeys.indexOf(key) !== index);
   if (duplicateKeys.length) {
     throw new Error(`Duplicate canonical recipe keys: ${[...new Set(duplicateKeys)].join(', ')}`);
+  }
+
+  const recipeKeySet = new Set(recipeKeys);
+  for (const variant of variantConfig.recipes ?? []) {
+    if (!recipeKeySet.has(recipeLookupKey(variant.parentRecipe))) {
+      throw new Error(`Variant parent missing after preflight: ${variant.parentRecipe.name}`);
+    }
+  }
+  for (const link of componentConfig.components ?? []) {
+    if (!recipeKeySet.has(recipeLookupKey({ ...link.parentRecipe, variantKey: 'base' }))) {
+      throw new Error(`Component parent missing after preflight: ${link.parentRecipe.name}`);
+    }
+    if (!recipeKeySet.has(recipeLookupKey({ ...link.componentRecipe, variantKey: 'base' }))) {
+      throw new Error(`Component recipe missing after preflight: ${link.componentRecipe.name}`);
+    }
   }
 
   if (dryRun) {
@@ -481,66 +541,45 @@ async function main() {
       counts[source] = (counts[source] ?? 0) + 1;
       return counts;
     }, {});
-    console.log(`\nDry run passed: ${recipes.length} unique recipes.`);
+    const readyCount = validatedRecipes.filter(({ recipe, ingredientsValid }) => isNutritionReady({
+      kcalPerServing: recipe.kcalPerServing,
+      proteinG: recipe.proteinG,
+      carbsG: recipe.carbsG,
+      fatG: recipe.fatG,
+      ingredientsValid,
+    })).length;
+    console.log(`\nDry run passed: ${recipes.length} unique recipes; ${readyCount} nutrition-ready.`);
+    console.log(`Excluded suspicious recipes: ${invalidRecipes.length}.`);
     console.table(countsBySource);
     return;
   }
 
   console.log(`\n🌱 Seeding ${recipes.length} recipes into database...\n`);
-
   let ingredientCount = 0;
   let recipeCount = 0;
   const recipeIds = new Map<string, string>();
 
-  for (const invalidRecipe of invalidRecipes) {
-    try {
-      await prisma.recipe.deleteMany({
-        where: {
-          name: invalidRecipe.name,
-          sourceDiet: invalidRecipe.sourceDiet ?? null,
-          variantKey: invalidRecipe.variantKey ?? 'base',
-          mealPlanMeals: {
-            none: {},
-          },
-        },
+  for (const { recipe, ingredientsValid } of validatedRecipes) {
+    const recipeId = await prisma.$transaction(async (tx) => {
+      const ingredientIds = new Map<string, string>();
+      for (const ingredient of recipe.ingredients) {
+        const pkgData = buildPackageData(getPackageInfo(ingredient.name));
+        const category = resolveCategory(ingredient);
+        const record = await tx.ingredient.upsert({
+          where: { name: ingredient.name },
+          update: { category, ...pkgData },
+          create: { name: ingredient.name, category, ...pkgData },
+        });
+        ingredientIds.set(ingredient.name, record.id);
+      }
+
+      const ready = isNutritionReady({
+        kcalPerServing: recipe.kcalPerServing,
+        proteinG: recipe.proteinG,
+        carbsG: recipe.carbsG,
+        fatG: recipe.fatG,
+        ingredientsValid,
       });
-    } catch (error: any) {
-      console.warn(`⚠️ Could not remove stale invalid recipe ${invalidRecipe.name}: ${error.message}`);
-    }
-  }
-
-  for (const recipe of recipes) {
-    const ingredientIds: Record<string, string> = {};
-
-    for (const ingredient of recipe.ingredients) {
-      const pkg = getPackageInfo(ingredient.name);
-      const pkgData = buildPackageData(pkg);
-      const category = resolveCategory(ingredient);
-      const record = await prisma.ingredient.upsert({
-        where: { name: ingredient.name },
-        update: { category, ...pkgData },
-        create: {
-          name: ingredient.name,
-          category,
-          ...pkgData,
-        },
-      });
-
-      ingredientIds[ingredient.name] = record.id;
-      ingredientCount += 1;
-    }
-
-    try {
-      const existing = await prisma.recipe.findFirst({
-        where: {
-          name: recipe.name,
-          sourceDiet: recipe.sourceDiet
-            ? { in: sourceDietCandidates(recipe.sourceDiet) }
-            : null,
-          variantKey: recipe.variantKey ?? 'base',
-        },
-      });
-
       const data = {
         type: recipe.type,
         role: recipe.role ?? 'meal',
@@ -561,83 +600,72 @@ async function main() {
         baseServings: recipe.baseServings ?? 1,
         ingredientBasis: recipe.ingredientBasis ?? 'per-serving',
         source: recipe.source ?? 'dietitian',
-        nutritionVerified: recipe.nutritionVerified ?? true,
+        nutritionReady: ready,
         variantOfId: null,
       };
-
+      const existing = await tx.recipe.findFirst({
+        where: {
+          name: recipe.name,
+          sourceDiet: recipe.sourceDiet ? { in: sourceDietCandidates(recipe.sourceDiet) } : null,
+          variantKey: recipe.variantKey ?? 'base',
+        },
+      });
       const dbRecipe = existing
-        ? await prisma.recipe.update({
-            where: { id: existing.id },
-            data,
-          })
-        : await prisma.recipe.create({
-            data: {
-              name: recipe.name,
-              ...data,
-            },
-          });
+        ? await tx.recipe.update({ where: { id: existing.id }, data })
+        : await tx.recipe.create({ data: { name: recipe.name, ...data } });
 
-      await prisma.recipeIngredient.deleteMany({ where: { recipeId: dbRecipe.id } });
-      for (const ingredient of recipe.ingredients) {
-        const ingredientId = ingredientIds[ingredient.name];
-        if (!ingredientId) continue;
-
-        await prisma.recipeIngredient.create({
-          data: {
+      await tx.recipeIngredient.deleteMany({ where: { recipeId: dbRecipe.id } });
+      await tx.recipeIngredient.createMany({
+        data: recipe.ingredients.flatMap((ingredient) => {
+          const ingredientId = ingredientIds.get(ingredient.name);
+          if (!ingredientId) return [];
+          return [{
             recipeId: dbRecipe.id,
             ingredientId,
             amountG: ingredient.amountG,
             displayText: ingredient.displayText ?? null,
             scalesLinearly: scalesLinearly(ingredient.name),
-          },
-        });
-      }
+          }];
+        }),
+      });
+      return dbRecipe.id;
+    });
 
-      recipeIds.set(recipeLookupKey(recipe), dbRecipe.id);
-      recipeCount += 1;
-      console.log(`✅ [${recipe.type}] ${recipe.name} (${recipe.variantKey ?? 'base'})`);
-    } catch (error: any) {
-      console.error(`❌ Failed: ${recipe.name} — ${error.message}`);
-    }
+    recipeIds.set(recipeLookupKey(recipe), recipeId);
+    recipeCount += 1;
+    ingredientCount += recipe.ingredients.length;
+    console.log(`✅ [${recipe.type}] ${recipe.name} (${recipe.variantKey ?? 'base'})`);
   }
 
-  for (const recipe of recipes) {
-    if (!recipe.variantOf) continue;
+  const variantUpdates = recipes.flatMap((recipe) => {
+    if (!recipe.variantOf) return [];
     const childId = recipeIds.get(recipeLookupKey(recipe));
     const parentId = recipeIds.get(recipeLookupKey(recipe.variantOf));
-    if (!childId || !parentId) continue;
-    await prisma.recipe.update({
-      where: { id: childId },
-      data: { variantOfId: parentId },
-    });
-  }
+    if (!childId || !parentId) throw new Error(`Variant link missing: ${recipe.name}`);
+    return [{ childId, parentId }];
+  });
+  await prisma.$transaction(variantUpdates.map(({ childId, parentId }) => prisma.recipe.update({
+    where: { id: childId },
+    data: { variantOfId: parentId },
+  })));
 
-  await prisma.recipeComponent.deleteMany();
-  for (const link of componentConfig?.components ?? []) {
-    const parentId = recipeIds.get(recipeLookupKey({
-      name: link.parentRecipe.name,
-      sourceDiet: link.parentRecipe.sourceDiet ?? null,
-      variantKey: 'base',
-    }));
-    const componentId = recipeIds.get(recipeLookupKey({
-      name: link.componentRecipe.name,
-      sourceDiet: link.componentRecipe.sourceDiet ?? null,
-      variantKey: 'base',
-    }));
-
-    if (!parentId || !componentId) {
-      console.warn(`⚠️ Component link skipped: ${link.parentRecipe.name} -> ${link.componentRecipe.name}`);
-      continue;
-    }
-
-    await prisma.recipeComponent.create({
-      data: {
-        parentRecipeId: parentId,
-        componentRecipeId: componentId,
-        servingsUsed: 1,
-        displayText: link.usage ?? null,
-        note: link.note ?? null,
-      },
+  const componentRows = (componentConfig.components ?? []).map((link) => {
+    const parentId = recipeIds.get(recipeLookupKey({ ...link.parentRecipe, variantKey: 'base' }));
+    const componentId = recipeIds.get(recipeLookupKey({ ...link.componentRecipe, variantKey: 'base' }));
+    if (!parentId || !componentId) throw new Error(`Component link missing: ${link.parentRecipe.name}`);
+    return {
+      parentRecipeId: parentId,
+      componentRecipeId: componentId,
+      servingsUsed: 1,
+      displayText: link.usage ?? null,
+      note: link.note ?? null,
+    };
+  });
+  const managedParentIds = [...new Set(componentRows.map((row) => row.parentRecipeId))];
+  if (managedParentIds.length) {
+    await prisma.$transaction(async (tx) => {
+      await tx.recipeComponent.deleteMany({ where: { parentRecipeId: { in: managedParentIds } } });
+      await tx.recipeComponent.createMany({ data: componentRows });
     });
   }
 

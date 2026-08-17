@@ -57,7 +57,7 @@ export async function loadRecipeCandidates(householdId: string) {
   const recipes = await prisma.recipe.findMany({
     where: {
       type: { in: [...CANDIDATE_MEAL_TYPES] },
-      nutritionVerified: true,
+      nutritionReady: true,
       role: 'meal',
       OR: [{ householdId: null }, { householdId }],
     },
@@ -195,10 +195,6 @@ export async function generateWeekPlan(
   const lunches = candidatesByType.lunch ?? [];
   const dinners = candidatesByType.dinner ?? [];
   const cocktails = candidatesByType.cocktail ?? [];
-
-  if (!breakfasts.length) throw new Error('Brak przepisów na śniadanie.');
-  if (!lunches.length)    throw new Error('Brak przepisów na obiad.');
-  if (!dinners.length)    throw new Error('Brak przepisów na kolację.');
 
   const servingsByProfile = profiles.map((profile) => ({
     profile,

@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   try {
     const context = await requireApiContext();
     const logs = await prisma.healthLog.findMany({
-      where: { personProfileId: context.primaryProfileId },
+      where: { personProfileId: context.personProfileId },
       orderBy: { date: 'desc' },
       take: limit,
     });

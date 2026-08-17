@@ -8,6 +8,7 @@
 import fs from "fs";
 import path from "path";
 import { getBreakfastSource, getLocalImportSetupHint } from "./localImportConfig";
+import { isNutritionReady } from "../lib/utils/nutritionReady";
 
 type ParsedIngredient = {
   name: string;
@@ -31,7 +32,7 @@ type ParsedRecipe = {
   baseServings: 1;
   ingredientBasis: "per-serving";
   source: "dietitian";
-  nutritionVerified: true;
+  nutritionReady: boolean;
   sourceDiet: string;
   tags: string[];
   ingredients: ParsedIngredient[];
@@ -298,7 +299,13 @@ function parseRecipeBlock(block: string): ParsedRecipe {
     baseServings: 1,
     ingredientBasis: "per-serving",
     source: "dietitian",
-    nutritionVerified: true,
+    nutritionReady: isNutritionReady({
+      kcalPerServing: kcal,
+      proteinG: Number.parseFloat(macro[1]),
+      carbsG: Number.parseFloat(macro[3]),
+      fatG: Number.parseFloat(macro[2]),
+      ingredientsValid: ingredients.every((ingredient) => ingredient.amountG > 0 && Boolean(ingredient.name.trim())),
+    }),
     sourceDiet: SOURCE_DIET,
     tags: parseTags(block),
     ingredients,

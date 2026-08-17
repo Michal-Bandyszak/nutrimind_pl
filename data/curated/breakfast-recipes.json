@@ -16,7 +16,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -93,7 +93,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -178,7 +178,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -255,7 +255,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -338,7 +338,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -427,7 +427,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -516,7 +516,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -619,7 +619,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -703,7 +703,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -787,7 +787,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -890,7 +890,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1000,7 +1000,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1103,7 +1103,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1193,7 +1193,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1276,7 +1276,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1378,7 +1378,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1479,7 +1479,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr"
@@ -1576,7 +1576,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1659,7 +1659,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1749,7 +1749,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1828,7 +1828,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1913,7 +1913,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -1997,7 +1997,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2086,7 +2086,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr"
@@ -2157,7 +2157,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2229,7 +2229,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2301,7 +2301,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2366,7 +2366,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2438,7 +2438,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr"
@@ -2517,7 +2517,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr"
@@ -2595,7 +2595,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2684,7 +2684,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2766,7 +2766,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2856,7 +2856,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -2947,7 +2947,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3043,7 +3043,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr"
@@ -3137,7 +3137,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3215,7 +3215,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3311,7 +3311,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3401,7 +3401,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3473,7 +3473,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3543,7 +3543,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3620,7 +3620,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",
@@ -3680,7 +3680,7 @@
       "baseServings": 1,
       "ingredientBasis": "per-serving",
       "source": "dietitian",
-      "nutritionVerified": true,
+      "nutritionReady": true,
       "sourceDiet": "Zestaw sniadan A",
       "tags": [
         "sniadania-ocr",

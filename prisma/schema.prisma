@@ -53,10 +53,10 @@ model Recipe {
   // Recipe metadata
   baseServings      Int     @default(1)            // portions this recipe yields
   ingredientBasis   String  @default("per-serving") // "per-serving" | "per-whole"
-  source            String  @default("dietitian")   // "dietitian" | "user"
+  source            String  @default("dietitian")   // "dietitian" | "user" | "curated"
   householdId       String?
   household         Household? @relation(fields: [householdId], references: [id], onDelete: Cascade)
-  nutritionVerified Boolean @default(false)          // true = macros are reliable
+  nutritionReady   Boolean @default(false) @map("nutritionVerified") // structural readiness for planner
   variantOfId       String?
   variantOf         Recipe?  @relation("RecipeVariants", fields: [variantOfId], references: [id], onDelete: SetNull)
   variants          Recipe[] @relation("RecipeVariants")

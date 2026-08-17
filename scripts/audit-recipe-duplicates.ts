@@ -45,7 +45,7 @@ function recipeFingerprint(recipe: RecipeRow) {
     ingredientBasis: recipe.ingredientBasis,
     source: recipe.source,
     householdId: recipe.householdId,
-    nutritionVerified: recipe.nutritionVerified,
+    nutritionReady: recipe.nutritionReady,
     ingredients: [...recipe.ingredients]
       .map(({ amountG, displayText, scalesLinearly, ingredient }) => ({
         name: normalize(ingredient.name),
@@ -100,7 +100,7 @@ function loadRecipes() {
       ingredientBasis: true,
       source: true,
       householdId: true,
-      nutritionVerified: true,
+      nutritionReady: true,
       createdAt: true,
       ingredients: {
         select: {

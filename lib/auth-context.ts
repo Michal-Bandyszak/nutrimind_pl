@@ -7,7 +7,7 @@ export type AuthContext = {
   userId: string;
   email: string;
   householdId: string;
-  primaryProfileId: string;
+  personProfileId: string;
 };
 
 export async function getAuthContext(): Promise<AuthContext | null> {
@@ -21,7 +21,7 @@ export async function getAuthContext(): Promise<AuthContext | null> {
       household: {
         select: {
           profiles: {
-            where: { isPrimary: true },
+            where: { userId: session.user.id },
             select: { id: true },
             take: 1,
           },
@@ -29,14 +29,14 @@ export async function getAuthContext(): Promise<AuthContext | null> {
       },
     },
   });
-  const primary = membership?.household.profiles[0];
-  if (!membership || !primary) return null;
+  const profile = membership?.household.profiles[0];
+  if (!membership || !profile) return null;
 
   return {
     userId: session.user.id,
     email: session.user.email,
     householdId: membership.householdId,
-    primaryProfileId: primary.id,
+    personProfileId: profile.id,
   };
 }
 
@@ -61,13 +61,18 @@ export function apiError(error: unknown, fallback = 'Błąd serwera.') {
   }
   if (error && typeof error === 'object' && 'code' in error
     && (error as { code?: unknown }).code === 'NO_ELIGIBLE_RECIPE') {
+    const recipeError = error as unknown as Error & { mealType?: string; batchDays?: number };
     return {
-      message: error instanceof Error ? error.message : 'Brak bezpiecznego przepisu dla wybranego bloku.',
+      message: recipeError.message || 'Brak bezpiecznego przepisu dla wybranego bloku.',
       status: 400,
+      code: 'NO_ELIGIBLE_RECIPE',
+      mealType: recipeError.mealType,
+      batchDays: recipeError.batchDays,
     };
   }
+  console.error('[api] Internal request failure:', error);
   return {
-    message: error instanceof Error ? error.message : fallback,
+    message: fallback,
     status: 500,
   };
 }

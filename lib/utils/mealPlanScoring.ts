@@ -73,7 +73,7 @@ export function isRecipeEligibleForGroup(
   requiredStorageDays: number,
 ) {
   return recipe.role !== 'component'
-    && recipe.nutritionReady !== false
+    && recipe.nutritionReady === true
     && recipe.kcalPerServing != null
     && recipe.kcalPerServing > 0
     && recipe.maxStorageDays >= requiredStorageDays

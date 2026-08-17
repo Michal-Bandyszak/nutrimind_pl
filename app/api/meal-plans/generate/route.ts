@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     const plan = await generateWeekPlan(context.householdId, profiles, config);
     return NextResponse.json(plan, { status: 201 });
   } catch (error) {
-    const { message, status } = apiError(error, 'Nie udało się wygenerować planu.');
-    return NextResponse.json({ error: message }, { status });
+    const { message, status, ...details } = apiError(error, 'Nie udało się wygenerować planu.');
+    return NextResponse.json({ error: message, ...details }, { status });
   }
 }

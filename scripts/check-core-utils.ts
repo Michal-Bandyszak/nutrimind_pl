@@ -172,7 +172,7 @@ type CuratedRecipe = {
   carbsG: number;
   fatG: number;
   fiberG: number;
-  nutritionVerified: boolean;
+  nutritionReady: boolean;
   tags: string[];
   ingredients: { name: string; amountG: number }[];
   instructions: string[];
@@ -190,7 +190,7 @@ assert.equal(curated.recipes.filter((recipe) => recipe.type === 'lunch').length,
 assert.equal(curated.recipes.filter((recipe) => recipe.type === 'dinner').length, 4);
 
 for (const recipe of curated.recipes) {
-  assert.equal(recipe.nutritionVerified, true, `${recipe.name}: nutritionVerified`);
+  assert.equal(recipe.nutritionReady, true, `${recipe.name}: nutritionReady`);
   assert.ok(recipe.tags.includes('profil:srodziemnomorski'), `${recipe.name}: profil tag`);
   assert.ok(recipe.tags.includes('lokalne'), `${recipe.name}: local tag`);
   assert.ok(recipe.ingredients.length >= 5, `${recipe.name}: ingredients`);

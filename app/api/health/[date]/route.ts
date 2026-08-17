@@ -35,7 +35,7 @@ export async function GET(
     const log = await prisma.healthLog.findUnique({
       where: {
         personProfileId_date: {
-          personProfileId: context.primaryProfileId,
+          personProfileId: context.personProfileId,
           date,
         },
       },
@@ -88,11 +88,11 @@ export async function PUT(
     const log = await prisma.healthLog.upsert({
       where: {
         personProfileId_date: {
-          personProfileId: context.primaryProfileId,
+          personProfileId: context.personProfileId,
           date,
         },
       },
-      create: { personProfileId: context.primaryProfileId, date, ...cleanData },
+      create: { personProfileId: context.personProfileId, date, ...cleanData },
       update: cleanData,
     });
     return NextResponse.json({ data: log });

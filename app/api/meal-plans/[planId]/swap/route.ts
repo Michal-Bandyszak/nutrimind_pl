@@ -51,7 +51,7 @@ export async function PATCH(
             select: {
               role: true,
               type: true,
-              nutritionVerified: true,
+              nutritionReady: true,
               maxStorageDays: true,
               kcalPerServing: true,
               batchFriendly: true,
@@ -66,7 +66,7 @@ export async function PATCH(
             select: {
               role: true,
               type: true,
-              nutritionVerified: true,
+              nutritionReady: true,
               maxStorageDays: true,
               kcalPerServing: true,
               batchFriendly: true,

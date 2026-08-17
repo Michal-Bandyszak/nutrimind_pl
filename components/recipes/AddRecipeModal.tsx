@@ -608,7 +608,7 @@ export default function AddRecipeModal({ onClose, onSaved }: Props) {
       const res = await fetch('/api/recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, source: 'user', nutritionVerified: false }),
+        body: JSON.stringify({ ...payload, source: 'user', nutritionReady: false }),
       });
       const json = await res.json();
       if (!res.ok) {

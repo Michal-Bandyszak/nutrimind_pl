@@ -8,6 +8,7 @@
 import fs from "fs";
 import path from "path";
 import { getDietFiles, getLocalImportSetupHint } from "./localImportConfig";
+import { isNutritionReady } from "../lib/utils/nutritionReady";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,6 +31,7 @@ interface ParsedRecipe {
   instructions: string[];
   batchFriendly: boolean;
   maxStorageDays: number;
+  nutritionReady: boolean;
   sourceDiet: string;
 }
 
@@ -451,6 +453,13 @@ function extractRecipesFromMealSection(
     instructions: block.instructions,
     batchFriendly: detectBatchFriendly(block.name),
     maxStorageDays: detectMaxStorageDays(block.name, mealType),
+    nutritionReady: isNutritionReady({
+      kcalPerServing: macros.kcal,
+      proteinG: macros.protein,
+      carbsG: macros.carbs,
+      fatG: macros.fat,
+      ingredientsValid: block.ingredients.every((ingredient) => ingredient.amountG > 0 && Boolean(ingredient.name.trim())),
+    }),
     sourceDiet,
   }));
 }

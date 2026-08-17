@@ -14,6 +14,7 @@ import fs from 'fs';
 import path from 'path';
 import { getLocalImportSetupHint, getOcrConfig } from './localImportConfig';
 import { getCanonicalOcrRecipeName } from '../lib/data/ocrRecipeNameFixes';
+import { isNutritionReady } from '../lib/utils/nutritionReady';
 
 type ParsedIngredient = {
   name: string;
@@ -37,7 +38,7 @@ type ParsedRecipe = {
   baseServings: 1;
   ingredientBasis: 'per-serving';
   source: 'dietitian';
-  nutritionVerified: boolean;
+  nutritionReady: boolean;
   sourceDiet: string;
   tags: string[];
   ingredients: ParsedIngredient[];
@@ -384,7 +385,13 @@ function parseMacros(block: string) {
     proteinG: macroMatch ? Number.parseFloat(macroMatch[1]) : null,
     fatG: macroMatch ? Number.parseFloat(macroMatch[2]) : null,
     carbsG: macroMatch ? Number.parseFloat(macroMatch[3]) : null,
-    nutritionVerified: Boolean(kcalMatch && macroMatch),
+    nutritionReady: isNutritionReady({
+      kcalPerServing: kcalMatch ? Number.parseFloat(kcalMatch[1]) : null,
+      proteinG: macroMatch ? Number.parseFloat(macroMatch[1]) : null,
+      carbsG: macroMatch ? Number.parseFloat(macroMatch[3]) : null,
+      fatG: macroMatch ? Number.parseFloat(macroMatch[2]) : null,
+      ingredientsValid: true,
+    }),
   };
 }
 
@@ -470,7 +477,13 @@ function parseRecipeBlock(
     baseServings: 1,
     ingredientBasis: 'per-serving',
     source: 'dietitian',
-    nutritionVerified: macros.nutritionVerified,
+    nutritionReady: isNutritionReady({
+      kcalPerServing: macros.kcalPerServing,
+      proteinG: macros.proteinG,
+      carbsG: macros.carbsG,
+      fatG: macros.fatG,
+      ingredientsValid: ingredients.length > 0 && ingredients.every((ingredient) => ingredient.amountG > 0 && Boolean(ingredient.name.trim())),
+    }),
     sourceDiet,
     tags: parseTags(block, tag),
     ingredients,

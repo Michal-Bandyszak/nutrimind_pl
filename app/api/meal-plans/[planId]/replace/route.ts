@@ -50,7 +50,7 @@ export async function PATCH(
           id: true,
           role: true,
           type: true,
-          nutritionVerified: true,
+          nutritionReady: true,
           maxStorageDays: true,
           kcalPerServing: true,
           batchFriendly: true,

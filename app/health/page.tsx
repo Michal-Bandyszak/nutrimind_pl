@@ -13,7 +13,7 @@ export default async function HealthPage() {
   const raw = await prisma.healthLog.findUnique({
     where: {
       personProfileId_date: {
-        personProfileId: context.primaryProfileId,
+        personProfileId: context.personProfileId,
         date,
       },
     },

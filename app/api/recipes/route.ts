@@ -4,12 +4,13 @@ import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
 import { visibleRecipeWhere } from '@/lib/access';
 import { normalizeRecipeName } from '@/lib/utils/recipeConstants';
+import { isNutritionReady } from '@/lib/utils/nutritionReady';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
 
 const VALID_INGREDIENT_BASIS = ['per-serving', 'per-whole'];
-const VALID_SOURCES = ['dietitian', 'user'];
+const VALID_SOURCES = ['dietitian', 'user', 'curated'];
 const VALID_ROLES = ['meal', 'component'];
 
 const RECIPE_PICKER_SELECT = {
@@ -21,6 +22,7 @@ const RECIPE_PICKER_SELECT = {
   proteinG: true,
   carbsG: true,
   fatG: true,
+  nutritionReady: true,
 } satisfies Prisma.RecipeSelect;
 
 const RECIPE_LIST_SELECT = {
@@ -67,7 +69,7 @@ export async function POST(req: NextRequest) {
       kcalPerServing, proteinG, carbsG, fatG, fiberG,
       prepTimeMin, cookTimeMin, batchFriendly, maxStorageDays, instructions,
       // new fields
-      baseServings, ingredientBasis, source, nutritionVerified, role, variantKey, adjustmentNote,
+      baseServings, ingredientBasis, source, role, variantKey, adjustmentNote,
     } = body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -101,9 +103,6 @@ export async function POST(req: NextRequest) {
     const resolvedBaseServings: number = typeof baseServings === 'number' && baseServings > 0 ? baseServings : 1;
     const resolvedRole: string = role ?? 'meal';
     const resolvedVariantKey: string = typeof variantKey === 'string' && variantKey.trim() ? variantKey.trim() : 'base';
-    // Only mark as verified if explicitly passed as true; user-submitted recipes default to unverified
-    const resolvedVerified: boolean = nutritionVerified === true;
-
     const existing = await prisma.recipe.findFirst({
       where: {
         name: { equals: normalizedName, mode: 'insensitive' },
@@ -118,8 +117,12 @@ export async function POST(req: NextRequest) {
 
     const recipeId = await prisma.$transaction(async (tx) => {
       const resolvedIngredients: { id: string; amountG: number; displayText?: string; scalesLinearly: boolean }[] = [];
+      const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
+      const validInputIngredients = ingredients.filter((ing: any) => (
+        ing && typeof ing.name === 'string' && ing.name.trim() && isValidNum(ing.amountG) && ing.amountG > 0
+      ));
 
-      for (const ing of ingredients) {
+      for (const ing of validInputIngredients) {
         const ingredient = await tx.ingredient.upsert({
           where: { name: ing.name },
           update: {},
@@ -133,7 +136,13 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
+      const ready = isNutritionReady({
+        kcalPerServing,
+        proteinG,
+        carbsG,
+        fatG,
+        ingredientsValid: validInputIngredients.length === ingredients.length,
+      });
       const created = await tx.recipe.create({
         data: {
           name: normalizedName,
@@ -158,7 +167,7 @@ export async function POST(req: NextRequest) {
             : null,
           ingredientBasis: resolvedBasis,
           baseServings: resolvedBaseServings,
-          nutritionVerified: resolvedVerified,
+          nutritionReady: ready,
         },
       });
 
@@ -196,15 +205,15 @@ export async function GET(req: NextRequest) {
     const type = searchParams.get('type');
     const q = searchParams.get('q');
     const view = searchParams.get('view');
-    const verifiedParam = searchParams.get('verified'); // "true" | "false" | null
-    const sourceParam = searchParams.get('source');     // "dietitian" | "user" | null
+    const readyParam = searchParams.get('ready') ?? searchParams.get('verified'); // compatibility alias
+    const sourceParam = searchParams.get('source');     // "dietitian" | "user" | "curated" | null
 
     const where = {
       ...visibleRecipeWhere(context.householdId),
       ...(type && type !== 'all' ? { type } : {}),
       ...(q ? { name: { contains: q } } : {}),
-      ...(verifiedParam === 'true' ? { nutritionVerified: true } : {}),
-      ...(verifiedParam === 'false' ? { nutritionVerified: false } : {}),
+      ...(readyParam === 'true' ? { nutritionReady: true } : {}),
+      ...(readyParam === 'false' ? { nutritionReady: false } : {}),
       ...(sourceParam && VALID_SOURCES.includes(sourceParam) ? { source: sourceParam } : {}),
     };
 

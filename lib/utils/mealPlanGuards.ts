@@ -6,8 +6,7 @@ export const MAX_REPLACEMENT_KCAL_DELTA = 350;
 export type GuardRecipe = {
   role?: string;
   type: string;
-  nutritionReady?: boolean;
-  nutritionVerified?: boolean;
+  nutritionReady: boolean;
   maxStorageDays: number;
   kcalPerServing: number | null;
   batchFriendly: boolean;
@@ -36,8 +35,7 @@ export function validateRecipeForMealSlot({
     return 'Ten przepis ma inny typ posiłku niż wybrany slot.';
   }
 
-  const nutritionReady = recipe.nutritionReady ?? recipe.nutritionVerified ?? false;
-  if (!nutritionReady || recipe.kcalPerServing == null || recipe.kcalPerServing <= 0) {
+  if (!recipe.nutritionReady || recipe.kcalPerServing == null || recipe.kcalPerServing <= 0) {
     return 'Ten przepis nie jest gotowy do planu.';
   }
 
