@@ -79,6 +79,8 @@ model RecipeIngredient {
   amountG        Float      // total grams for 1 serving
   displayText    String?    // original text e.g. "3 łyżki oliwy (30g)"
   scalesLinearly Boolean    @default(true) // false for oils, spices
+
+  @@unique([recipeId, ingredientId])
 }
 
 model RecipeComponent {

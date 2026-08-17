@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
 import { isNutritionReady } from '../lib/utils/nutritionReady';
+import { isSuspiciousIngredientName, normalizeIngredientName } from '../lib/utils/ingredientNormalization';
 
 const prisma = new PrismaClient();
 const CURATED_RECIPE_FILES = [
@@ -296,11 +297,7 @@ function isOcrSource(sourceDiet?: string | null) {
 
 function isInvalidIngredientName(name: string) {
   const normalized = normalizeWhitespace(name);
-  if (!normalized) return true;
-  if (!hasLetters(normalized)) return true;
-  if (/^screenshot\b/i.test(normalized)) return true;
-  if (/^[\d.,/%() -]+(?:g|kg|ml|l)?$/i.test(normalized)) return true;
-  return false;
+  return !normalized;
 }
 
 function hasTooManyUppercaseGlyphs(name: string) {
@@ -369,12 +366,13 @@ function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
   const validIngredients = recipe.ingredients
     .map((ingredient) => ({
       ...ingredient,
-      name: normalizeWhitespace(ingredient.name),
+      name: normalizeIngredientName(ingredient.name),
       displayText: ingredient.displayText ? normalizeWhitespace(ingredient.displayText) : undefined,
       category: ingredient.category ? normalizeWhitespace(ingredient.category) : undefined,
     }))
     .filter((ingredient) => ingredient.amountG > 0 && !isInvalidIngredientName(ingredient.name));
-  const ingredientsValid = validIngredients.length === recipe.ingredients.length;
+  const ingredientsValid = validIngredients.length === recipe.ingredients.length
+    && validIngredients.every((ingredient) => !isSuspiciousIngredientName(ingredient.name));
   const normalizedIngredients = mergeIngredients(validIngredients);
   const normalizedInstructions = (recipe.instructions ?? [])
     .map((instruction) => normalizeWhitespace(instruction))
@@ -389,7 +387,7 @@ function sanitizeRecipe(recipe: SeedRecipe): ValidatedRecipe | null {
 
   const warnings: string[] = [];
   if (!ingredientsValid) {
-    warnings.push(`filtered ${recipe.ingredients.length - validIngredients.length} invalid ingredient(s)`);
+    warnings.push('contains unresolved or suspicious ingredient name(s); marked nutritionReady=false');
   }
   if (normalizedIngredients.length !== validIngredients.length) {
     warnings.push(`merged ${validIngredients.length - normalizedIngredients.length} duplicate ingredient(s)`);

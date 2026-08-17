@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db/prisma';
 import { apiError, requireApiContext } from '@/lib/auth-context';
 import { visibleRecipeWhere } from '@/lib/access';
 import { normalizeRecipeName } from '@/lib/utils/recipeConstants';
+import { normalizeIngredientName, isSuspiciousIngredientName } from '@/lib/utils/ingredientNormalization';
+import { isNutritionReady } from '@/lib/utils/nutritionReady';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
@@ -73,6 +75,17 @@ export async function PATCH(
     if (!isValidNum(kcalPerServing) || !isValidNum(proteinG) || !isValidNum(carbsG) || !isValidNum(fatG)) {
       return NextResponse.json({ error: 'Makroskładniki (kcal, białko, węgle, tłuszcze) są wymagane.' }, { status: 400 });
     }
+    const normalizedIngredients = ingredients
+      .filter((ing: any) => ing && typeof ing.name === 'string')
+      .map((ing: any) => ({ ...ing, name: normalizeIngredientName(ing.name) }));
+    if (normalizedIngredients.length !== ingredients.length || normalizedIngredients.some((ing: any) => (
+      !ing.name || !isValidNum(ing.amountG) || ing.amountG <= 0
+    ))) {
+      return NextResponse.json({ error: 'Każdy składnik musi mieć nazwę i dodatnią gramaturę.' }, { status: 400 });
+    }
+    if (new Set(normalizedIngredients.map((ing: any) => ing.name)).size !== normalizedIngredients.length) {
+      return NextResponse.json({ error: 'Ten sam składnik występuje więcej niż raz po normalizacji.' }, { status: 400 });
+    }
 
     const existing = await prisma.recipe.findFirst({
       where: { id, householdId: context.householdId, source: 'user' },
@@ -100,7 +113,7 @@ export async function PATCH(
 
       // Upsert ingredients and collect ids
       const resolvedIngredients: { id: string; amountG: number; displayText?: string; scalesLinearly: boolean }[] = [];
-      for (const ing of ingredients) {
+      for (const ing of normalizedIngredients) {
         const ingredient = await tx.ingredient.upsert({
           where: { name: ing.name },
           update: {},
@@ -129,6 +142,19 @@ export async function PATCH(
           fatG,
           fiberG: fiberG ?? null,
           instructions: JSON.stringify(Array.isArray(instructions) ? instructions : []),
+          nutritionReady: isNutritionReady({
+            kcalPerServing,
+            proteinG,
+            carbsG,
+            fatG,
+            ingredientsValid: normalizedIngredients.every((ingredient: any) => (
+              typeof ingredient.name === 'string'
+              && ingredient.name.length > 0
+              && !isSuspiciousIngredientName(ingredient.name)
+              && isValidNum(ingredient.amountG)
+              && ingredient.amountG > 0
+            )),
+          }),
         },
       });
 

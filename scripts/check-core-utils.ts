@@ -16,6 +16,7 @@ import {
 import { normalizeRecipeName } from '../lib/utils/recipeConstants';
 import { inferRecipeSemantics } from '../lib/utils/recipeSemantics';
 import { DEFAULT_BATCH_CONFIG, isBatchConfig, normalizeStoredBatchConfig } from '../lib/types';
+import { isSuspiciousIngredientName, normalizeIngredientName } from '../lib/utils/ingredientNormalization';
 
 const justAfterMidnightInWarsaw = new Date('2026-07-14T22:30:00.000Z');
 
@@ -163,6 +164,12 @@ assert.deepEqual(
 );
 assert.deepEqual(normalizeStoredBatchConfig({ lunch: [true] }).lunch, DEFAULT_BATCH_CONFIG.lunch);
 console.log('Batch configuration checks passed.');
+
+assert.equal(normalizeIngredientName('  ser   feta  '), 'Ser feta');
+assert.equal(normalizeIngredientName('Odzywka biatkowa'), 'Odżywka białkowa');
+assert.equal(isSuspiciousIngredientName('50g'), true);
+assert.equal(isSuspiciousIngredientName('Pomidory, 200g'), true);
+console.log('Ingredient normalization checks passed.');
 
 type CuratedRecipe = {
   name: string;

@@ -5,6 +5,7 @@ import { apiError, requireApiContext } from '@/lib/auth-context';
 import { visibleRecipeWhere } from '@/lib/access';
 import { normalizeRecipeName } from '@/lib/utils/recipeConstants';
 import { isNutritionReady } from '@/lib/utils/nutritionReady';
+import { normalizeIngredientName, isSuspiciousIngredientName } from '@/lib/utils/ingredientNormalization';
 
 const VALID_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'snack', 'cocktail', 'dessert'];
 const VALID_CATEGORIES = ['vegetables', 'fruits', 'grains', 'protein', 'dairy', 'oils', 'nuts', 'spices', 'other'];
@@ -88,6 +89,17 @@ export async function POST(req: NextRequest) {
     if (ingredients.length > 50) {
       return NextResponse.json({ error: 'Za dużo składników (max 50).' }, { status: 400 });
     }
+    const ingredientRows = ingredients
+      .filter((ing: any) => ing && typeof ing.name === 'string')
+      .map((ing: any) => ({ ...ing, name: normalizeIngredientName(ing.name) }));
+    if (ingredientRows.length !== ingredients.length || ingredientRows.some((ing: any) => (
+      !ing.name || typeof ing.amountG !== 'number' || !Number.isFinite(ing.amountG) || ing.amountG <= 0
+    ))) {
+      return NextResponse.json({ error: 'Każdy składnik musi mieć nazwę i dodatnią gramaturę.' }, { status: 400 });
+    }
+    if (new Set(ingredientRows.map((ing: any) => ing.name)).size !== ingredientRows.length) {
+      return NextResponse.json({ error: 'Ten sam składnik występuje więcej niż raz po normalizacji.' }, { status: 400 });
+    }
     if (ingredientBasis && !VALID_INGREDIENT_BASIS.includes(ingredientBasis)) {
       return NextResponse.json({ error: 'Nieprawidłowa wartość ingredientBasis.' }, { status: 400 });
     }
@@ -118,9 +130,7 @@ export async function POST(req: NextRequest) {
     const recipeId = await prisma.$transaction(async (tx) => {
       const resolvedIngredients: { id: string; amountG: number; displayText?: string; scalesLinearly: boolean }[] = [];
       const isValidNum = (v: unknown) => typeof v === 'number' && isFinite(v) && v >= 0;
-      const validInputIngredients = ingredients.filter((ing: any) => (
-        ing && typeof ing.name === 'string' && ing.name.trim() && isValidNum(ing.amountG) && ing.amountG > 0
-      ));
+      const validInputIngredients = ingredientRows;
 
       for (const ing of validInputIngredients) {
         const ingredient = await tx.ingredient.upsert({
@@ -141,7 +151,8 @@ export async function POST(req: NextRequest) {
         proteinG,
         carbsG,
         fatG,
-        ingredientsValid: validInputIngredients.length === ingredients.length,
+        ingredientsValid: validInputIngredients.length === ingredients.length
+          && validInputIngredients.every((ingredient) => !isSuspiciousIngredientName(ingredient.name)),
       });
       const created = await tx.recipe.create({
         data: {
