@@ -59,6 +59,13 @@ export function apiError(error: unknown, fallback = 'Błąd serwera.') {
   if (error instanceof Error && error.message === 'FORBIDDEN') {
     return { message: 'Brak dostępu.', status: 403 };
   }
+  if (error && typeof error === 'object' && 'code' in error
+    && (error as { code?: unknown }).code === 'NO_ELIGIBLE_RECIPE') {
+    return {
+      message: error instanceof Error ? error.message : 'Brak bezpiecznego przepisu dla wybranego bloku.',
+      status: 400,
+    };
+  }
   return {
     message: error instanceof Error ? error.message : fallback,
     status: 500,

@@ -107,6 +107,14 @@ export type BatchConfig = {
   cocktail: MealDividers;
 };
 
+export const BATCH_MEAL_TYPES = [
+  'breakfast',
+  'second_breakfast',
+  'lunch',
+  'dinner',
+  'cocktail',
+] as const;
+
 export const DEFAULT_BATCH_CONFIG: BatchConfig = {
   // Mon-Tue | Wed-Thu | Fri-Sat | Sunday solo
   breakfast:        [false, true,  false, true,  false, true],
@@ -115,6 +123,32 @@ export const DEFAULT_BATCH_CONFIG: BatchConfig = {
   dinner:           [false, true,  false, true,  false, true],
   cocktail:         [false, true,  false, true,  false, true],
 };
+
+export function isBatchConfig(value: unknown): value is BatchConfig {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const record = value as Record<string, unknown>;
+  const keys = Object.keys(record).sort();
+  if (keys.join('|') !== [...BATCH_MEAL_TYPES].sort().join('|')) return false;
+  return BATCH_MEAL_TYPES.every((mealType) => {
+    const dividers = record[mealType];
+    return Array.isArray(dividers)
+      && dividers.length === 6
+      && dividers.every((divider) => typeof divider === 'boolean');
+  });
+}
+
+export function normalizeStoredBatchConfig(value: unknown): BatchConfig {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return DEFAULT_BATCH_CONFIG;
+  const record = value as Record<string, unknown>;
+  const merged = { ...DEFAULT_BATCH_CONFIG } as Record<string, unknown>;
+  for (const mealType of BATCH_MEAL_TYPES) {
+    const dividers = record[mealType];
+    if (Array.isArray(dividers) && dividers.length === 6 && dividers.every((divider) => typeof divider === 'boolean')) {
+      merged[mealType] = dividers;
+    }
+  }
+  return merged as BatchConfig;
+}
 
 /** Convert dividers array → group numbers array (length 7) */
 export function dividersToGroups(dividers: MealDividers): number[] {

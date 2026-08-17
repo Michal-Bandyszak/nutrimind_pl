@@ -17,16 +17,8 @@ import {
   type PlanDayKcalTotals,
   type RecipeCandidate,
 } from '@/lib/utils/mealPlanScoring';
+import { inferRecipeSemantics, primarySemanticFamily } from '@/lib/utils/recipeSemantics';
 import { APP_TIME_ZONE, currentWeekStart } from '@/lib/utils/appDate';
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 function formatWeekLabel(start: Date): string {
   const end = new Date(start);
@@ -39,6 +31,7 @@ function normalizeCandidates(
   recipes: Array<{
     id: string;
     name: string;
+    type: string;
     maxStorageDays: number;
     kcalPerServing: number | null;
     batchFriendly: boolean;
@@ -49,12 +42,50 @@ function normalizeCandidates(
   return recipes.map((recipe) => ({
     id: recipe.id,
     name: recipe.name,
+    type: recipe.type,
     maxStorageDays: recipe.maxStorageDays,
     kcalPerServing: recipe.kcalPerServing,
     batchFriendly: recipe.batchFriendly,
     tags: recipe.tags,
     ingredientNames: recipe.ingredients.map((item) => item.ingredient.name),
   }));
+}
+
+const CANDIDATE_MEAL_TYPES = ['breakfast', 'second_breakfast', 'lunch', 'dinner', 'cocktail'] as const;
+
+export async function loadRecipeCandidates(householdId: string) {
+  const recipes = await prisma.recipe.findMany({
+    where: {
+      type: { in: [...CANDIDATE_MEAL_TYPES] },
+      nutritionVerified: true,
+      role: 'meal',
+      OR: [{ householdId: null }, { householdId }],
+    },
+    select: {
+      id: true,
+      name: true,
+      type: true,
+      maxStorageDays: true,
+      kcalPerServing: true,
+      batchFriendly: true,
+      tags: true,
+      ingredients: { select: { ingredient: { select: { name: true } } } },
+    },
+  });
+
+  return CANDIDATE_MEAL_TYPES.reduce<Record<string, RecipeCandidate[]>>((byType, mealType) => {
+    byType[mealType] = normalizeCandidates(recipes.filter((recipe) => recipe.type === mealType));
+    return byType;
+  }, {});
+}
+
+async function loadPreviousPlanRecipeIds(householdId: string) {
+  const previous = await prisma.mealPlan.findFirst({
+    where: { householdId, status: 'active' },
+    orderBy: { createdAt: 'desc' },
+    select: { meals: { select: { recipeId: true } } },
+  });
+  return new Set(previous?.meals.map((meal) => meal.recipeId) ?? []);
 }
 
 /** Build meal rows for one meal type based on divider config */
@@ -68,6 +99,8 @@ function buildMealRows(
   dayContexts: PlanDayContexts,
   dayKcalTotals: PlanDayKcalTotals,
   cumulativeTargetKcal: number,
+  familyCounts: Map<string, number>,
+  previousPlanRecipeIds: ReadonlySet<string>,
 ): {
   mealPlanId: string;
   dayOfWeek: number;
@@ -80,7 +113,6 @@ function buildMealRows(
   const groups = dividersToGroups(dividers); // e.g. [1,1,1,2,2,2,2]
   const uniqueGroups = [...new Set(groups)]; // [1, 2]
 
-  const shuffled = shuffle(recipes);
   const usedIds = new Set<string>();
 
   const dayAssignments = new Map<number, { recipeId: string; batchGroupId: string; batchDayNum: number }>();
@@ -93,7 +125,7 @@ function buildMealRows(
     // Keep the configured group intact. Prefer recipes whose storage time can
     // cover the whole block, but do not silently split a user-selected group.
     const requiredStorageDays = days.length;
-    const chosen = chooseRecipeForGroup(shuffled, {
+    const chosen = chooseRecipeForGroup(recipes, {
       usedIds,
       requiredStorageDays,
       targetKcalPerServing,
@@ -102,8 +134,16 @@ function buildMealRows(
       dayContexts,
       dayKcalTotals,
       cumulativeTargetKcal,
+      familyCounts,
+      previousPlanRecipeIds,
     });
     usedIds.add(chosen.id);
+    const chosenFamily = primarySemanticFamily(inferRecipeSemantics({
+      name: chosen.name,
+      tags: chosen.tags,
+      ingredientNames: chosen.ingredientNames,
+    }));
+    familyCounts.set(`${mealType}:${chosenFamily}`, (familyCounts.get(`${mealType}:${chosenFamily}`) ?? 0) + 1);
     applyRecipeToDayContexts(dayContexts, chosen, mealType, days);
     applyRecipeToDayKcalTotals(dayKcalTotals, chosen, days);
 
@@ -122,16 +162,7 @@ function buildMealRows(
     const assignment = dayAssignments.get(dayOfWeek);
     if (!assignment) {
       // Defensive fallback; should never happen with valid 7-day divider config.
-      const fallbackRecipe = shuffled[0];
-      return {
-        mealPlanId: planId,
-        dayOfWeek,
-        mealType,
-        recipeId: fallbackRecipe.id,
-        servings,
-        batchGroupId: crypto.randomUUID(),
-        batchDayNum: 1,
-      };
+      throw new Error(`Brak przypisania posiłku ${mealType} dla dnia ${dayOfWeek}.`);
     }
 
     return {
@@ -151,79 +182,19 @@ export async function generateWeekPlan(
   profiles: { id: string; name: string; targetKcal: number; isPrimary: boolean }[],
   config: BatchConfig = DEFAULT_BATCH_CONFIG,
   weekStart?: Date,
-): Promise<MealPlanWithMeals> {
+): Promise<{ planId: string }> {
   if (!profiles.length) throw new Error('Brak aktywnych profili żywieniowych.');
   const start = weekStart ?? currentWeekStart();
   const targetKcalPerPerson = Math.max(...profiles.map((profile) => profile.targetKcal));
-  const recipeScope = { OR: [{ householdId: null }, { householdId }] };
-
-  const [allBreakfasts, allSecondBreakfasts, allLunches, allDinners, allCocktails] = await Promise.all([
-    prisma.recipe.findMany({
-      where: { type: 'breakfast', nutritionVerified: true, role: 'meal', ...recipeScope },
-      select: {
-        id: true,
-        name: true,
-        maxStorageDays: true,
-        kcalPerServing: true,
-        batchFriendly: true,
-        tags: true,
-        ingredients: { select: { ingredient: { select: { name: true } } } },
-      },
-    }),
-    prisma.recipe.findMany({
-      where: { type: 'second_breakfast', nutritionVerified: true, role: 'meal', ...recipeScope },
-      select: {
-        id: true,
-        name: true,
-        maxStorageDays: true,
-        kcalPerServing: true,
-        batchFriendly: true,
-        tags: true,
-        ingredients: { select: { ingredient: { select: { name: true } } } },
-      },
-    }),
-    prisma.recipe.findMany({
-      where: { type: 'lunch', nutritionVerified: true, batchFriendly: true, role: 'meal', ...recipeScope },
-      select: {
-        id: true,
-        name: true,
-        maxStorageDays: true,
-        kcalPerServing: true,
-        batchFriendly: true,
-        tags: true,
-        ingredients: { select: { ingredient: { select: { name: true } } } },
-      },
-    }),
-    prisma.recipe.findMany({
-      where: { type: 'dinner', nutritionVerified: true, role: 'meal', ...recipeScope },
-      select: {
-        id: true,
-        name: true,
-        maxStorageDays: true,
-        kcalPerServing: true,
-        batchFriendly: true,
-        tags: true,
-        ingredients: { select: { ingredient: { select: { name: true } } } },
-      },
-    }),
-    prisma.recipe.findMany({
-      where: { type: 'cocktail', nutritionVerified: true, role: 'meal', ...recipeScope },
-      select: {
-        id: true,
-        name: true,
-        maxStorageDays: true,
-        kcalPerServing: true,
-        batchFriendly: true,
-        tags: true,
-        ingredients: { select: { ingredient: { select: { name: true } } } },
-      },
-    }),
+  const [candidatesByType, previousPlanRecipeIds] = await Promise.all([
+    loadRecipeCandidates(householdId),
+    loadPreviousPlanRecipeIds(householdId),
   ]);
-  const breakfasts = normalizeCandidates(allBreakfasts);
-  const secondBreakfasts = normalizeCandidates(allSecondBreakfasts);
-  const lunches = normalizeCandidates(allLunches);
-  const dinners = normalizeCandidates(allDinners);
-  const cocktails = normalizeCandidates(allCocktails);
+  const breakfasts = candidatesByType.breakfast ?? [];
+  const secondBreakfasts = candidatesByType.second_breakfast ?? [];
+  const lunches = candidatesByType.lunch ?? [];
+  const dinners = candidatesByType.dinner ?? [];
+  const cocktails = candidatesByType.cocktail ?? [];
 
   if (!breakfasts.length) throw new Error('Brak przepisów na śniadanie.');
   if (!lunches.length)    throw new Error('Brak przepisów na obiad.');
@@ -234,17 +205,10 @@ export async function generateWeekPlan(
     servings: Math.max(0.25, Math.round((profile.targetKcal / targetKcalPerPerson) * 4) / 4),
   }));
   const SERVINGS = servingsByProfile.reduce((sum, item) => sum + item.servings, 0);
-  const rows: {
-    mealPlanId: string;
-    dayOfWeek: number;
-    mealType: string;
-    recipeId: string;
-    servings: number;
-    batchGroupId: string | null;
-    batchDayNum: number | null;
-  }[] = [];
+  const rows: ReturnType<typeof buildMealRows> = [];
   const dayContexts: PlanDayContexts = new Map();
   const dayKcalTotals: PlanDayKcalTotals = new Map();
+  const familyCounts = new Map<string, number>();
 
   const plannedMealTypes = [
     'breakfast',
@@ -255,6 +219,76 @@ export async function generateWeekPlan(
   ].filter((mealType): mealType is string => mealType !== null);
   const mealTargets = buildMealTargets(plannedMealTypes, targetKcalPerPerson);
   const cumulativeMealTargets = buildCumulativeMealTargets(plannedMealTypes, targetKcalPerPerson);
+
+  rows.push(...buildMealRows(
+    'pending',
+    'breakfast',
+    config.breakfast,
+    breakfasts,
+    SERVINGS,
+    mealTargets.breakfast,
+    dayContexts,
+    dayKcalTotals,
+    cumulativeMealTargets.breakfast ?? targetKcalPerPerson,
+    familyCounts,
+    previousPlanRecipeIds,
+  ));
+  if (secondBreakfasts.length) {
+    rows.push(...buildMealRows(
+      'pending',
+      'second_breakfast',
+      config.second_breakfast,
+      secondBreakfasts,
+      SERVINGS,
+      mealTargets.second_breakfast,
+      dayContexts,
+      dayKcalTotals,
+      cumulativeMealTargets.second_breakfast ?? targetKcalPerPerson,
+      familyCounts,
+      previousPlanRecipeIds,
+    ));
+  }
+  rows.push(...buildMealRows(
+    'pending',
+    'lunch',
+    config.lunch,
+    lunches,
+    SERVINGS,
+    mealTargets.lunch,
+    dayContexts,
+    dayKcalTotals,
+    cumulativeMealTargets.lunch ?? targetKcalPerPerson,
+    familyCounts,
+    previousPlanRecipeIds,
+  ));
+  rows.push(...buildMealRows(
+    'pending',
+    'dinner',
+    config.dinner,
+    dinners,
+    SERVINGS,
+    mealTargets.dinner,
+    dayContexts,
+    dayKcalTotals,
+    cumulativeMealTargets.dinner ?? targetKcalPerPerson,
+    familyCounts,
+    previousPlanRecipeIds,
+  ));
+  if (cocktails.length) {
+    rows.push(...buildMealRows(
+      'pending',
+      'cocktail',
+      config.cocktail,
+      cocktails,
+      SERVINGS,
+      mealTargets.cocktail,
+      dayContexts,
+      dayKcalTotals,
+      cumulativeMealTargets.cocktail ?? targetKcalPerPerson,
+      familyCounts,
+      previousPlanRecipeIds,
+    ));
+  }
 
   const planId = await prisma.$transaction(async (tx) => {
     await tx.mealPlan.updateMany({
@@ -280,68 +314,9 @@ export async function generateWeekPlan(
       include: { participants: true },
     });
 
-    // Breakfast, second_breakfast, lunch, dinner, cocktail with custom batch config
-    rows.push(...buildMealRows(
-      plan.id,
-    'breakfast',
-    config.breakfast,
-    breakfasts,
-    SERVINGS,
-    mealTargets.breakfast,
-    dayContexts,
-    dayKcalTotals,
-    cumulativeMealTargets.breakfast ?? targetKcalPerPerson,
-    ));
-    if (secondBreakfasts.length) {
-      rows.push(...buildMealRows(
-        plan.id,
-      'second_breakfast',
-      config.second_breakfast,
-      secondBreakfasts,
-      SERVINGS,
-      mealTargets.second_breakfast,
-      dayContexts,
-      dayKcalTotals,
-      cumulativeMealTargets.second_breakfast ?? targetKcalPerPerson,
-      ));
-    }
-    rows.push(...buildMealRows(
-      plan.id,
-    'lunch',
-    config.lunch,
-    lunches,
-    SERVINGS,
-    mealTargets.lunch,
-    dayContexts,
-    dayKcalTotals,
-    cumulativeMealTargets.lunch ?? targetKcalPerPerson,
-    ));
-    rows.push(...buildMealRows(
-      plan.id,
-    'dinner',
-    config.dinner,
-    dinners,
-    SERVINGS,
-    mealTargets.dinner,
-    dayContexts,
-    dayKcalTotals,
-    cumulativeMealTargets.dinner ?? targetKcalPerPerson,
-    ));
-    if (cocktails.length) {
-      rows.push(...buildMealRows(
-        plan.id,
-      'cocktail',
-      config.cocktail,
-      cocktails,
-      SERVINGS,
-      mealTargets.cocktail,
-      dayContexts,
-      dayKcalTotals,
-      cumulativeMealTargets.cocktail ?? targetKcalPerPerson,
-      ));
-    }
-
-    await tx.mealPlanMeal.createMany({ data: rows });
+    await tx.mealPlanMeal.createMany({
+      data: rows.map((row) => ({ ...row, mealPlanId: plan.id })),
+    });
     const meals = await tx.mealPlanMeal.findMany({ where: { mealPlanId: plan.id } });
     const participantByProfile = new Map(
       plan.participants.map((participant) => [participant.personProfileId, participant]),
@@ -359,7 +334,7 @@ export async function generateWeekPlan(
     return plan.id;
   });
 
-  return fetchPlanWithMeals(planId, householdId);
+  return { planId };
 }
 
 export async function getActivePlan(householdId: string): Promise<MealPlanWithMeals | null> {

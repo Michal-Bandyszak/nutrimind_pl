@@ -15,6 +15,7 @@ import {
 } from '../lib/utils/mealPlanScoring';
 import { normalizeRecipeName } from '../lib/utils/recipeConstants';
 import { inferRecipeSemantics } from '../lib/utils/recipeSemantics';
+import { DEFAULT_BATCH_CONFIG, isBatchConfig, normalizeStoredBatchConfig } from '../lib/types';
 
 const justAfterMidnightInWarsaw = new Date('2026-07-14T22:30:00.000Z');
 
@@ -152,6 +153,16 @@ assert.throws(
 );
 
 console.log('Diverse safe selection checks passed.');
+
+assert.equal(isBatchConfig(DEFAULT_BATCH_CONFIG), true);
+assert.equal(isBatchConfig({ ...DEFAULT_BATCH_CONFIG, lunch: [false] }), false);
+assert.equal(isBatchConfig({ ...DEFAULT_BATCH_CONFIG, extra: [false, false, false, false, false, false] }), false);
+assert.deepEqual(
+  normalizeStoredBatchConfig({ lunch: [true, false, true, false, true, false] }).lunch,
+  [true, false, true, false, true, false],
+);
+assert.deepEqual(normalizeStoredBatchConfig({ lunch: [true] }).lunch, DEFAULT_BATCH_CONFIG.lunch);
+console.log('Batch configuration checks passed.');
 
 type CuratedRecipe = {
   name: string;

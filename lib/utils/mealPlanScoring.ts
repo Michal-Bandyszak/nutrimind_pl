@@ -19,6 +19,7 @@ export const MEAL_TARGET_WEIGHTS: Record<string, number> = {
 export type RecipeCandidate = {
   id: string;
   name: string;
+  type?: string;
   role?: string;
   nutritionReady?: boolean;
   maxStorageDays: number;
@@ -64,6 +65,19 @@ export class NoEligibleRecipeError extends Error {
     super(`Brak bezpiecznego przepisu dla ${mealType} na blok ${batchDays} dni.`);
     this.name = 'NoEligibleRecipeError';
   }
+}
+
+export function isRecipeEligibleForGroup(
+  recipe: RecipeCandidate,
+  mealType: string,
+  requiredStorageDays: number,
+) {
+  return recipe.role !== 'component'
+    && recipe.nutritionReady !== false
+    && recipe.kcalPerServing != null
+    && recipe.kcalPerServing > 0
+    && recipe.maxStorageDays >= requiredStorageDays
+    && (mealType !== 'lunch' || requiredStorageDays <= 1 || recipe.batchFriendly === true);
 }
 
 export function buildMealTargets(
@@ -154,14 +168,7 @@ export function chooseRecipeForGroup(
     familyCounts,
     familyLimit = 2,
   } = options;
-  const eligible = recipes.filter((recipe) => (
-    recipe.role !== 'component'
-    && recipe.nutritionReady !== false
-    && recipe.kcalPerServing != null
-    && recipe.kcalPerServing > 0
-    && recipe.maxStorageDays >= requiredStorageDays
-    && (mealType !== 'lunch' || requiredStorageDays <= 1 || recipe.batchFriendly === true)
-  ));
+  const eligible = recipes.filter((recipe) => isRecipeEligibleForGroup(recipe, mealType, requiredStorageDays));
 
   if (!eligible.length) throw new NoEligibleRecipeError(mealType, requiredStorageDays);
 
