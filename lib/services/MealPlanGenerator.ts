@@ -32,6 +32,8 @@ function normalizeCandidates(
     id: string;
     name: string;
     type: string;
+    role: string;
+    nutritionReady: boolean;
     maxStorageDays: number;
     kcalPerServing: number | null;
     batchFriendly: boolean;
@@ -43,6 +45,8 @@ function normalizeCandidates(
     id: recipe.id,
     name: recipe.name,
     type: recipe.type,
+    role: recipe.role,
+    nutritionReady: recipe.nutritionReady,
     maxStorageDays: recipe.maxStorageDays,
     kcalPerServing: recipe.kcalPerServing,
     batchFriendly: recipe.batchFriendly,
@@ -65,6 +69,8 @@ export async function loadRecipeCandidates(householdId: string) {
       id: true,
       name: true,
       type: true,
+      role: true,
+      nutritionReady: true,
       maxStorageDays: true,
       kcalPerServing: true,
       batchFriendly: true,

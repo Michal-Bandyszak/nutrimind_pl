@@ -106,7 +106,7 @@ INSERT INTO "AppSettings" (
     "id", "personAName", "personAKcal", "personBName", "personBKcal",
     "defaultBatchConfig", "updatedAt"
 )
-SELECT 'default', 'Michał', 2500, 'Dziewczyna', 2500, '', CURRENT_TIMESTAMP
+SELECT 'default', 'Michał', 2500, 'Natalia', 2500, '', CURRENT_TIMESTAMP
 WHERE NOT EXISTS (SELECT 1 FROM "AppSettings");
 
 ALTER TABLE "AppSettings" ADD COLUMN "householdId" TEXT;
@@ -132,7 +132,7 @@ INSERT INTO "PersonProfile" (
 )
 SELECT
     'legacy-secondary-profile', 'legacy-household',
-    CASE WHEN "personBName" = 'Osoba B' THEN 'Dziewczyna' ELSE "personBName" END,
+    CASE WHEN "personBName" = 'Osoba B' THEN 'Natalia' ELSE "personBName" END,
     CASE WHEN "personBKcal" = 1800 THEN 2500 ELSE "personBKcal" END,
     false, true, CURRENT_TIMESTAMP
 FROM "AppSettings"
